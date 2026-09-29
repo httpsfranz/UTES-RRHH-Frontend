@@ -7,9 +7,13 @@ import HomePage from './pages/HomePage';
 import PlaceholderPage from './pages/PlaceholderPage';
 
 import MicroredPage from './pages/organizacion/MicroredPage';
+
 import MetodoMarcacionPage from './pages/biometria/MetodoMarcacionPage';
 
 import TipoEstablecimientoPage from './pages/organizacion/TipoEstablecimientoPage';
+
+import ConceptoDescuentoPage from './pages/compensaciones/ConceptoDescuentoPage.jsx';
+
 import { menu } from './nav/menu';
 
 // =========================================================
@@ -17,9 +21,15 @@ import { menu } from './nav/menu';
 // =========================================================
 
 const paginasReales = {
+
   '/organizacion/microredes': MicroredPage,
+
   '/biometria/metodos': MetodoMarcacionPage,
+
   '/organizacion/tipos-establecimiento': TipoEstablecimientoPage,
+
+  '/compensaciones/conceptos-descuento': ConceptoDescuentoPage,
+
 };
 
 // =========================================================
@@ -28,16 +38,18 @@ const paginasReales = {
 
 const moduleRoutes = menu.flatMap((group) =>
   group.children.map((item) => {
+
     const PaginaReal = paginasReales[item.path];
 
     return {
-      path: item.path.replace(/^\//, ''),
+      path: item.path.replace(/^\/+/, ''),
       element: PaginaReal ? (
         <PaginaReal />
       ) : (
         <PlaceholderPage title={item.label} />
       ),
     };
+
   })
 );
 
