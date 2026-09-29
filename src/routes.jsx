@@ -9,6 +9,7 @@ import PlaceholderPage from './pages/PlaceholderPage';
 import MicroredPage from './pages/organizacion/MicroredPage';
 
 import MetodoMarcacionPage from './pages/biometria/MetodoMarcacionPage';
+import DispositivoMarcacionPage from './pages/biometria/DispositivoMarcacionPage';
 
 import TipoEstablecimientoPage from './pages/organizacion/TipoEstablecimientoPage';
 
@@ -22,10 +23,10 @@ import { menu } from './nav/menu';
 
 const paginasReales = {
 
-  '/organizacion/microredes': MicroredPage,
-
   '/biometria/metodos': MetodoMarcacionPage,
+  '/biometria/dispositivos': DispositivoMarcacionPage,
 
+  '/organizacion/microredes': MicroredPage,
   '/organizacion/tipos-establecimiento': TipoEstablecimientoPage,
 
   '/compensaciones/conceptos-descuento': ConceptoDescuentoPage,
