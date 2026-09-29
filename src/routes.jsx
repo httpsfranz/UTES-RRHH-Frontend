@@ -15,6 +15,8 @@ import TipoEstablecimientoPage from './pages/organizacion/TipoEstablecimientoPag
 
 import ConceptoDescuentoPage from './pages/compensaciones/ConceptoDescuentoPage.jsx';
 
+import TipoCompensacionPage from './pages/compensaciones/TipoCompensacionPage';
+
 import { menu } from './nav/menu';
 
 // =========================================================
@@ -30,6 +32,7 @@ const paginasReales = {
   '/organizacion/tipos-establecimiento': TipoEstablecimientoPage,
 
   '/compensaciones/conceptos-descuento': ConceptoDescuentoPage,
+  '/compensaciones/tipos-compensacion': TipoCompensacionPage,
 
 };
 
