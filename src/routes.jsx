@@ -17,6 +17,12 @@ import ConceptoDescuentoPage from './pages/compensaciones/ConceptoDescuentoPage.
 
 import TipoCompensacionPage from './pages/compensaciones/TipoCompensacionPage';
 
+import ParametroSistemaPage from './pages/configuracion/ParametroSistemaPage';
+import TablaToleranciaPage from './pages/configuracion/TablaToleranciaPage';
+import TipoJornadaPage from './pages/configuracion/TipoJornadaPage';
+import PeriodoAsistenciaPage from './pages/consolidacion/PeriodoAsistenciaPage';
+import TipoFaltaDisciplinariaPage from './pages/disciplina/TipoFaltaDisciplinariaPage';
+
 import { menu } from './nav/menu';
 
 // =========================================================
@@ -33,7 +39,12 @@ const paginasReales = {
 
   '/compensaciones/conceptos-descuento': ConceptoDescuentoPage,
   '/compensaciones/tipos-compensacion': TipoCompensacionPage,
-
+  '/configuracion/parametros-sistema': ParametroSistemaPage,
+  '/configuracion/tablas-tolerancia': TablaToleranciaPage,
+  '/configuracion/tipos-jornada': TipoJornadaPage,
+  '/consolidacion/periodos-asistencia': PeriodoAsistenciaPage,
+  '/disciplina/tipos-falta': TipoFaltaDisciplinariaPage,
+  
 };
 
 // =========================================================
