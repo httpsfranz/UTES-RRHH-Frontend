@@ -1,6 +1,6 @@
 import { motion } from 'motion/react';
-import { Pencil, Power, Trash2 } from 'lucide-react';
 import StatusBadge from './StatusBadge';
+import ActionButtons from './ActionButtons';
 
 // La tarjeta de catalogo que se repite en (casi) todos los modulos de mantenimiento:
 // avatar (icono fijo o inicial del nombre) + badge de estado arriba, titulo + lineas
@@ -21,7 +21,9 @@ export default function EntityCard({
       layout
       whileHover={{ y: -3 }}
       transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-      className="flex min-h-56 flex-col justify-between overflow-hidden rounded-2xl border border-line bg-surface shadow-sm hover:shadow-md"
+      className={`flex min-h-56 flex-col justify-between overflow-hidden rounded-2xl border border-line bg-surface shadow-sm hover:shadow-md ${
+        active === false ? 'opacity-70' : ''
+      }`}
     >
       <div className="flex-1 p-5">
         <div className="flex items-start justify-between gap-2">
@@ -44,41 +46,7 @@ export default function EntityCard({
 
       <div className="flex items-center justify-between gap-3 border-t border-line px-5 py-3">
         <span className="truncate text-xs font-medium text-muted">{footer}</span>
-        <div className="flex shrink-0 gap-1">
-          {onEdit && (
-            <button
-              type="button"
-              onClick={onEdit}
-              className="rounded-lg p-1.5 text-muted transition-colors hover:bg-page hover:text-brand"
-              aria-label="Editar"
-              title="Editar"
-            >
-              <Pencil size={14} />
-            </button>
-          )}
-          {onToggle && (
-            <button
-              type="button"
-              onClick={onToggle}
-              className="rounded-lg p-1.5 text-muted transition-colors hover:bg-red-50 hover:text-red-600"
-              aria-label="Desactivar"
-              title="Desactivar"
-            >
-              <Power size={14} />
-            </button>
-          )}
-          {onDelete && (
-            <button
-              type="button"
-              onClick={onDelete}
-              className="rounded-lg p-1.5 text-muted transition-colors hover:bg-red-50 hover:text-red-600"
-              aria-label="Eliminar"
-              title="Eliminar"
-            >
-              <Trash2 size={14} />
-            </button>
-          )}
-        </div>
+        <ActionButtons active={active} onEdit={onEdit} onToggle={onToggle} onDelete={onDelete} />
       </div>
     </motion.div>
   );

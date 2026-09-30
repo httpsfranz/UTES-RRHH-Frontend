@@ -1,40 +1,42 @@
 import { FileText, Hash, Tag } from 'lucide-react';
 import Field from '../../components/ui/Field';
+import FormGrid from '../../components/ui/FormGrid';
 
-export default function TablaToleranciaForm({
-  form,
-  setForm,
-  errors,
-}) {
+export default function TablaToleranciaForm({ form, setForm, errors }) {
   return (
     <>
-      <div className="grid grid-cols-2 gap-4">
+      <FormGrid>
         <Field
           form={form}
           setForm={setForm}
           errors={errors}
-          name="codigo"
+          name="TablaToleranciaCodigo"
           label="Código"
           icon={Hash}
+          required
+          maxLength={30}
+          filter="codigo"
+          placeholder="Ej. RIT_GENERAL"
         />
-
         <Field
           form={form}
           setForm={setForm}
           errors={errors}
-          name="nombre"
+          name="TablaToleranciaNombre"
           label="Nombre"
           icon={Tag}
+          required
+          maxLength={100}
         />
-      </div>
-
+      </FormGrid>
       <Field
         form={form}
         setForm={setForm}
         errors={errors}
-        name="descripcion"
+        name="TablaToleranciaDescripcion"
         label="Descripción"
         icon={FileText}
+        maxLength={250}
       />
     </>
   );

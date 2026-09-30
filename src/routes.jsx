@@ -6,8 +6,15 @@ import HomePage from './pages/HomePage';
 
 import PlaceholderPage from './pages/PlaceholderPage';
 
+// ASISTENCIA
+import ConceptoJustificacionPage from './pages/asistencia/ConceptoJustificacionPage';
+
+import EstadoAsistenciaPage from './pages/asistencia/EstadoAsistenciaPage';
+
+// ORGANIZACIÓN
 import MicroredPage from './pages/organizacion/MicroredPage';
 
+// BIOMETRÍA
 import MetodoMarcacionPage from './pages/biometria/MetodoMarcacionPage';
 
 import DispositivoMarcacionPage from './pages/biometria/DispositivoMarcacionPage';
@@ -16,7 +23,8 @@ import TipoEstablecimientoPage from './pages/organizacion/TipoEstablecimientoPag
 
 import TipoResponsabilidadPage from './pages/organizacion/TipoResponsabilidadPage';
 
-import ConceptoDescuentoPage from './pages/compensaciones/ConceptoDescuentoPage.jsx';
+// COMPENSACIONES
+import ConceptoDescuentoPage from './pages/compensaciones/ConceptoDescuentoPage';
 
 import TipoCompensacionPage from './pages/compensaciones/TipoCompensacionPage';
 
@@ -77,6 +85,10 @@ import { menu } from './nav/menu';
 // =========================================================
 
 const paginasReales = {
+  // ASISTENCIA
+  '/asistencia/conceptos-justificacion': ConceptoJustificacionPage,
+  '/asistencia/estados': EstadoAsistenciaPage,
+
   // BIOMETRÍA
   '/biometria/metodos': MetodoMarcacionPage,
   '/biometria/dispositivos': DispositivoMarcacionPage,

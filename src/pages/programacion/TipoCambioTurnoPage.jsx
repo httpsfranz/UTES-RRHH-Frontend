@@ -1,199 +1,85 @@
-import { ArrowRightLeft, Plus } from 'lucide-react';
-import { useCrudResource } from '../../hooks/useCrudResource';
-import Modal from '../../components/Modal';
+import { Repeat, Plus } from 'lucide-react';
+import { formModel, useCrudResource } from '../../hooks/useCrudResource';
+import { validador, codigo, requerido } from '../../utils/validaciones';
+import { siNo } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
 import SearchInput from '../../components/ui/SearchInput';
 import Alert from '../../components/ui/Alert';
-import LoadingState from '../../components/ui/LoadingState';
-import EmptyState from '../../components/ui/EmptyState';
-import CardGrid from '../../components/ui/CardGrid';
-import EntityCard from '../../components/ui/EntityCard';
-import Form from '../../components/ui/Form';
-import FormActions from '../../components/ui/FormActions';
+import EntityList from '../../components/ui/EntityList';
+import FormModal from '../../components/ui/FormModal';
 import TipoCambioTurnoForm from './TipoCambioTurnoForm';
 
-const campoVacio = {
-  TipoCambioTurnoCodigo: '',
-  TipoCambioTurnoNombre: '',
-  TipoCambioTurnoRequiereReemplazante: false,
-  TipoCambioTurnoEstado: true,
-};
+const { emptyForm, mapToForm } = formModel({
+  TipoCambioTurnoCodigo: 'codigo',
+  TipoCambioTurnoNombre: 'nombre',
+  TipoCambioTurnoDescripcion: 'descripcion',
+  TipoCambioTurnoRequiereReemplazante: ['requiere_reemplazante', false],
+});
 
-function mapToForm(tipoCambioTurno) {
-  return {
-    TipoCambioTurnoCodigo:
-      tipoCambioTurno.TipoCambioTurnoCodigo ??
-      tipoCambioTurno.codigo ??
-      '',
+const validate = validador({
+  TipoCambioTurnoCodigo: [requerido, codigo],
+  TipoCambioTurnoNombre: [requerido],
+});
 
-    TipoCambioTurnoNombre:
-      tipoCambioTurno.TipoCambioTurnoNombre ??
-      tipoCambioTurno.nombre ??
-      '',
+const columns = [
+  { key: 'codigo', header: 'Código' },
+  { key: 'nombre', header: 'Nombre' },
+  { key: 'requiere_reemplazante', header: 'Reemplazante', render: (item) => siNo(item.requiere_reemplazante) },
+];
 
-    TipoCambioTurnoRequiereReemplazante:
-      Boolean(
-        tipoCambioTurno.TipoCambioTurnoRequiereReemplazante ??
-        tipoCambioTurno.requiere_reemplazante ??
-        false
-      ),
-
-    TipoCambioTurnoEstado:
-      Boolean(
-        tipoCambioTurno.TipoCambioTurnoEstado ??
-        tipoCambioTurno.activo ??
-        true
-      ),
-  };
-}
+const card = (item) => ({
+  title: item.nombre,
+  meta: [item.descripcion, item.requiere_reemplazante && 'Requiere reemplazante'],
+  footer: item.codigo,
+});
 
 export default function TipoCambioTurnoPage() {
-  const {
-    items: tiposCambioTurno,
-    loading,
-    error,
-    buscar,
-    setBuscar,
-    cargar,
-    modalOpen,
-    editando,
-    form,
-    setForm,
-    erroresForm,
-    guardando,
-    abrirCrear,
-    abrirEditar,
-    cerrarModal,
-    guardar,
-    desactivar,
-  } = useCrudResource({
+  const crud = useCrudResource({
     endpoint: '/tipos-cambio-turno',
-    emptyForm: campoVacio,
+    emptyForm,
     mapToForm,
-    deactivateErrorMessage:
-      'No se pudo desactivar el tipo de cambio de turno.',
+    validate,
+    estadoKey: 'TipoCambioTurnoEstado',
+    buildConfirmMessage: (item) => `¿Desactivar "${item.nombre}"?`,
   });
 
   return (
     <PageContainer>
-
-      {/* Encabezado */}
-      <PageHeader
-        title="Tipos de Cambio de Turno"
-        subtitle="Programación · Tipo de cambio de turno"
-      >
-        <Button onClick={abrirCrear} icon={Plus}>
-          Nuevo tipo de cambio
+      <PageHeader title="Tipos de cambio de turno" subtitle="Programación · Tipo de cambio de turno">
+        <Button onClick={crud.abrirCrear} icon={Plus}>
+          Nuevo tipo
         </Button>
       </PageHeader>
 
-      {/* Buscador */}
-      <SearchInput
-          value={buscar}
-          onChange={setBuscar}
-          onSubmit={() => cargar()}
-        />
+      <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />
 
-      {/* Error general */}
-      <Alert>{error}</Alert>
+      <Alert>{crud.error}</Alert>
 
-      {/* Cargando */}
-      {loading ? (
-        <LoadingState message="Cargando tipos de cambio de turno…" />
+      <EntityList
+        items={crud.items}
+        total={crud.total}
+        loading={crud.loading}
+        loadingMessage="Cargando tipos de cambio de turno…"
+        emptyIcon={Repeat}
+        emptyMessage="No hay tipos de cambio de turno registrados todavía."
+        columns={columns}
+        card={card}
+        onEdit={crud.abrirEditar}
+        onToggle={crud.alternarEstado}
+      />
 
-      ) : tiposCambioTurno.length === 0 ? (
-
-        /* Sin registros */
-        <EmptyState
-          icon={ArrowRightLeft}
-          message="No hay tipos de cambio de turno registrados todavía."
-        />
-
-      ) : (
-
-        /* Lista */
-        <CardGrid>
-          {tiposCambioTurno.map((item) => {
-
-            const id =
-              item.TipoCambioTurnoId ??
-              item.id;
-
-            const nombre =
-              item.TipoCambioTurnoNombre ??
-              item.nombre;
-
-            const codigo =
-              item.TipoCambioTurnoCodigo ??
-              item.codigo;
-
-            const requiereReemplazante =
-              Boolean(
-                item.TipoCambioTurnoRequiereReemplazante ??
-                item.requiere_reemplazante
-              );
-
-            const activo =
-              Boolean(
-                item.TipoCambioTurnoEstado ??
-                item.activo
-              );
-
-            return (
-              <EntityCard
-                key={id}
-                icon={ArrowRightLeft}
-                active={activo}
-                title={nombre}
-                meta={[
-                  codigo && `Código: ${codigo}`,
-
-                  requiereReemplazante
-                    ? 'Requiere reemplazante'
-                    : 'No requiere reemplazante',
-                ].filter(Boolean)}
-                footer={`ID: ${id}`}
-                onEdit={() => abrirEditar(item)}
-                onToggle={
-                  activo
-                    ? () => desactivar(item)
-                    : undefined
-                }
-              />
-            );
-          })}
-        </CardGrid>
-      )}
-
-      {/* Modal */}
-      <Modal
-        open={modalOpen}
-        onClose={cerrarModal}
-        title={
-          editando
-            ? 'Editar tipo de cambio de turno'
-            : 'Nuevo tipo de cambio de turno'
-        }
+      <FormModal
+        open={crud.modalOpen}
+        onClose={crud.cerrarModal}
+        title={crud.editando ? 'Editar tipo de cambio de turno' : 'Nuevo tipo de cambio de turno'}
+        onSubmit={crud.guardar}
+        error={crud.erroresForm.general?.[0]}
+        submitting={crud.guardando}
       >
-        <Form
-          onSubmit={guardar}
-          generalError={erroresForm.general?.[0]}
-        >
-          <TipoCambioTurnoForm
-            form={form}
-            setForm={setForm}
-            errors={erroresForm}
-          />
-
-          <FormActions
-            onCancel={cerrarModal}
-            submitting={guardando}
-          />
-        </Form>
-      </Modal>
-
+        <TipoCambioTurnoForm form={crud.form} setForm={crud.setForm} errors={crud.erroresForm} />
+      </FormModal>
     </PageContainer>
   );
 }

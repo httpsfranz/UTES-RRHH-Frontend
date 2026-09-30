@@ -1,142 +1,84 @@
-import { FileText, Plus } from 'lucide-react';
-import { useCrudResource } from '../../hooks/useCrudResource';
-import Modal from '../../components/Modal';
+import { Scale, Plus } from 'lucide-react';
+import { formModel, useCrudResource } from '../../hooks/useCrudResource';
+import { validador, codigo, requerido } from '../../utils/validaciones';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
 import SearchInput from '../../components/ui/SearchInput';
 import Alert from '../../components/ui/Alert';
-import LoadingState from '../../components/ui/LoadingState';
-import EmptyState from '../../components/ui/EmptyState';
-import CardGrid from '../../components/ui/CardGrid';
-import EntityCard from '../../components/ui/EntityCard';
-import Form from '../../components/ui/Form';
-import FormActions from '../../components/ui/FormActions';
+import EntityList from '../../components/ui/EntityList';
+import FormModal from '../../components/ui/FormModal';
 import RegimenLaboralForm from './RegimenLaboralForm';
 
-const campoVacio = {
-  RegimenLaboralCodigo: '',
-  RegimenLaboralNombre: '',
-  RegimenLaboralBaseLegal: '',
-  RegimenLaboralDescripcion: '',
-  RegimenLaboralEstado: true,
-};
+const { emptyForm, mapToForm } = formModel({
+  RegimenLaboralCodigo: 'codigo',
+  RegimenLaboralNombre: 'nombre',
+  RegimenLaboralBaseLegal: 'base_legal',
+  RegimenLaboralDescripcion: 'descripcion',
+});
 
-function mapToForm(regimen) {
-  return {
-    RegimenLaboralCodigo: regimen.codigo ?? '',
-    RegimenLaboralNombre: regimen.nombre ?? '',
-    RegimenLaboralBaseLegal: regimen.base_legal ?? '',
-    RegimenLaboralDescripcion: regimen.descripcion ?? '',
-    RegimenLaboralEstado: regimen.activo ?? true,
-  };
-}
+const validate = validador({
+  RegimenLaboralCodigo: [requerido, codigo],
+  RegimenLaboralNombre: [requerido],
+});
+
+const columns = [
+  { key: 'codigo', header: 'Código' },
+  { key: 'nombre', header: 'Nombre' },
+  { key: 'base_legal', header: 'Base legal' },
+];
+
+const card = (item) => ({
+  title: item.nombre,
+  meta: [item.base_legal, item.descripcion],
+  footer: item.codigo,
+});
 
 export default function RegimenLaboralPage() {
-  const {
-    items: regimenes,
-    loading,
-    error,
-    buscar,
-    setBuscar,
-    cargar,
-    modalOpen,
-    editando,
-    form,
-    setForm,
-    erroresForm,
-    guardando,
-    abrirCrear,
-    abrirEditar,
-    cerrarModal,
-    guardar,
-    desactivar,
-  } = useCrudResource({
+  const crud = useCrudResource({
     endpoint: '/regimenes-laborales',
-    emptyForm: campoVacio,
+    emptyForm,
     mapToForm,
-    deactivateErrorMessage:
-      'No se pudo desactivar el régimen laboral.',
+    validate,
+    estadoKey: 'RegimenLaboralEstado',
+    buildConfirmMessage: (item) => `¿Desactivar "${item.nombre}"?`,
   });
 
   return (
     <PageContainer>
-      <PageHeader
-        title="Regímenes Laborales"
-        subtitle="Personal · Régimen laboral"
-      >
-        <Button onClick={abrirCrear} icon={Plus}>
+      <PageHeader title="Regímenes laborales" subtitle="Personal · Régimen laboral">
+        <Button onClick={crud.abrirCrear} icon={Plus}>
           Nuevo régimen
         </Button>
       </PageHeader>
 
-      <SearchInput
-        value={buscar}
-        onChange={setBuscar}
-        onSubmit={() => cargar()}
+      <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />
+
+      <Alert>{crud.error}</Alert>
+
+      <EntityList
+        items={crud.items}
+        total={crud.total}
+        loading={crud.loading}
+        loadingMessage="Cargando regímenes laborales…"
+        emptyIcon={Scale}
+        emptyMessage="No hay regímenes laborales registrados todavía."
+        columns={columns}
+        card={card}
+        onEdit={crud.abrirEditar}
+        onToggle={crud.alternarEstado}
       />
 
-      <Alert>{error}</Alert>
-
-      {loading ? (
-        <LoadingState message="Cargando regímenes laborales…" />
-      ) : regimenes.length === 0 ? (
-        <EmptyState
-          icon={FileText}
-          message="No hay regímenes laborales registrados todavía."
-        />
-      ) : (
-        <CardGrid>
-          {regimenes.map((regimen) => (
-            <EntityCard
-              key={regimen.id}
-              icon={FileText}
-              active={regimen.activo}
-              title={regimen.nombre}
-              meta={[
-                regimen.codigo &&
-                  `Código: ${regimen.codigo}`,
-                regimen.base_legal &&
-                  `Base legal: ${regimen.base_legal}`,
-                regimen.descripcion,
-              ].filter(Boolean)}
-              footer={`ID: ${regimen.id}`}
-              onEdit={() => abrirEditar(regimen)}
-              onToggle={
-                regimen.activo
-                  ? () => desactivar(regimen)
-                  : undefined
-              }
-            />
-          ))}
-        </CardGrid>
-      )}
-
-      <Modal
-        open={modalOpen}
-        onClose={cerrarModal}
-        title={
-          editando
-            ? 'Editar régimen laboral'
-            : 'Nuevo régimen laboral'
-        }
+      <FormModal
+        open={crud.modalOpen}
+        onClose={crud.cerrarModal}
+        title={crud.editando ? 'Editar régimen laboral' : 'Nuevo régimen laboral'}
+        onSubmit={crud.guardar}
+        error={crud.erroresForm.general?.[0]}
+        submitting={crud.guardando}
       >
-        <Form
-          onSubmit={guardar}
-          generalError={erroresForm.general?.[0]}
-        >
-          <RegimenLaboralForm
-            form={form}
-            setForm={setForm}
-            errors={erroresForm}
-          />
-
-          <FormActions
-            onCancel={cerrarModal}
-            submitting={guardando}
-          />
-        </Form>
-      </Modal>
+        <RegimenLaboralForm form={crud.form} setForm={crud.setForm} errors={crud.erroresForm} />
+      </FormModal>
     </PageContainer>
   );
 }

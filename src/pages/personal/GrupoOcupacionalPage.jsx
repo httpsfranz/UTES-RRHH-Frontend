@@ -1,87 +1,83 @@
-import { Plus, Layers } from 'lucide-react';
-import { useCrudResource } from '../../hooks/useCrudResource';
-import Modal from '../../components/Modal';
+import { Users, Plus } from 'lucide-react';
+import { formModel, useCrudResource } from '../../hooks/useCrudResource';
+import { validador, codigo, requerido } from '../../utils/validaciones';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
 import SearchInput from '../../components/ui/SearchInput';
 import Alert from '../../components/ui/Alert';
-import LoadingState from '../../components/ui/LoadingState';
-import EmptyState from '../../components/ui/EmptyState';
-import CardGrid from '../../components/ui/CardGrid';
-import EntityCard from '../../components/ui/EntityCard';
-import Form from '../../components/ui/Form';
-import FormActions from '../../components/ui/FormActions';
+import EntityList from '../../components/ui/EntityList';
+import FormModal from '../../components/ui/FormModal';
 import GrupoOcupacionalForm from './GrupoOcupacionalForm';
 
-const campoVacio = {
-  GrupoOcupacionalCodigo: '',
-  GrupoOcupacionalNombre: '',
-  GrupoOcupacionalDescripcion: '',
-};
+const { emptyForm, mapToForm } = formModel({
+  GrupoOcupacionalCodigo: 'codigo',
+  GrupoOcupacionalNombre: 'nombre',
+  GrupoOcupacionalDescripcion: 'descripcion',
+});
 
-function mapToForm(grupo) {
-  return {
-    GrupoOcupacionalCodigo: grupo.codigo ?? '',
-    GrupoOcupacionalNombre: grupo.nombre ?? '',
-    GrupoOcupacionalDescripcion: grupo.descripcion ?? '',
-  };
-}
+const validate = validador({
+  GrupoOcupacionalCodigo: [requerido, codigo],
+  GrupoOcupacionalNombre: [requerido],
+});
+
+const columns = [
+  { key: 'codigo', header: 'Código' },
+  { key: 'nombre', header: 'Nombre' },
+  { key: 'descripcion', header: 'Descripción' },
+];
+
+const card = (item) => ({
+  title: item.nombre,
+  meta: [item.descripcion],
+  footer: item.codigo,
+});
 
 export default function GrupoOcupacionalPage() {
-  const {
-    items: grupos, loading, error, buscar, setBuscar, cargar, modalOpen, editando,
-    form, setForm, erroresForm, guardando, abrirCrear, abrirEditar, cerrarModal, guardar, desactivar,
-  } = useCrudResource({
+  const crud = useCrudResource({
     endpoint: '/grupos-ocupacionales',
-    emptyForm: campoVacio,
+    emptyForm,
     mapToForm,
-    deactivateErrorMessage: 'No se pudo desactivar el grupo ocupacional.',
+    validate,
+    estadoKey: 'GrupoOcupacionalEstado',
+    buildConfirmMessage: (item) => `¿Desactivar "${item.nombre}"?`,
   });
 
   return (
     <PageContainer>
       <PageHeader title="Grupos ocupacionales" subtitle="Personal · Grupo ocupacional">
-        <Button onClick={abrirCrear} icon={Plus}>
+        <Button onClick={crud.abrirCrear} icon={Plus}>
           Nuevo grupo
         </Button>
       </PageHeader>
 
-      <SearchInput value={buscar} onChange={setBuscar} onSubmit={() => cargar()} />
+      <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />
 
-      <Alert>{error}</Alert>
+      <Alert>{crud.error}</Alert>
 
-      {loading ? (
-        <LoadingState message="Cargando grupos ocupacionales…" />
-      ) : grupos.length === 0 ? (
-        <EmptyState icon={Layers} message="No hay grupos ocupacionales registrados todavía." />
-      ) : (
-        <CardGrid>
-          {grupos.map((grupo) => (
-            <EntityCard
-              key={grupo.id}
-              icon={Layers}
-              active={grupo.activo}
-              title={grupo.nombre}
-              meta={[grupo.descripcion]}
-              footer={grupo.codigo}
-              onEdit={() => abrirEditar(grupo)}
-              onToggle={grupo.activo ? () => desactivar(grupo) : undefined}
-            />
-          ))}
-        </CardGrid>
-      )}
+      <EntityList
+        items={crud.items}
+        total={crud.total}
+        loading={crud.loading}
+        loadingMessage="Cargando grupos ocupacionales…"
+        emptyIcon={Users}
+        emptyMessage="No hay grupos ocupacionales registrados todavía."
+        columns={columns}
+        card={card}
+        onEdit={crud.abrirEditar}
+        onToggle={crud.alternarEstado}
+      />
 
-      <Modal
-        open={modalOpen}
-        onClose={cerrarModal}
-        title={editando ? 'Editar grupo ocupacional' : 'Nuevo grupo ocupacional'}
+      <FormModal
+        open={crud.modalOpen}
+        onClose={crud.cerrarModal}
+        title={crud.editando ? 'Editar grupo ocupacional' : 'Nuevo grupo ocupacional'}
+        onSubmit={crud.guardar}
+        error={crud.erroresForm.general?.[0]}
+        submitting={crud.guardando}
       >
-        <Form onSubmit={guardar} generalError={erroresForm.general?.[0]}>
-          <GrupoOcupacionalForm form={form} setForm={setForm} errors={erroresForm} />
-          <FormActions onCancel={cerrarModal} submitting={guardando} />
-        </Form>
-      </Modal>
+        <GrupoOcupacionalForm form={crud.form} setForm={crud.setForm} errors={crud.erroresForm} />
+      </FormModal>
     </PageContainer>
   );
 }

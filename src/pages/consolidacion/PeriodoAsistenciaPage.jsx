@@ -1,148 +1,88 @@
-import { CalendarDays, Plus } from 'lucide-react';
-import { useCrudResource } from '../../hooks/useCrudResource';
-import Modal from '../../components/Modal';
+import { CalendarRange, Plus } from 'lucide-react';
+import { formModel, useCrudResource } from '../../hooks/useCrudResource';
+import { validador, entero, fecha, noAnteriorA, requerido, unoDe } from '../../utils/validaciones';
+import { ESTADOS_PERIODO, MESES, etiquetaDe, valoresDe } from '../../utils/opciones';
+import { formatoFecha } from '../../utils/formato';
+import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
 import SearchInput from '../../components/ui/SearchInput';
 import Alert from '../../components/ui/Alert';
-import LoadingState from '../../components/ui/LoadingState';
-import EmptyState from '../../components/ui/EmptyState';
-import CardGrid from '../../components/ui/CardGrid';
-import EntityCard from '../../components/ui/EntityCard';
-import Form from '../../components/ui/Form';
-import FormActions from '../../components/ui/FormActions';
+import EntityList from '../../components/ui/EntityList';
+import FormModal from '../../components/ui/FormModal';
 import PeriodoAsistenciaForm from './PeriodoAsistenciaForm';
 
-const campoVacio = {
-  anio: '',
-  mes: '',
-  fechaInicio: '',
-  fechaFin: '',
-  estado: 'ABIERTO',
-};
+const { emptyForm, mapToForm } = formModel({
+  PeriodoAsistenciaAnio: 'anio',
+  PeriodoAsistenciaMes: 'mes',
+  PeriodoAsistenciaFechaInicio: 'fecha_inicio',
+  PeriodoAsistenciaFechaFin: 'fecha_fin',
+  PeriodoAsistenciaEstado: ['estado', 'ABIERTO'],
+});
 
-function mapToForm(periodo) {
-  return {
-    anio: periodo.anio ?? '',
-    mes: periodo.mes ?? '',
-    fechaInicio: periodo.fechaInicio ?? '',
-    fechaFin: periodo.fechaFin ?? '',
-    estado: periodo.estado ?? 'ABIERTO',
-  };
-}
+const validate = validador({
+  PeriodoAsistenciaAnio: [requerido, entero({ min: 2000, max: 2100 })],
+  PeriodoAsistenciaMes: [requerido, unoDe(valoresDe(MESES))],
+  PeriodoAsistenciaFechaInicio: [requerido, fecha],
+  PeriodoAsistenciaFechaFin: [requerido, fecha, noAnteriorA('PeriodoAsistenciaFechaInicio', 'La fecha de fin no puede ser anterior a la de inicio.')],
+  PeriodoAsistenciaEstado: [requerido, unoDe(valoresDe(ESTADOS_PERIODO))],
+});
 
-function mapToPayload(form) {
-  return {
-    PeriodoAsistenciaAnio: form.anio,
-    PeriodoAsistenciaMes: form.mes,
-    PeriodoAsistenciaFechaInicio: form.fechaInicio,
-    PeriodoAsistenciaFechaFin: form.fechaFin,
-    PeriodoAsistenciaEstado: form.estado,
-  };
-}
+const columns = [
+  { key: 'periodo', header: 'Período', render: (item) => `${item.anio}-${String(item.mes).padStart(2, '0')}` },
+  { key: 'fecha_inicio', header: 'Inicio', render: (item) => formatoFecha(item.fecha_inicio) },
+  { key: 'fecha_fin', header: 'Fin', render: (item) => formatoFecha(item.fecha_fin) },
+  { key: 'estado', header: 'Estado', render: (item) => etiquetaDe(ESTADOS_PERIODO, item.estado) },
+];
+
+const card = (item) => ({
+  title: `${etiquetaDe(MESES, item.mes)} ${item.anio}`,
+  meta: [`Del ${formatoFecha(item.fecha_inicio)} al ${formatoFecha(item.fecha_fin)}`, item.fecha_cierre && `Cerrado el ${formatoFecha(item.fecha_cierre)}`],
+  footer: etiquetaDe(ESTADOS_PERIODO, item.estado),
+});
 
 export default function PeriodoAsistenciaPage() {
-  const {
-    items: periodos,
-    loading,
-    error,
-    buscar,
-    setBuscar,
-    cargar,
-    modalOpen,
-    editando,
-    form,
-    setForm,
-    erroresForm,
-    guardando,
-    abrirCrear,
-    abrirEditar,
-    cerrarModal,
-    guardar,
-  } = useCrudResource({
+  const crud = useCrudResource({
     endpoint: '/periodos-asistencia',
-    emptyForm: campoVacio,
+    emptyForm,
     mapToForm,
-    mapToPayload,
-    searchParam: 'buscar',
-    saveErrorMessage:
-      'No se pudo guardar el período de asistencia.',
+    validate,
   });
 
   return (
-    <div className="p-6">
-      <PageHeader
-        title="Períodos de Asistencia"
-        subtitle="Consolidación · Período de asistencia"
-      >
-        <Button onClick={abrirCrear} icon={Plus}>
+    <PageContainer>
+      <PageHeader title="Períodos de asistencia" subtitle="Consolidación · Período de asistencia">
+        <Button onClick={crud.abrirCrear} icon={Plus}>
           Nuevo período
         </Button>
       </PageHeader>
 
-      <SearchInput
-        value={buscar}
-        onChange={setBuscar}
-        onSubmit={() => cargar()}
+      <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />
+
+      <Alert>{crud.error}</Alert>
+
+      <EntityList
+        items={crud.items}
+        total={crud.total}
+        loading={crud.loading}
+        loadingMessage="Cargando períodos de asistencia…"
+        emptyIcon={CalendarRange}
+        emptyMessage="No hay períodos de asistencia registrados todavía."
+        columns={columns}
+        card={card}
+        onEdit={crud.abrirEditar}
       />
 
-      <Alert>{error}</Alert>
-
-      {loading ? (
-        <LoadingState message="Cargando períodos de asistencia…" />
-      ) : periodos.length === 0 ? (
-        <EmptyState
-          icon={CalendarDays}
-          message="No hay períodos de asistencia registrados todavía."
-        />
-      ) : (
-        <CardGrid>
-          {periodos.map((periodo) => (
-            <EntityCard
-              key={periodo.id}
-              icon={CalendarDays}
-              active={periodo.estado === 'ABIERTO'}
-              title={`${periodo.anio} - ${String(periodo.mes).padStart(2, '0')}`}
-              meta={[
-                periodo.fechaInicio &&
-                  `Inicio: ${periodo.fechaInicio}`,
-                periodo.fechaFin &&
-                  `Fin: ${periodo.fechaFin}`,
-                periodo.estado &&
-                  `Estado: ${periodo.estado}`,
-              ]}
-              footer={`ID: ${periodo.id}`}
-              onEdit={() => abrirEditar(periodo)}
-            />
-          ))}
-        </CardGrid>
-      )}
-
-      <Modal
-        open={modalOpen}
-        onClose={cerrarModal}
-        title={
-          editando
-            ? 'Editar período de asistencia'
-            : 'Nuevo período de asistencia'
-        }
+      <FormModal
+        open={crud.modalOpen}
+        onClose={crud.cerrarModal}
+        title={crud.editando ? 'Editar período de asistencia' : 'Nuevo período de asistencia'}
+        onSubmit={crud.guardar}
+        error={crud.erroresForm.general?.[0]}
+        submitting={crud.guardando}
       >
-        <Form
-          onSubmit={guardar}
-          generalError={erroresForm.general?.[0]}
-        >
-          <PeriodoAsistenciaForm
-            form={form}
-            setForm={setForm}
-            errors={erroresForm}
-          />
-
-          <FormActions
-            onCancel={cerrarModal}
-            submitting={guardando}
-          />
-        </Form>
-      </Modal>
-    </div>
+        <PeriodoAsistenciaForm form={crud.form} setForm={crud.setForm} errors={crud.erroresForm} />
+      </FormModal>
+    </PageContainer>
   );
 }

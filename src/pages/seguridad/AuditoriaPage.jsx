@@ -1,15 +1,14 @@
 import { History } from 'lucide-react';
 import { useCrudResource } from '../../hooks/useCrudResource';
+import { formatoFechaHora } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import SearchInput from '../../components/ui/SearchInput';
 import Alert from '../../components/ui/Alert';
-import LoadingState from '../../components/ui/LoadingState';
-import EmptyState from '../../components/ui/EmptyState';
-import Table from '../../components/ui/Table';
+import EntityList from '../../components/ui/EntityList';
 
-const columnas = [
-  { key: 'fecha_hora', header: 'Fecha y hora' },
+const columns = [
+  { key: 'fecha_hora', header: 'Fecha y hora', render: (item) => formatoFechaHora(item.fecha_hora) },
   { key: 'usuario_id', header: 'Usuario' },
   { key: 'esquema', header: 'Esquema' },
   { key: 'tabla', header: 'Tabla' },
@@ -19,12 +18,13 @@ const columnas = [
 ];
 
 // Solo lectura: nadie crea ni edita auditoria via API (ver AuditoriaController).
-// Se reutiliza el hook solo para cargar y filtrar por tabla.
+// Se reutiliza el hook solo para cargar y filtrar por tabla; `limite` evita traer miles de filas.
 export default function AuditoriaPage() {
-  const { items, loading, error, buscar, setBuscar, cargar } = useCrudResource({
+  const crud = useCrudResource({
     endpoint: '/auditoria',
     searchParam: 'tabla',
     emptyForm: {},
+    limite: 100,
   });
 
   return (
@@ -32,21 +32,23 @@ export default function AuditoriaPage() {
       <PageHeader title="Auditoría" subtitle="Seguridad · Auditoría" />
 
       <SearchInput
-        value={buscar}
-        onChange={setBuscar}
-        onSubmit={() => cargar()}
+        value={crud.buscar}
+        onChange={crud.setBuscar}
+        onSubmit={() => crud.cargar()}
         placeholder="Filtrar por tabla…"
       />
 
-      <Alert>{error}</Alert>
+      <Alert>{crud.error}</Alert>
 
-      {loading ? (
-        <LoadingState message="Cargando auditoría…" />
-      ) : items.length === 0 ? (
-        <EmptyState icon={History} message="No hay registros de auditoría." />
-      ) : (
-        <Table columns={columnas} rows={items} />
-      )}
+      <EntityList
+        items={crud.items}
+        total={crud.total}
+        loading={crud.loading}
+        loadingMessage="Cargando auditoría…"
+        emptyIcon={History}
+        emptyMessage="No hay registros de auditoría."
+        columns={columns}
+      />
     </PageContainer>
   );
 }

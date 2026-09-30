@@ -1,98 +1,89 @@
-import { FileBadge, Plus } from 'lucide-react';
-import { useCrudResource } from '../../hooks/useCrudResource';
-import Modal from '../../components/Modal';
+import { FileCheck, Plus } from 'lucide-react';
+import { formModel, useCrudResource } from '../../hooks/useCrudResource';
+import { validador, codigo, entero, requerido } from '../../utils/validaciones';
+import { siNo } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
 import SearchInput from '../../components/ui/SearchInput';
 import Alert from '../../components/ui/Alert';
-import LoadingState from '../../components/ui/LoadingState';
-import EmptyState from '../../components/ui/EmptyState';
-import CardGrid from '../../components/ui/CardGrid';
-import EntityCard from '../../components/ui/EntityCard';
-import Form from '../../components/ui/Form';
-import FormActions from '../../components/ui/FormActions';
+import EntityList from '../../components/ui/EntityList';
+import FormModal from '../../components/ui/FormModal';
 import TipoLicenciaForm from './TipoLicenciaForm';
 
-const campoVacio = {
-  TipoLicenciaCodigo: '',
-  TipoLicenciaNombre: '',
-  TipoLicenciaDescripcion: '',
-  TipoLicenciaMaximoDias: '',
-  TipoLicenciaBaseLegal: '',
-  TipoLicenciaConGoce: false,
-};
+const { emptyForm, mapToForm } = formModel({
+  TipoLicenciaCodigo: 'codigo',
+  TipoLicenciaNombre: 'nombre',
+  TipoLicenciaDescripcion: 'descripcion',
+  TipoLicenciaMaximoDias: 'maximo_dias',
+  TipoLicenciaBaseLegal: 'base_legal',
+  TipoLicenciaConGoce: ['con_goce', true],
+});
 
-function mapToForm(item) {
-  return {
-    TipoLicenciaCodigo: item.codigo ?? '',
-    TipoLicenciaNombre: item.nombre ?? '',
-    TipoLicenciaDescripcion: item.descripcion ?? '',
-    TipoLicenciaMaximoDias: item.maximo_dias ?? '',
-    TipoLicenciaBaseLegal: item.base_legal ?? '',
-    TipoLicenciaConGoce: Boolean(item.con_goce),
-  };
-}
+const validate = validador({
+  TipoLicenciaCodigo: [requerido, codigo],
+  TipoLicenciaNombre: [requerido],
+  TipoLicenciaMaximoDias: [entero({ min: 1, max: 3650 })],
+});
+
+const columns = [
+  { key: 'codigo', header: 'Código' },
+  { key: 'nombre', header: 'Nombre' },
+  { key: 'con_goce', header: 'Con goce', render: (item) => siNo(item.con_goce) },
+  { key: 'maximo_dias', header: 'Máx. días' },
+];
+
+const card = (item) => ({
+  title: item.nombre,
+  meta: [item.con_goce ? 'Con goce de haber' : 'Sin goce de haber', item.maximo_dias && `Hasta ${item.maximo_dias} días`, item.base_legal],
+  footer: item.codigo,
+});
 
 export default function TipoLicenciaPage() {
-  const {
-    items, loading, error, buscar, setBuscar, cargar, modalOpen, editando,
-    form, setForm, erroresForm, guardando, abrirCrear, abrirEditar, cerrarModal, guardar, desactivar,
-  } = useCrudResource({
+  const crud = useCrudResource({
     endpoint: '/tipos-licencia',
-    emptyForm: campoVacio,
+    emptyForm,
     mapToForm,
-    deactivateErrorMessage: 'No se pudo desactivar el tipo de licencia.',
+    validate,
+    estadoKey: 'TipoLicenciaEstado',
+    buildConfirmMessage: (item) => `¿Desactivar "${item.nombre}"?`,
   });
 
   return (
     <PageContainer>
       <PageHeader title="Tipos de licencia" subtitle="Solicitudes · Tipo de licencia">
-        <Button onClick={abrirCrear} icon={Plus}>
-          Nuevo tipo de licencia
+        <Button onClick={crud.abrirCrear} icon={Plus}>
+          Nuevo tipo
         </Button>
       </PageHeader>
 
-      <SearchInput value={buscar} onChange={setBuscar} onSubmit={() => cargar()} />
+      <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />
 
-      <Alert>{error}</Alert>
+      <Alert>{crud.error}</Alert>
 
-      {loading ? (
-        <LoadingState message="Cargando tipos de licencia…" />
-      ) : items.length === 0 ? (
-        <EmptyState icon={FileBadge} message="No hay tipos de licencia registrados todavía." />
-      ) : (
-        <CardGrid>
-          {items.map((item) => (
-            <EntityCard
-              key={item.id}
-              icon={FileBadge}
-              active={item.activo}
-              title={item.nombre}
-              meta={[
-                item.descripcion,
-                item.con_goce ? 'Con goce' : 'Sin goce',
-                item.maximo_dias && `Máximo ${item.maximo_dias} días`,
-                item.base_legal,
-              ]}
-              footer={item.codigo}
-              onEdit={() => abrirEditar(item)}
-              onToggle={item.activo ? () => desactivar(item) : undefined}
-            />
-          ))}
-        </CardGrid>
-      )}
+      <EntityList
+        items={crud.items}
+        total={crud.total}
+        loading={crud.loading}
+        loadingMessage="Cargando tipos de licencia…"
+        emptyIcon={FileCheck}
+        emptyMessage="No hay tipos de licencia registrados todavía."
+        columns={columns}
+        card={card}
+        onEdit={crud.abrirEditar}
+        onToggle={crud.alternarEstado}
+      />
 
-      <Modal
-        open={modalOpen}
-        onClose={cerrarModal}
-        title={editando ? 'Editar tipo de licencia' : 'Nuevo tipo de licencia'}
+      <FormModal
+        open={crud.modalOpen}
+        onClose={crud.cerrarModal}
+        title={crud.editando ? 'Editar tipo de licencia' : 'Nuevo tipo de licencia'}
+        onSubmit={crud.guardar}
+        error={crud.erroresForm.general?.[0]}
+        submitting={crud.guardando}
       >
-        <Form onSubmit={guardar} generalError={erroresForm.general?.[0]}>
-          <TipoLicenciaForm form={form} setForm={setForm} errors={erroresForm} />
-          <FormActions onCancel={cerrarModal} submitting={guardando} />
-        </Form>
-      </Modal>
+        <TipoLicenciaForm form={crud.form} setForm={crud.setForm} errors={crud.erroresForm} />
+      </FormModal>
     </PageContainer>
   );
 }

@@ -1,15 +1,14 @@
 import { Plug } from 'lucide-react';
 import { useCrudResource } from '../../hooks/useCrudResource';
+import { formatoFechaHora } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import SearchInput from '../../components/ui/SearchInput';
 import Alert from '../../components/ui/Alert';
-import LoadingState from '../../components/ui/LoadingState';
-import EmptyState from '../../components/ui/EmptyState';
-import Table from '../../components/ui/Table';
+import EntityList from '../../components/ui/EntityList';
 
-const columnas = [
-  { key: 'fecha_hora', header: 'Fecha y hora' },
+const columns = [
+  { key: 'fecha_hora', header: 'Fecha y hora', render: (item) => formatoFechaHora(item.fecha_hora) },
   { key: 'sistema_externo', header: 'Sistema' },
   { key: 'operacion', header: 'Operación' },
   { key: 'direccion', header: 'Dirección' },
@@ -21,10 +20,11 @@ const columnas = [
 // Solo lectura: los escriben los procesos internos (ver LogIntegracionController),
 // asi que no hay modal ni acciones; se reutiliza el hook solo para cargar y filtrar.
 export default function LogIntegracionPage() {
-  const { items, loading, error, buscar, setBuscar, cargar } = useCrudResource({
+  const crud = useCrudResource({
     endpoint: '/logs-integracion',
     searchParam: 'sistema_externo',
     emptyForm: {},
+    limite: 100,
   });
 
   return (
@@ -32,21 +32,23 @@ export default function LogIntegracionPage() {
       <PageHeader title="Logs de integración" subtitle="Soporte · Log de integración" />
 
       <SearchInput
-        value={buscar}
-        onChange={setBuscar}
-        onSubmit={() => cargar()}
+        value={crud.buscar}
+        onChange={crud.setBuscar}
+        onSubmit={() => crud.cargar()}
         placeholder="Filtrar por sistema externo…"
       />
 
-      <Alert>{error}</Alert>
+      <Alert>{crud.error}</Alert>
 
-      {loading ? (
-        <LoadingState message="Cargando logs de integración…" />
-      ) : items.length === 0 ? (
-        <EmptyState icon={Plug} message="No hay logs de integración registrados." />
-      ) : (
-        <Table columns={columnas} rows={items} />
-      )}
+      <EntityList
+        items={crud.items}
+        total={crud.total}
+        loading={crud.loading}
+        loadingMessage="Cargando logs de integración…"
+        emptyIcon={Plug}
+        emptyMessage="No hay logs de integración registrados."
+        columns={columns}
+      />
     </PageContainer>
   );
 }

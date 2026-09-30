@@ -1,89 +1,85 @@
-import { Plus, GraduationCap } from 'lucide-react';
-import { useCrudResource } from '../../hooks/useCrudResource';
-import Modal from '../../components/Modal';
+import { GraduationCap, Plus } from 'lucide-react';
+import { formModel, useCrudResource } from '../../hooks/useCrudResource';
+import { validador, codigo, requerido } from '../../utils/validaciones';
+import { siNo } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
 import SearchInput from '../../components/ui/SearchInput';
 import Alert from '../../components/ui/Alert';
-import LoadingState from '../../components/ui/LoadingState';
-import EmptyState from '../../components/ui/EmptyState';
-import CardGrid from '../../components/ui/CardGrid';
-import EntityCard from '../../components/ui/EntityCard';
-import Form from '../../components/ui/Form';
-import FormActions from '../../components/ui/FormActions';
+import EntityList from '../../components/ui/EntityList';
+import FormModal from '../../components/ui/FormModal';
 import ProfesionForm from './ProfesionForm';
 
-const campoVacio = {
-  ProfesionCodigo: '',
-  ProfesionNombre: '',
-  ProfesionDescripcion: '',
-  ProfesionRequiereColegiatura: false,
-};
+const { emptyForm, mapToForm } = formModel({
+  ProfesionCodigo: 'codigo',
+  ProfesionNombre: 'nombre',
+  ProfesionDescripcion: 'descripcion',
+  ProfesionRequiereColegiatura: ['requiere_colegiatura', false],
+});
 
-function mapToForm(profesion) {
-  return {
-    ProfesionCodigo: profesion.codigo ?? '',
-    ProfesionNombre: profesion.nombre ?? '',
-    ProfesionDescripcion: profesion.descripcion ?? '',
-    ProfesionRequiereColegiatura: Boolean(profesion.requiere_colegiatura),
-  };
-}
+const validate = validador({
+  ProfesionCodigo: [requerido, codigo],
+  ProfesionNombre: [requerido],
+});
+
+const columns = [
+  { key: 'codigo', header: 'Código' },
+  { key: 'nombre', header: 'Nombre' },
+  { key: 'requiere_colegiatura', header: 'Colegiatura', render: (item) => siNo(item.requiere_colegiatura) },
+];
+
+const card = (item) => ({
+  title: item.nombre,
+  meta: [item.descripcion, item.requiere_colegiatura && 'Requiere colegiatura'],
+  footer: item.codigo,
+});
 
 export default function ProfesionPage() {
-  const {
-    items: profesiones, loading, error, buscar, setBuscar, cargar, modalOpen, editando,
-    form, setForm, erroresForm, guardando, abrirCrear, abrirEditar, cerrarModal, guardar, desactivar,
-  } = useCrudResource({
+  const crud = useCrudResource({
     endpoint: '/profesiones',
-    emptyForm: campoVacio,
+    emptyForm,
     mapToForm,
-    deactivateErrorMessage: 'No se pudo desactivar la profesión.',
+    validate,
+    estadoKey: 'ProfesionEstado',
+    buildConfirmMessage: (item) => `¿Desactivar "${item.nombre}"?`,
   });
 
   return (
     <PageContainer>
       <PageHeader title="Profesiones" subtitle="Personal · Profesión">
-        <Button onClick={abrirCrear} icon={Plus}>
+        <Button onClick={crud.abrirCrear} icon={Plus}>
           Nueva profesión
         </Button>
       </PageHeader>
 
-      <SearchInput value={buscar} onChange={setBuscar} onSubmit={() => cargar()} />
+      <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />
 
-      <Alert>{error}</Alert>
+      <Alert>{crud.error}</Alert>
 
-      {loading ? (
-        <LoadingState message="Cargando profesiones…" />
-      ) : profesiones.length === 0 ? (
-        <EmptyState icon={GraduationCap} message="No hay profesiones registradas todavía." />
-      ) : (
-        <CardGrid>
-          {profesiones.map((profesion) => (
-            <EntityCard
-              key={profesion.id}
-              icon={GraduationCap}
-              active={profesion.activo}
-              title={profesion.nombre}
-              meta={[profesion.descripcion, profesion.requiere_colegiatura && 'Requiere colegiatura']}
-              footer={profesion.codigo}
-              onEdit={() => abrirEditar(profesion)}
-              onToggle={profesion.activo ? () => desactivar(profesion) : undefined}
-            />
-          ))}
-        </CardGrid>
-      )}
+      <EntityList
+        items={crud.items}
+        total={crud.total}
+        loading={crud.loading}
+        loadingMessage="Cargando profesiones…"
+        emptyIcon={GraduationCap}
+        emptyMessage="No hay profesiones registradas todavía."
+        columns={columns}
+        card={card}
+        onEdit={crud.abrirEditar}
+        onToggle={crud.alternarEstado}
+      />
 
-      <Modal
-        open={modalOpen}
-        onClose={cerrarModal}
-        title={editando ? 'Editar profesión' : 'Nueva profesión'}
+      <FormModal
+        open={crud.modalOpen}
+        onClose={crud.cerrarModal}
+        title={crud.editando ? 'Editar profesión' : 'Nueva profesión'}
+        onSubmit={crud.guardar}
+        error={crud.erroresForm.general?.[0]}
+        submitting={crud.guardando}
       >
-        <Form onSubmit={guardar} generalError={erroresForm.general?.[0]}>
-          <ProfesionForm form={form} setForm={setForm} errors={erroresForm} />
-          <FormActions onCancel={cerrarModal} submitting={guardando} />
-        </Form>
-      </Modal>
+        <ProfesionForm form={crud.form} setForm={crud.setForm} errors={crud.erroresForm} />
+      </FormModal>
     </PageContainer>
   );
 }

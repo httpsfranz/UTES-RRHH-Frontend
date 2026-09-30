@@ -10,25 +10,35 @@ export default function Select({
   label,
   icon,
   options,
+  required,
+  disabled,
   placeholder = 'Selecciona…',
 }) {
   const value = form[name] ?? '';
   const error = errors[name]?.[0];
+  // Si ya existe una opcion "vacia" propia ("Todas las microredes") no se agrega el placeholder.
+  const tieneOpcionVacia = options.some((option) => option.value === '');
 
   return (
-    <FieldShell name={name} label={label} icon={icon} error={error}>
+    <FieldShell name={name} label={label} icon={icon} required={required} error={error}>
       <select
         id={name}
         name={name}
         value={value}
+        disabled={disabled}
+        aria-required={required || undefined}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? `${name}-error` : undefined}
         onChange={(event) => setForm((f) => ({ ...f, [name]: event.target.value }))}
-        className={`w-full rounded-xl border border-line bg-surface py-2 ${
+        className={`w-full rounded-xl border bg-surface py-2 ${error ? 'border-red-400' : 'border-line'} ${
           icon ? 'pl-9' : 'pl-3'
-        } pr-3 text-sm text-heading outline-none transition-colors focus:border-brand focus:ring-4 focus:ring-brand/10`}
+        } pr-3 text-sm text-heading outline-none transition-colors focus:border-brand focus:ring-4 focus:ring-brand/10 disabled:opacity-60`}
       >
-        <option value="" disabled hidden>
-          {placeholder}
-        </option>
+        {!tieneOpcionVacia && (
+          <option value="" disabled hidden>
+            {placeholder}
+          </option>
+        )}
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}

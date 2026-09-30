@@ -1,143 +1,83 @@
-import { Clock3, Plus } from 'lucide-react';
-import { useCrudResource } from '../../hooks/useCrudResource';
-import Modal from '../../components/Modal';
+import { Percent, Plus } from 'lucide-react';
+import { formModel, useCrudResource } from '../../hooks/useCrudResource';
+import { validador, codigo, requerido } from '../../utils/validaciones';
+import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
 import SearchInput from '../../components/ui/SearchInput';
 import Alert from '../../components/ui/Alert';
-import LoadingState from '../../components/ui/LoadingState';
-import EmptyState from '../../components/ui/EmptyState';
-import CardGrid from '../../components/ui/CardGrid';
-import EntityCard from '../../components/ui/EntityCard';
-import Form from '../../components/ui/Form';
-import FormActions from '../../components/ui/FormActions';
+import EntityList from '../../components/ui/EntityList';
+import FormModal from '../../components/ui/FormModal';
 import TablaToleranciaForm from './TablaToleranciaForm';
 
-const campoVacio = {
-  codigo: '',
-  nombre: '',
-  descripcion: '',
-};
+const { emptyForm, mapToForm } = formModel({
+  TablaToleranciaCodigo: 'codigo',
+  TablaToleranciaNombre: 'nombre',
+  TablaToleranciaDescripcion: 'descripcion',
+});
 
-function mapToForm(tabla) {
-  return {
-    codigo: tabla.codigo ?? '',
-    nombre: tabla.nombre ?? '',
-    descripcion: tabla.descripcion ?? '',
-  };
-}
+const validate = validador({
+  TablaToleranciaCodigo: [requerido, codigo],
+  TablaToleranciaNombre: [requerido],
+});
 
-function mapToPayload(form) {
-  return {
-    TablaToleranciaCodigo: form.codigo,
-    TablaToleranciaNombre: form.nombre,
-    TablaToleranciaDescripcion: form.descripcion,
-  };
-}
+const columns = [
+  { key: 'codigo', header: 'Código' },
+  { key: 'nombre', header: 'Nombre' },
+  { key: 'descripcion', header: 'Descripción' },
+];
+
+const card = (item) => ({
+  title: item.nombre,
+  meta: [item.descripcion],
+  footer: item.codigo,
+});
 
 export default function TablaToleranciaPage() {
-  const {
-    items: tablas,
-    loading,
-    error,
-    buscar,
-    setBuscar,
-    cargar,
-    modalOpen,
-    editando,
-    form,
-    setForm,
-    erroresForm,
-    guardando,
-    abrirCrear,
-    abrirEditar,
-    cerrarModal,
-    guardar,
-    desactivar,
-  } = useCrudResource({
+  const crud = useCrudResource({
     endpoint: '/tablas-tolerancia',
-    emptyForm: campoVacio,
+    emptyForm,
     mapToForm,
-    mapToPayload,
-    deactivateErrorMessage:
-      'No se pudo desactivar la tabla de tolerancia.',
+    validate,
+    estadoKey: 'TablaToleranciaEstado',
+    buildConfirmMessage: (item) => `¿Desactivar "${item.nombre}"?`,
   });
 
   return (
-    <div className="p-6">
-      <PageHeader
-        title="Tablas de Tolerancia"
-        subtitle="Configuración · Tabla de tolerancia"
-      >
-        <Button onClick={abrirCrear} icon={Plus}>
+    <PageContainer>
+      <PageHeader title="Tablas de tolerancia" subtitle="Configuración · Tabla de tolerancia">
+        <Button onClick={crud.abrirCrear} icon={Plus}>
           Nueva tabla
         </Button>
       </PageHeader>
 
-      <SearchInput
-        value={buscar}
-        onChange={setBuscar}
-        onSubmit={() => cargar()}
+      <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />
+
+      <Alert>{crud.error}</Alert>
+
+      <EntityList
+        items={crud.items}
+        total={crud.total}
+        loading={crud.loading}
+        loadingMessage="Cargando tablas de tolerancia…"
+        emptyIcon={Percent}
+        emptyMessage="No hay tablas de tolerancia registradas todavía."
+        columns={columns}
+        card={card}
+        onEdit={crud.abrirEditar}
+        onToggle={crud.alternarEstado}
       />
 
-      <Alert>{error}</Alert>
-
-      {loading ? (
-        <LoadingState message="Cargando tablas de tolerancia…" />
-      ) : tablas.length === 0 ? (
-        <EmptyState
-          icon={Clock3}
-          message="No hay tablas de tolerancia registradas todavía."
-        />
-      ) : (
-        <CardGrid>
-          {tablas.map((tabla) => (
-            <EntityCard
-              key={tabla.id}
-              icon={Clock3}
-              active={tabla.activo}
-              title={tabla.nombre}
-              meta={[
-                tabla.codigo && `Código: ${tabla.codigo}`,
-                tabla.descripcion,
-              ]}
-              footer={`ID: ${tabla.id}`}
-              onEdit={() => abrirEditar(tabla)}
-              onToggle={
-                tabla.activo
-                  ? () => desactivar(tabla)
-                  : undefined
-              }
-            />
-          ))}
-        </CardGrid>
-      )}
-
-      <Modal
-        open={modalOpen}
-        onClose={cerrarModal}
-        title={
-          editando
-            ? 'Editar tabla de tolerancia'
-            : 'Nueva tabla de tolerancia'
-        }
+      <FormModal
+        open={crud.modalOpen}
+        onClose={crud.cerrarModal}
+        title={crud.editando ? 'Editar tabla de tolerancia' : 'Nueva tabla de tolerancia'}
+        onSubmit={crud.guardar}
+        error={crud.erroresForm.general?.[0]}
+        submitting={crud.guardando}
       >
-        <Form
-          onSubmit={guardar}
-          generalError={erroresForm.general?.[0]}
-        >
-          <TablaToleranciaForm
-            form={form}
-            setForm={setForm}
-            errors={erroresForm}
-          />
-
-          <FormActions
-            onCancel={cerrarModal}
-            submitting={guardando}
-          />
-        </Form>
-      </Modal>
-    </div>
+        <TablaToleranciaForm form={crud.form} setForm={crud.setForm} errors={crud.erroresForm} />
+      </FormModal>
+    </PageContainer>
   );
 }

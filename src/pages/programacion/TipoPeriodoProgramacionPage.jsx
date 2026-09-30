@@ -1,89 +1,85 @@
 import { CalendarRange, Plus } from 'lucide-react';
-import { useCrudResource } from '../../hooks/useCrudResource';
-import Modal from '../../components/Modal';
+import { formModel, useCrudResource } from '../../hooks/useCrudResource';
+import { validador, codigo, entero, requerido } from '../../utils/validaciones';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
 import SearchInput from '../../components/ui/SearchInput';
 import Alert from '../../components/ui/Alert';
-import LoadingState from '../../components/ui/LoadingState';
-import EmptyState from '../../components/ui/EmptyState';
-import CardGrid from '../../components/ui/CardGrid';
-import EntityCard from '../../components/ui/EntityCard';
-import Form from '../../components/ui/Form';
-import FormActions from '../../components/ui/FormActions';
+import EntityList from '../../components/ui/EntityList';
+import FormModal from '../../components/ui/FormModal';
 import TipoPeriodoProgramacionForm from './TipoPeriodoProgramacionForm';
 
-const campoVacio = {
-  TipoPeriodoProgramacionCodigo: '',
-  TipoPeriodoProgramacionNombre: '',
-  TipoPeriodoProgramacionDias: '',
-  TipoPeriodoProgramacionDescripcion: '',
-};
+const { emptyForm, mapToForm } = formModel({
+  TipoPeriodoProgramacionCodigo: 'codigo',
+  TipoPeriodoProgramacionNombre: 'nombre',
+  TipoPeriodoProgramacionDias: 'dias',
+  TipoPeriodoProgramacionDescripcion: 'descripcion',
+});
 
-function mapToForm(tipo) {
-  return {
-    TipoPeriodoProgramacionCodigo: tipo.codigo ?? '',
-    TipoPeriodoProgramacionNombre: tipo.nombre ?? '',
-    TipoPeriodoProgramacionDias: tipo.dias ?? '',
-    TipoPeriodoProgramacionDescripcion: tipo.descripcion ?? '',
-  };
-}
+const validate = validador({
+  TipoPeriodoProgramacionCodigo: [requerido, codigo],
+  TipoPeriodoProgramacionNombre: [requerido],
+  TipoPeriodoProgramacionDias: [entero({ min: 1, max: 366 })],
+});
+
+const columns = [
+  { key: 'codigo', header: 'Código' },
+  { key: 'nombre', header: 'Nombre' },
+  { key: 'dias', header: 'Días' },
+];
+
+const card = (item) => ({
+  title: item.nombre,
+  meta: [item.dias && `${item.dias} días`, item.descripcion],
+  footer: item.codigo,
+});
 
 export default function TipoPeriodoProgramacionPage() {
-  const {
-    items, loading, error, buscar, setBuscar, cargar, modalOpen, editando,
-    form, setForm, erroresForm, guardando, abrirCrear, abrirEditar, cerrarModal, guardar, desactivar,
-  } = useCrudResource({
+  const crud = useCrudResource({
     endpoint: '/tipos-periodo-programacion',
-    emptyForm: campoVacio,
+    emptyForm,
     mapToForm,
-    deactivateErrorMessage: 'No se pudo desactivar el tipo de período.',
+    validate,
+    estadoKey: 'TipoPeriodoProgramacionEstado',
+    buildConfirmMessage: (item) => `¿Desactivar "${item.nombre}"?`,
   });
 
   return (
     <PageContainer>
       <PageHeader title="Tipos de período de programación" subtitle="Programación · Tipo de período">
-        <Button onClick={abrirCrear} icon={Plus}>
+        <Button onClick={crud.abrirCrear} icon={Plus}>
           Nuevo tipo de período
         </Button>
       </PageHeader>
 
-      <SearchInput value={buscar} onChange={setBuscar} onSubmit={() => cargar()} />
+      <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />
 
-      <Alert>{error}</Alert>
+      <Alert>{crud.error}</Alert>
 
-      {loading ? (
-        <LoadingState message="Cargando tipos de período…" />
-      ) : items.length === 0 ? (
-        <EmptyState icon={CalendarRange} message="No hay tipos de período registrados todavía." />
-      ) : (
-        <CardGrid>
-          {items.map((item) => (
-            <EntityCard
-              key={item.id}
-              icon={CalendarRange}
-              active={item.activo}
-              title={item.nombre}
-              meta={[item.dias && `${item.dias} días`, item.descripcion]}
-              footer={item.codigo}
-              onEdit={() => abrirEditar(item)}
-              onToggle={item.activo ? () => desactivar(item) : undefined}
-            />
-          ))}
-        </CardGrid>
-      )}
+      <EntityList
+        items={crud.items}
+        total={crud.total}
+        loading={crud.loading}
+        loadingMessage="Cargando tipos de período…"
+        emptyIcon={CalendarRange}
+        emptyMessage="No hay tipos de período registrados todavía."
+        columns={columns}
+        card={card}
+        onEdit={crud.abrirEditar}
+        onToggle={crud.alternarEstado}
+      />
 
-      <Modal
-        open={modalOpen}
-        onClose={cerrarModal}
-        title={editando ? 'Editar tipo de período' : 'Nuevo tipo de período'}
+      <FormModal
+        open={crud.modalOpen}
+        onClose={crud.cerrarModal}
+        title={crud.editando ? 'Editar tipo de período' : 'Nuevo tipo de período'}
+        onSubmit={crud.guardar}
+        error={crud.erroresForm.general?.[0]}
+        submitting={crud.guardando}
       >
-        <Form onSubmit={guardar} generalError={erroresForm.general?.[0]}>
-          <TipoPeriodoProgramacionForm form={form} setForm={setForm} errors={erroresForm} />
-          <FormActions onCancel={cerrarModal} submitting={guardando} />
-        </Form>
-      </Modal>
+        <TipoPeriodoProgramacionForm form={crud.form} setForm={crud.setForm} errors={crud.erroresForm} />
+      </FormModal>
     </PageContainer>
   );
 }

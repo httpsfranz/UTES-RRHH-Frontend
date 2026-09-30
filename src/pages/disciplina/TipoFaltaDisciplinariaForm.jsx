@@ -1,58 +1,62 @@
 import { AlertTriangle, FileText, Hash, Scale, Tag } from 'lucide-react';
 import Field from '../../components/ui/Field';
+import Select from '../../components/ui/Select';
+import FormGrid from '../../components/ui/FormGrid';
+import { GRAVEDADES } from '../../utils/opciones';
 
-export default function TipoFaltaDisciplinariaForm({
-  form,
-  setForm,
-  errors,
-}) {
+export default function TipoFaltaDisciplinariaForm({ form, setForm, errors }) {
   return (
     <>
-      <div className="grid grid-cols-2 gap-4">
+      <FormGrid>
         <Field
           form={form}
           setForm={setForm}
           errors={errors}
-          name="codigo"
+          name="TipoFaltaDisciplinariaCodigo"
           label="Código"
           icon={Hash}
+          required
+          maxLength={50}
+          filter="codigo"
+          placeholder="Ej. TARDANZA_REIT"
         />
-
-        <Field
+        <Select
           form={form}
           setForm={setForm}
           errors={errors}
-          name="nombre"
-          label="Nombre"
-          icon={Tag}
+          name="TipoFaltaDisciplinariaGravedad"
+          label="Gravedad"
+          icon={AlertTriangle}
+          options={[{ value: '', label: 'Sin clasificar' }, ...GRAVEDADES]}
         />
-      </div>
-
+      </FormGrid>
       <Field
         form={form}
         setForm={setForm}
         errors={errors}
-        name="gravedad"
-        label="Gravedad"
-        icon={AlertTriangle}
+        name="TipoFaltaDisciplinariaNombre"
+        label="Nombre"
+        icon={Tag}
+        required
+        maxLength={150}
       />
-
       <Field
         form={form}
         setForm={setForm}
         errors={errors}
-        name="baseLegal"
+        name="TipoFaltaDisciplinariaBaseLegal"
         label="Base legal"
         icon={Scale}
+        maxLength={200}
       />
-
       <Field
         form={form}
         setForm={setForm}
         errors={errors}
-        name="descripcion"
+        name="TipoFaltaDisciplinariaDescripcion"
         label="Descripción"
         icon={FileText}
+        maxLength={300}
       />
     </>
   );

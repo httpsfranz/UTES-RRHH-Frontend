@@ -1,62 +1,67 @@
 import { CalendarDays, CalendarRange, Hash, LockKeyhole } from 'lucide-react';
 import Field from '../../components/ui/Field';
+import Select from '../../components/ui/Select';
+import FormGrid from '../../components/ui/FormGrid';
+import { ESTADOS_PERIODO, MESES } from '../../utils/opciones';
 
-export default function PeriodoAsistenciaForm({
-  form,
-  setForm,
-  errors,
-}) {
+export default function PeriodoAsistenciaForm({ form, setForm, errors }) {
   return (
     <>
-      <div className="grid grid-cols-2 gap-4">
+      <FormGrid>
         <Field
           form={form}
           setForm={setForm}
           errors={errors}
-          name="anio"
+          name="PeriodoAsistenciaAnio"
           label="Año"
           icon={Hash}
+          required
+          maxLength={4}
+          filter="digitos"
+          placeholder="Ej. 2026"
         />
-
-        <Field
+        <Select
           form={form}
           setForm={setForm}
           errors={errors}
-          name="mes"
+          name="PeriodoAsistenciaMes"
           label="Mes"
           icon={CalendarRange}
+          options={MESES}
+          required
         />
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
+      </FormGrid>
+      <FormGrid>
         <Field
           form={form}
           setForm={setForm}
           errors={errors}
-          name="fechaInicio"
+          name="PeriodoAsistenciaFechaInicio"
           label="Fecha de inicio"
           icon={CalendarDays}
           type="date"
+          required
         />
-
         <Field
           form={form}
           setForm={setForm}
           errors={errors}
-          name="fechaFin"
+          name="PeriodoAsistenciaFechaFin"
           label="Fecha de fin"
           icon={CalendarDays}
           type="date"
+          required
         />
-      </div>
-
-      <Field
+      </FormGrid>
+      <Select
         form={form}
         setForm={setForm}
         errors={errors}
-        name="estado"
+        name="PeriodoAsistenciaEstado"
         label="Estado"
         icon={LockKeyhole}
+        options={ESTADOS_PERIODO}
+        required
       />
     </>
   );

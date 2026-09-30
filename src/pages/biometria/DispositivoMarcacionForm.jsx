@@ -1,18 +1,39 @@
 import { Building2, Hash, MapPin, ScanFace, Tag, Wifi } from 'lucide-react';
+import { useOpciones } from '../../hooks/useOpciones';
 import Field from '../../components/ui/Field';
+import Select from '../../components/ui/Select';
+import FormGrid from '../../components/ui/FormGrid';
 
 export default function DispositivoMarcacionForm({ form, setForm, errors }) {
+  const { opciones: opcionesEess } = useOpciones('/establecimientos', { sinOpcion: 'Sin establecimiento asignado' });
+
   return (
     <>
-      <Field
-        form={form}
-        setForm={setForm}
-        errors={errors}
-        name="DispositivoMarcacionCodigo"
-        label="Código"
-        icon={Hash}
-        placeholder="Ej. DISP-001"
-      />
+      <FormGrid>
+        <Field
+          form={form}
+          setForm={setForm}
+          errors={errors}
+          name="DispositivoMarcacionCodigo"
+          label="Código"
+          icon={Hash}
+          required
+          maxLength={50}
+          filter="codigo"
+          placeholder="Ej. DISP-001"
+        />
+        <Field
+          form={form}
+          setForm={setForm}
+          errors={errors}
+          name="DispositivoMarcacionTipo"
+          label="Tipo"
+          icon={Tag}
+          required
+          maxLength={50}
+          placeholder="Ej. Huella dactilar / Facial / Tarjeta"
+        />
+      </FormGrid>
       <Field
         form={form}
         setForm={setForm}
@@ -20,45 +41,42 @@ export default function DispositivoMarcacionForm({ form, setForm, errors }) {
         name="DispositivoMarcacionNombre"
         label="Nombre"
         icon={ScanFace}
+        required
+        maxLength={100}
         placeholder="Ej. Lector biométrico - Recepción"
       />
-      <Field
-        form={form}
-        setForm={setForm}
-        errors={errors}
-        name="DispositivoMarcacionTipo"
-        label="Tipo"
-        icon={Tag}
-        placeholder="Ej. Huella dactilar / Facial / Tarjeta"
-      />
-      <Field
+      <Select
         form={form}
         setForm={setForm}
         errors={errors}
         name="EessId"
-        label="ID de Establecimiento"
+        label="Establecimiento"
         icon={Building2}
-        type="number"
-        placeholder="Ej. 12"
+        options={opcionesEess}
       />
-      <Field
-        form={form}
-        setForm={setForm}
-        errors={errors}
-        name="DispositivoMarcacionUbicacion"
-        label="Ubicación"
-        icon={MapPin}
-        placeholder="Ej. Ingreso principal"
-      />
-      <Field
-        form={form}
-        setForm={setForm}
-        errors={errors}
-        name="DispositivoMarcacionIp"
-        label="Dirección IP"
-        icon={Wifi}
-        placeholder="Ej. 192.168.1.10"
-      />
+      <FormGrid>
+        <Field
+          form={form}
+          setForm={setForm}
+          errors={errors}
+          name="DispositivoMarcacionUbicacion"
+          label="Ubicación"
+          icon={MapPin}
+          maxLength={200}
+          placeholder="Ej. Ingreso principal"
+        />
+        <Field
+          form={form}
+          setForm={setForm}
+          errors={errors}
+          name="DispositivoMarcacionIp"
+          label="Dirección IP"
+          icon={Wifi}
+          maxLength={45}
+          filter="ip"
+          placeholder="Ej. 192.168.1.10"
+        />
+      </FormGrid>
     </>
   );
 }

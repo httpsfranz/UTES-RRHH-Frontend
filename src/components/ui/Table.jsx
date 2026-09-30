@@ -1,13 +1,15 @@
+// columns: [{ key, header, render?(row) }]. Se desplaza en horizontal si no cabe (movil).
 export default function Table({ columns, rows, getRowKey = (row) => row.id }) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-line bg-surface shadow-sm">
+    <div className="overflow-x-auto rounded-2xl border border-line bg-surface shadow-sm">
       <table className="w-full text-left text-sm">
         <thead>
           <tr className="border-b border-line bg-page/60">
             {columns.map((column) => (
               <th
                 key={column.key}
-                className="px-5 py-3 text-xs font-medium uppercase tracking-wide text-muted"
+                scope="col"
+                className="whitespace-nowrap px-5 py-3 text-xs font-medium uppercase tracking-wide text-muted"
               >
                 {column.header}
               </th>
@@ -19,7 +21,7 @@ export default function Table({ columns, rows, getRowKey = (row) => row.id }) {
             <tr key={getRowKey(row)} className="border-b border-line last:border-0 hover:bg-page/60">
               {columns.map((column) => (
                 <td key={column.key} className="px-5 py-3 text-heading">
-                  {column.render ? column.render(row) : row[column.key]}
+                  {column.render ? column.render(row) : (row[column.key] ?? '—')}
                 </td>
               ))}
             </tr>

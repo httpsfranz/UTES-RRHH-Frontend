@@ -1,134 +1,83 @@
-import { FileText, Plus } from 'lucide-react';
-import { useCrudResource } from '../../hooks/useCrudResource';
-import Modal from '../../components/Modal';
+import { Receipt, Plus } from 'lucide-react';
+import { formModel, useCrudResource } from '../../hooks/useCrudResource';
+import { validador, codigo, requerido } from '../../utils/validaciones';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
 import SearchInput from '../../components/ui/SearchInput';
 import Alert from '../../components/ui/Alert';
-import LoadingState from '../../components/ui/LoadingState';
-import EmptyState from '../../components/ui/EmptyState';
-import CardGrid from '../../components/ui/CardGrid';
-import EntityCard from '../../components/ui/EntityCard';
-import Form from '../../components/ui/Form';
-import FormActions from '../../components/ui/FormActions';
+import EntityList from '../../components/ui/EntityList';
+import FormModal from '../../components/ui/FormModal';
 import ConceptoDescuentoForm from './ConceptoDescuentoForm';
 
-const campoVacio = {
-  codigo: '',
-  nombre: '',
-  descripcion: '',
-};
+const { emptyForm, mapToForm } = formModel({
+  ConceptoDescuentoCodigo: 'codigo',
+  ConceptoDescuentoNombre: 'nombre',
+  ConceptoDescuentoDescripcion: 'descripcion',
+});
 
-function mapToForm(concepto) {
-  return {
-    codigo: concepto.codigo ?? '',
-    nombre: concepto.nombre ?? '',
-    descripcion: concepto.descripcion ?? '',
-  };
-}
+const validate = validador({
+  ConceptoDescuentoCodigo: [requerido, codigo],
+  ConceptoDescuentoNombre: [requerido],
+});
+
+const columns = [
+  { key: 'codigo', header: 'Código' },
+  { key: 'nombre', header: 'Nombre' },
+  { key: 'descripcion', header: 'Descripción' },
+];
+
+const card = (item) => ({
+  title: item.nombre,
+  meta: [item.descripcion],
+  footer: item.codigo,
+});
 
 export default function ConceptoDescuentoPage() {
-  const {
-    items: conceptos,
-    loading,
-    error,
-    buscar,
-    setBuscar,
-    cargar,
-    modalOpen,
-    editando,
-    form,
-    setForm,
-    erroresForm,
-    guardando,
-    abrirCrear,
-    abrirEditar,
-    cerrarModal,
-    guardar,
-    desactivar,
-  } = useCrudResource({
+  const crud = useCrudResource({
     endpoint: '/conceptos-descuento',
-    emptyForm: campoVacio,
+    emptyForm,
     mapToForm,
-    deactivateErrorMessage: 'No se pudo desactivar el concepto de descuento.',
+    validate,
+    estadoKey: 'ConceptoDescuentoEstado',
+    buildConfirmMessage: (item) => `¿Desactivar "${item.nombre}"?`,
   });
 
   return (
     <PageContainer>
-      <PageHeader
-        title="Conceptos de Descuento"
-        subtitle="Compensaciones · Concepto de descuento"
-      >
-        <Button onClick={abrirCrear} icon={Plus}>
+      <PageHeader title="Conceptos de descuento" subtitle="Compensaciones · Concepto de descuento">
+        <Button onClick={crud.abrirCrear} icon={Plus}>
           Nuevo concepto
         </Button>
       </PageHeader>
 
-      <SearchInput
-        value={buscar}
-        onChange={setBuscar}
-        onSubmit={() => cargar()}
+      <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />
+
+      <Alert>{crud.error}</Alert>
+
+      <EntityList
+        items={crud.items}
+        total={crud.total}
+        loading={crud.loading}
+        loadingMessage="Cargando conceptos de descuento…"
+        emptyIcon={Receipt}
+        emptyMessage="No hay conceptos de descuento registrados todavía."
+        columns={columns}
+        card={card}
+        onEdit={crud.abrirEditar}
+        onToggle={crud.alternarEstado}
       />
 
-      <Alert>{error}</Alert>
-
-      {loading ? (
-        <LoadingState message="Cargando conceptos de descuento…" />
-      ) : conceptos.length === 0 ? (
-        <EmptyState
-          icon={FileText}
-          message="No hay conceptos de descuento registrados todavía."
-        />
-      ) : (
-        <CardGrid>
-          {conceptos.map((concepto) => (
-            <EntityCard
-              key={concepto.id}
-              icon={FileText}
-              active={concepto.activo}
-              title={concepto.nombre}
-              meta={[
-                concepto.codigo && `Código: ${concepto.codigo}`,
-                concepto.descripcion,
-              ]}
-              footer={`ID: ${concepto.id}`}
-              onEdit={() => abrirEditar(concepto)}
-              onToggle={
-                concepto.activo
-                  ? () => desactivar(concepto)
-                  : undefined
-              }
-            />
-          ))}
-        </CardGrid>
-      )}
-
-      <Modal
-        open={modalOpen}
-        onClose={cerrarModal}
-        title={
-          editando
-            ? 'Editar concepto de descuento'
-            : 'Nuevo concepto de descuento'
-        }
+      <FormModal
+        open={crud.modalOpen}
+        onClose={crud.cerrarModal}
+        title={crud.editando ? 'Editar concepto de descuento' : 'Nuevo concepto de descuento'}
+        onSubmit={crud.guardar}
+        error={crud.erroresForm.general?.[0]}
+        submitting={crud.guardando}
       >
-        <Form
-          onSubmit={guardar}
-          generalError={erroresForm.general?.[0]}
-        >
-          <ConceptoDescuentoForm
-            form={form}
-            setForm={setForm}
-            errors={erroresForm}
-          />
-
-          <FormActions
-            onCancel={cerrarModal}
-            submitting={guardando}
-          />
-        </Form>
-      </Modal>
+        <ConceptoDescuentoForm form={crud.form} setForm={crud.setForm} errors={crud.erroresForm} />
+      </FormModal>
     </PageContainer>
   );
 }

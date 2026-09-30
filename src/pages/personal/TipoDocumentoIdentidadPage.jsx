@@ -1,154 +1,86 @@
-import { FileText, Plus } from 'lucide-react';
-import { useCrudResource } from '../../hooks/useCrudResource';
-import Modal from '../../components/Modal';
+import { BadgeCheck, Plus } from 'lucide-react';
+import { formModel, useCrudResource } from '../../hooks/useCrudResource';
+import { validador, codigo, entero, requerido } from '../../utils/validaciones';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
 import SearchInput from '../../components/ui/SearchInput';
 import Alert from '../../components/ui/Alert';
-import LoadingState from '../../components/ui/LoadingState';
-import EmptyState from '../../components/ui/EmptyState';
-import CardGrid from '../../components/ui/CardGrid';
-import EntityCard from '../../components/ui/EntityCard';
-import Form from '../../components/ui/Form';
-import FormActions from '../../components/ui/FormActions';
+import EntityList from '../../components/ui/EntityList';
+import FormModal from '../../components/ui/FormModal';
 import TipoDocumentoIdentidadForm from './TipoDocumentoIdentidadForm';
 
-const campoVacio = {
-  TipoDocumentoIdentidadCodigo: '',
-  TipoDocumentoIdentidadNombre: '',
-  TipoDocumentoIdentidadAbreviatura: '',
-  TipoDocumentoIdentidadLongitud: '',
-  TipoDocumentoIdentidadEstado: true,
-};
+const { emptyForm, mapToForm } = formModel({
+  TipoDocumentoIdentidadCodigo: 'codigo',
+  TipoDocumentoIdentidadNombre: 'nombre',
+  TipoDocumentoIdentidadAbreviatura: 'abreviatura',
+  TipoDocumentoIdentidadLongitud: 'longitud',
+});
 
-function mapToForm(tipoDocumento) {
-  return {
-    TipoDocumentoIdentidadCodigo:
-      tipoDocumento.TipoDocumentoIdentidadCodigo ?? tipoDocumento.codigo ?? '',
+const validate = validador({
+  TipoDocumentoIdentidadCodigo: [requerido, codigo],
+  TipoDocumentoIdentidadNombre: [requerido],
+  TipoDocumentoIdentidadLongitud: [entero({ min: 1, max: 20 })],
+});
 
-    TipoDocumentoIdentidadNombre:
-      tipoDocumento.TipoDocumentoIdentidadNombre ?? tipoDocumento.nombre ?? '',
+const columns = [
+  { key: 'codigo', header: 'Código' },
+  { key: 'nombre', header: 'Nombre' },
+  { key: 'abreviatura', header: 'Abreviatura' },
+  { key: 'longitud', header: 'Longitud' },
+];
 
-    TipoDocumentoIdentidadAbreviatura:
-      tipoDocumento.TipoDocumentoIdentidadAbreviatura ?? tipoDocumento.abreviatura ?? '',
-
-    TipoDocumentoIdentidadLongitud:
-      tipoDocumento.TipoDocumentoIdentidadLongitud ?? tipoDocumento.longitud ?? '',
-
-    TipoDocumentoIdentidadEstado:
-      Boolean(tipoDocumento.TipoDocumentoIdentidadEstado ?? tipoDocumento.activo ?? true),
-  };
-}
+const card = (item) => ({
+  title: item.nombre,
+  meta: [item.abreviatura, item.longitud && `${item.longitud} caracteres`],
+  footer: item.codigo,
+});
 
 export default function TipoDocumentoIdentidadPage() {
-  const {
-    items: tiposDocumentos,
-    loading,
-    error,
-    buscar,
-    setBuscar,
-    cargar,
-    modalOpen,
-    editando,
-    form,
-    setForm,
-    erroresForm,
-    guardando,
-    abrirCrear,
-    abrirEditar,
-    cerrarModal,
-    guardar,
-    desactivar,
-  } = useCrudResource({
+  const crud = useCrudResource({
     endpoint: '/tipos-documento-identidad',
-    emptyForm: campoVacio,
+    emptyForm,
     mapToForm,
-    deactivateErrorMessage:
-      'No se pudo desactivar el tipo de documento de identidad.',
+    validate,
+    estadoKey: 'TipoDocumentoIdentidadEstado',
+    buildConfirmMessage: (item) => `¿Desactivar "${item.nombre}"?`,
   });
 
   return (
     <PageContainer>
-      <PageHeader
-        title="Tipos de Documento de Identidad"
-        subtitle="Personal · Tipo de documento de identidad"
-      >
-        <Button onClick={abrirCrear} icon={Plus}>
-          Nuevo tipo de documento
+      <PageHeader title="Tipos de documento de identidad" subtitle="Personal · Tipo de documento de identidad">
+        <Button onClick={crud.abrirCrear} icon={Plus}>
+          Nuevo tipo
         </Button>
       </PageHeader>
 
-      <SearchInput
-          value={buscar}
-          onChange={setBuscar}
-          onSubmit={() => cargar()}
-        />
+      <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />
 
-      <Alert>{error}</Alert>
+      <Alert>{crud.error}</Alert>
 
-      {loading ? (
-        <LoadingState message="Cargando tipos de documentos de identidad…" />
-      ) : tiposDocumentos.length === 0 ? (
-        <EmptyState
-          icon={FileText}
-          message="No hay tipos de documentos de identidad registrados todavía."
-        />
-      ) : (
-        <CardGrid>
-          {tiposDocumentos.map((item) => {
-            const id = item.TipoDocumentoIdentidadId ?? item.id;
-            const nombre = item.TipoDocumentoIdentidadNombre ?? item.nombre;
-            const codigo = item.TipoDocumentoIdentidadCodigo ?? item.codigo;
-            const abreviatura = item.TipoDocumentoIdentidadAbreviatura ?? item.abreviatura;
-            const longitud = item.TipoDocumentoIdentidadLongitud ?? item.longitud;
-            const activo = Boolean(item.TipoDocumentoIdentidadEstado ?? item.activo);
+      <EntityList
+        items={crud.items}
+        total={crud.total}
+        loading={crud.loading}
+        loadingMessage="Cargando tipos de documento de identidad…"
+        emptyIcon={BadgeCheck}
+        emptyMessage="No hay tipos de documento de identidad registrados todavía."
+        columns={columns}
+        card={card}
+        onEdit={crud.abrirEditar}
+        onToggle={crud.alternarEstado}
+      />
 
-            return (
-              <EntityCard
-                key={id}
-                icon={FileText}
-                active={activo}
-                title={nombre}
-                meta={[
-                  codigo && `Código: ${codigo}`,
-                  abreviatura && `Abreviatura: ${abreviatura}`,
-                  longitud && `Longitud: ${longitud}`,
-                ].filter(Boolean)}
-                footer={`ID: ${id}`}
-                onEdit={() => abrirEditar(item)}
-                onToggle={activo ? () => desactivar(item) : undefined}
-              />
-            );
-          })}
-        </CardGrid>
-      )}
-
-      <Modal
-        open={modalOpen}
-        onClose={cerrarModal}
-        title={
-          editando
-            ? 'Editar tipo de documento de identidad'
-            : 'Nuevo tipo de documento de identidad'
-        }
+      <FormModal
+        open={crud.modalOpen}
+        onClose={crud.cerrarModal}
+        title={crud.editando ? 'Editar tipo de documento de identidad' : 'Nuevo tipo de documento de identidad'}
+        onSubmit={crud.guardar}
+        error={crud.erroresForm.general?.[0]}
+        submitting={crud.guardando}
       >
-        <Form
-          onSubmit={guardar}
-          generalError={erroresForm.general?.[0]}
-        >
-          <TipoDocumentoIdentidadForm
-            form={form}
-            setForm={setForm}
-            errors={erroresForm}
-          />
-
-          <FormActions
-            onCancel={cerrarModal}
-            submitting={guardando}
-          />
-        </Form>
-      </Modal>
+        <TipoDocumentoIdentidadForm form={crud.form} setForm={crud.setForm} errors={crud.erroresForm} />
+      </FormModal>
     </PageContainer>
   );
 }

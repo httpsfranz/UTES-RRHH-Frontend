@@ -1,144 +1,91 @@
 import { Building2, Plus } from 'lucide-react';
-import { fieldMapper, useCrudResource } from '../../hooks/useCrudResource';
-import Modal from '../../components/Modal';
+import { formModel, useCrudResource } from '../../hooks/useCrudResource';
+import { validador, codigo, requerido, telefonoPeruano, ubigeo } from '../../utils/validaciones';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
 import SearchInput from '../../components/ui/SearchInput';
 import Alert from '../../components/ui/Alert';
-import LoadingState from '../../components/ui/LoadingState';
-import EmptyState from '../../components/ui/EmptyState';
-//import CardGrid from '../../components/ui/CardGrid';
-//import EntityCard from '../../components/ui/EntityCard';
-import Form from '../../components/ui/Form';
-import FormActions from '../../components/ui/FormActions';
+import EntityList from '../../components/ui/EntityList';
+import FormModal from '../../components/ui/FormModal';
 import MicroredForm from './MicroredForm';
 
-import RowActions from '../../components/ui/RowActions';
-import Table from '../../components/ui/Table';
-import StatusBadge from '../../components/ui/StatusBadge';
-
-const campoVacio = {
-  MicroredCodigo: '',
-  MicroredNombre: '',
-  MicroredDistrito: '',
-  MicroredUbigeo: '',
-  MicroredDireccion: '',
-  MicroredTelefono: '',
-  MicroredDescripcion: '',
-};
-
-// El form escribe en PascalCase (asi lo valida MicroredRequest en el backend)
-// pero la respuesta de lectura viene en camelCase (MicroredResource); fieldMapper
-// traduce de una a otra al abrir "Editar".
-const mapToForm = fieldMapper({
+const { emptyForm, mapToForm } = formModel({
   MicroredCodigo: 'codigo',
+  MicroredUbigeo: 'ubigeo',
   MicroredNombre: 'nombre',
   MicroredDistrito: 'distrito',
-  MicroredUbigeo: 'ubigeo',
-  MicroredDireccion: 'direccion',
   MicroredTelefono: 'telefono',
+  MicroredDireccion: 'direccion',
   MicroredDescripcion: 'descripcion',
 });
 
+const validate = validador({
+  MicroredCodigo: [requerido, codigo],
+  MicroredUbigeo: [ubigeo],
+  MicroredNombre: [requerido],
+  MicroredTelefono: [telefonoPeruano],
+});
+
+const columns = [
+  { key: 'codigo', header: 'Código' },
+  { key: 'nombre', header: 'Nombre' },
+  { key: 'distrito', header: 'Distrito' },
+  { key: 'telefono', header: 'Teléfono' },
+];
+
+const card = (item) => ({
+  initial: item.nombre?.[0],
+  title: item.nombre,
+  meta: [item.distrito, item.telefono && `Tel. ${item.telefono}`],
+  footer: item.codigo,
+});
+
 export default function MicroredPage() {
-  const {
-    items: microredes,
-    loading,
-    error,
-    buscar,
-    setBuscar,
-    cargar,
-    modalOpen,
-    editando,
-    form,
-    setForm,
-    erroresForm,
-    guardando,
-    abrirCrear,
-    abrirEditar,
-    cerrarModal,
-    guardar,
-    desactivar,
-  } = useCrudResource({
+  const crud = useCrudResource({
     endpoint: '/microredes',
-    emptyForm: campoVacio,
+    emptyForm,
     mapToForm,
+    validate,
+    estadoKey: 'MicroredEstado',
+    buildConfirmMessage: (item) => `¿Desactivar "${item.nombre}"?`,
   });
-
-  //aca 
-
-   const columnasMicrored = [
-    { key: 'codigo', header: 'Código' },
-    { key: 'nombre', header: 'Nombre' },
-    { key: 'distrito', header: 'Distrito' },
-    {
-      key: 'estado',
-      header: 'Estado',
-      render: (microred) => <StatusBadge active={microred.activo} />,
-    },
-    {
-      key: 'acciones',
-      header: '',
-      render: (microred) => (
-        <RowActions
-          onEdit={() => abrirEditar(microred)}
-          onToggle={microred.activo ? () => desactivar(microred) : undefined}
-        />
-      ),
-    },
-  ];
 
   return (
     <PageContainer>
       <PageHeader title="Microredes" subtitle="Organización · Microred">
-        <Button onClick={abrirCrear} icon={Plus}>
+        <Button onClick={crud.abrirCrear} icon={Plus}>
           Nueva microred
         </Button>
       </PageHeader>
 
-      <SearchInput value={buscar} onChange={setBuscar} onSubmit={() => cargar()} />
+      <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />
 
-      <Alert>{error}</Alert>
+      <Alert>{crud.error}</Alert>
 
+      <EntityList
+        items={crud.items}
+        total={crud.total}
+        loading={crud.loading}
+        loadingMessage="Cargando microredes…"
+        emptyIcon={Building2}
+        emptyMessage="No hay microredes registradas todavía."
+        columns={columns}
+        card={card}
+        onEdit={crud.abrirEditar}
+        onToggle={crud.alternarEstado}
+      />
 
-      {/*
-  {loading ? (
-    <LoadingState message="Cargando microredes…" />
-  ) : microredes.length === 0 ? (
-    <EmptyState icon={Building2} message="No hay microredes registradas todavía." />
-  ) : (
-    <CardGrid>
-      {microredes.map((microred) => (
-        <EntityCard
-          key={microred.id}
-          initial={microred.nombre?.[0] ?? 'M'}
-          active={microred.activo}
-          title={microred.nombre}
-          meta={[microred.distrito]}
-          footer={microred.codigo}
-          onEdit={() => abrirEditar(microred)}
-          onToggle={microred.activo ? () => desactivar(microred) : undefined}
-        />
-      ))}
-    </CardGrid>
-  )}
-*/}
-   
-    {loading ? (
-        <LoadingState message="Cargando microredes…" />
-      ) : microredes.length === 0 ? (
-        <EmptyState icon={Building2} message="No hay microredes registradas todavía." />
-      ) : (
-        <Table columns={columnasMicrored} rows={microredes} />
-      )}
-
-      <Modal open={modalOpen} onClose={cerrarModal} title={editando ? 'Editar microred' : 'Nueva microred'}>
-        <Form onSubmit={guardar} generalError={erroresForm.general?.[0]}>
-          <MicroredForm form={form} setForm={setForm} errors={erroresForm} />
-          <FormActions onCancel={cerrarModal} submitting={guardando} />
-        </Form>
-      </Modal>
+      <FormModal
+        open={crud.modalOpen}
+        onClose={crud.cerrarModal}
+        title={crud.editando ? 'Editar microred' : 'Nueva microred'}
+        onSubmit={crud.guardar}
+        error={crud.erroresForm.general?.[0]}
+        submitting={crud.guardando}
+      >
+        <MicroredForm form={crud.form} setForm={crud.setForm} errors={crud.erroresForm} />
+      </FormModal>
     </PageContainer>
   );
 }

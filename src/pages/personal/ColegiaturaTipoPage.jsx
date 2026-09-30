@@ -1,91 +1,86 @@
-import { Plus, IdCard } from 'lucide-react';
-import { useCrudResource } from '../../hooks/useCrudResource';
-import Modal from '../../components/Modal';
+import { IdCard, Plus } from 'lucide-react';
+import { formModel, useCrudResource } from '../../hooks/useCrudResource';
+import { validador, codigo, requerido } from '../../utils/validaciones';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
 import SearchInput from '../../components/ui/SearchInput';
 import Alert from '../../components/ui/Alert';
-import LoadingState from '../../components/ui/LoadingState';
-import EmptyState from '../../components/ui/EmptyState';
-import CardGrid from '../../components/ui/CardGrid';
-import EntityCard from '../../components/ui/EntityCard';
-import Form from '../../components/ui/Form';
-import FormActions from '../../components/ui/FormActions';
+import EntityList from '../../components/ui/EntityList';
+import FormModal from '../../components/ui/FormModal';
 import ColegiaturaTipoForm from './ColegiaturaTipoForm';
 
-const campoVacio = {
-  ColegiaturaTipoCodigo: '',
-  ColegiaturaTipoNombre: '',
-  ProfesionId: '',
-  ColegiaturaTipoEntidad: '',
-  ColegiaturaTipoDescripcion: '',
-};
+const { emptyForm, mapToForm } = formModel({
+  ColegiaturaTipoCodigo: 'codigo',
+  ColegiaturaTipoNombre: 'nombre',
+  ProfesionId: 'profesion_id',
+  ColegiaturaTipoEntidad: 'entidad',
+  ColegiaturaTipoDescripcion: 'descripcion',
+});
 
-function mapToForm(tipo) {
-  return {
-    ColegiaturaTipoCodigo: tipo.codigo ?? '',
-    ColegiaturaTipoNombre: tipo.nombre ?? '',
-    ProfesionId: tipo.profesion?.id ?? '',
-    ColegiaturaTipoEntidad: tipo.entidad ?? '',
-    ColegiaturaTipoDescripcion: tipo.descripcion ?? '',
-  };
-}
+const validate = validador({
+  ColegiaturaTipoCodigo: [requerido, codigo],
+  ColegiaturaTipoNombre: [requerido],
+});
+
+const columns = [
+  { key: 'codigo', header: 'Código' },
+  { key: 'nombre', header: 'Nombre' },
+  { key: 'profesion', header: 'Profesión', render: (item) => item.profesion?.nombre ?? '—' },
+  { key: 'entidad', header: 'Entidad' },
+];
+
+const card = (item) => ({
+  title: item.nombre,
+  meta: [item.profesion?.nombre, item.entidad],
+  footer: item.codigo,
+});
 
 export default function ColegiaturaTipoPage() {
-  const {
-    items: tipos, loading, error, buscar, setBuscar, cargar, modalOpen, editando,
-    form, setForm, erroresForm, guardando, abrirCrear, abrirEditar, cerrarModal, guardar, desactivar,
-  } = useCrudResource({
+  const crud = useCrudResource({
     endpoint: '/tipos-colegiatura',
-    emptyForm: campoVacio,
+    emptyForm,
     mapToForm,
-    deactivateErrorMessage: 'No se pudo desactivar el tipo de colegiatura.',
+    validate,
+    estadoKey: 'ColegiaturaTipoEstado',
+    buildConfirmMessage: (item) => `¿Desactivar "${item.nombre}"?`,
   });
 
   return (
     <PageContainer>
       <PageHeader title="Tipos de colegiatura" subtitle="Personal · Tipo de colegiatura">
-        <Button onClick={abrirCrear} icon={Plus}>
+        <Button onClick={crud.abrirCrear} icon={Plus}>
           Nuevo tipo
         </Button>
       </PageHeader>
 
-      <SearchInput value={buscar} onChange={setBuscar} onSubmit={() => cargar()} />
+      <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />
 
-      <Alert>{error}</Alert>
+      <Alert>{crud.error}</Alert>
 
-      {loading ? (
-        <LoadingState message="Cargando tipos de colegiatura…" />
-      ) : tipos.length === 0 ? (
-        <EmptyState icon={IdCard} message="No hay tipos de colegiatura registrados todavía." />
-      ) : (
-        <CardGrid>
-          {tipos.map((tipo) => (
-            <EntityCard
-              key={tipo.id}
-              icon={IdCard}
-              active={tipo.activo}
-              title={tipo.nombre}
-              meta={[tipo.profesion?.nombre, tipo.entidad, tipo.descripcion]}
-              footer={tipo.codigo}
-              onEdit={() => abrirEditar(tipo)}
-              onToggle={tipo.activo ? () => desactivar(tipo) : undefined}
-            />
-          ))}
-        </CardGrid>
-      )}
+      <EntityList
+        items={crud.items}
+        total={crud.total}
+        loading={crud.loading}
+        loadingMessage="Cargando tipos de colegiatura…"
+        emptyIcon={IdCard}
+        emptyMessage="No hay tipos de colegiatura registrados todavía."
+        columns={columns}
+        card={card}
+        onEdit={crud.abrirEditar}
+        onToggle={crud.alternarEstado}
+      />
 
-      <Modal
-        open={modalOpen}
-        onClose={cerrarModal}
-        title={editando ? 'Editar tipo de colegiatura' : 'Nuevo tipo de colegiatura'}
+      <FormModal
+        open={crud.modalOpen}
+        onClose={crud.cerrarModal}
+        title={crud.editando ? 'Editar tipo de colegiatura' : 'Nuevo tipo de colegiatura'}
+        onSubmit={crud.guardar}
+        error={crud.erroresForm.general?.[0]}
+        submitting={crud.guardando}
       >
-        <Form onSubmit={guardar} generalError={erroresForm.general?.[0]}>
-          <ColegiaturaTipoForm form={form} setForm={setForm} errors={erroresForm} />
-          <FormActions onCancel={cerrarModal} submitting={guardando} />
-        </Form>
-      </Modal>
+        <ColegiaturaTipoForm form={crud.form} setForm={crud.setForm} errors={crud.erroresForm} />
+      </FormModal>
     </PageContainer>
   );
 }

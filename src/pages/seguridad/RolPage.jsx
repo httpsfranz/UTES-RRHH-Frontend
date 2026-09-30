@@ -1,87 +1,83 @@
 import { Shield, Plus } from 'lucide-react';
-import { useCrudResource } from '../../hooks/useCrudResource';
-import Modal from '../../components/Modal';
+import { formModel, useCrudResource } from '../../hooks/useCrudResource';
+import { validador, codigo, requerido } from '../../utils/validaciones';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
 import SearchInput from '../../components/ui/SearchInput';
 import Alert from '../../components/ui/Alert';
-import LoadingState from '../../components/ui/LoadingState';
-import EmptyState from '../../components/ui/EmptyState';
-import CardGrid from '../../components/ui/CardGrid';
-import EntityCard from '../../components/ui/EntityCard';
-import Form from '../../components/ui/Form';
-import FormActions from '../../components/ui/FormActions';
+import EntityList from '../../components/ui/EntityList';
+import FormModal from '../../components/ui/FormModal';
 import RolForm from './RolForm';
 
-const campoVacio = {
-  RolCodigo: '',
-  RolNombre: '',
-  RolDescripcion: '',
-};
+const { emptyForm, mapToForm } = formModel({
+  RolCodigo: 'codigo',
+  RolNombre: 'nombre',
+  RolDescripcion: 'descripcion',
+});
 
-function mapToForm(item) {
-  return {
-    RolCodigo: item.codigo ?? '',
-    RolNombre: item.nombre ?? '',
-    RolDescripcion: item.descripcion ?? '',
-  };
-}
+const validate = validador({
+  RolCodigo: [requerido, codigo],
+  RolNombre: [requerido],
+});
+
+const columns = [
+  { key: 'codigo', header: 'Código' },
+  { key: 'nombre', header: 'Nombre' },
+  { key: 'descripcion', header: 'Descripción' },
+];
+
+const card = (item) => ({
+  title: item.nombre,
+  meta: [item.descripcion],
+  footer: item.codigo,
+});
 
 export default function RolPage() {
-  const {
-    items, loading, error, buscar, setBuscar, cargar, modalOpen, editando,
-    form, setForm, erroresForm, guardando, abrirCrear, abrirEditar, cerrarModal, guardar, desactivar,
-  } = useCrudResource({
+  const crud = useCrudResource({
     endpoint: '/roles',
-    emptyForm: campoVacio,
+    emptyForm,
     mapToForm,
-    deactivateErrorMessage: 'No se pudo desactivar el rol.',
+    validate,
+    estadoKey: 'RolEstado',
+    buildConfirmMessage: (item) => `¿Desactivar "${item.nombre}"?`,
   });
 
   return (
     <PageContainer>
       <PageHeader title="Roles" subtitle="Seguridad · Rol">
-        <Button onClick={abrirCrear} icon={Plus}>
+        <Button onClick={crud.abrirCrear} icon={Plus}>
           Nuevo rol
         </Button>
       </PageHeader>
 
-      <SearchInput value={buscar} onChange={setBuscar} onSubmit={() => cargar()} />
+      <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />
 
-      <Alert>{error}</Alert>
+      <Alert>{crud.error}</Alert>
 
-      {loading ? (
-        <LoadingState message="Cargando roles…" />
-      ) : items.length === 0 ? (
-        <EmptyState icon={Shield} message="No hay roles registrados todavía." />
-      ) : (
-        <CardGrid>
-          {items.map((item) => (
-            <EntityCard
-              key={item.id}
-              icon={Shield}
-              active={item.activo}
-              title={item.nombre}
-              meta={[item.descripcion]}
-              footer={item.codigo}
-              onEdit={() => abrirEditar(item)}
-              onToggle={item.activo ? () => desactivar(item) : undefined}
-            />
-          ))}
-        </CardGrid>
-      )}
+      <EntityList
+        items={crud.items}
+        total={crud.total}
+        loading={crud.loading}
+        loadingMessage="Cargando roles…"
+        emptyIcon={Shield}
+        emptyMessage="No hay roles registrados todavía."
+        columns={columns}
+        card={card}
+        onEdit={crud.abrirEditar}
+        onToggle={crud.alternarEstado}
+      />
 
-      <Modal
-        open={modalOpen}
-        onClose={cerrarModal}
-        title={editando ? 'Editar rol' : 'Nuevo rol'}
+      <FormModal
+        open={crud.modalOpen}
+        onClose={crud.cerrarModal}
+        title={crud.editando ? 'Editar rol' : 'Nuevo rol'}
+        onSubmit={crud.guardar}
+        error={crud.erroresForm.general?.[0]}
+        submitting={crud.guardando}
       >
-        <Form onSubmit={guardar} generalError={erroresForm.general?.[0]}>
-          <RolForm form={form} setForm={setForm} errors={erroresForm} />
-          <FormActions onCancel={cerrarModal} submitting={guardando} />
-        </Form>
-      </Modal>
+        <RolForm form={crud.form} setForm={crud.setForm} errors={crud.erroresForm} />
+      </FormModal>
     </PageContainer>
   );
 }
