@@ -14,8 +14,16 @@ import DispositivoMarcacionPage from './pages/biometria/DispositivoMarcacionPage
 import TipoEstablecimientoPage from './pages/organizacion/TipoEstablecimientoPage';
 
 import ConceptoDescuentoPage from './pages/compensaciones/ConceptoDescuentoPage.jsx';
-
 import TipoCompensacionPage from './pages/compensaciones/TipoCompensacionPage';
+
+import RegimenLaboralPage from './pages/personal/RegimenLaboralPage';
+import TipoDocumentoIdentidadPage from './pages/personal/TipoDocumentoIdentidadPage';
+
+import TipoCambioTurnoPage from './pages/programacion/TipoCambioTurnoPage';
+import TipoPeriodoProgramacionPage from './pages/programacion/TipoPeriodoProgramacionForm';
+
+import AuditoriaPage from './pages/seguridad/AuditoriaPage';
+import PermisoPage from './pages/seguridad/PermisoPage';
 
 import { menu } from './nav/menu';
 
@@ -24,16 +32,30 @@ import { menu } from './nav/menu';
 // =========================================================
 
 const paginasReales = {
-
+  // BIOMETRÍA
   '/biometria/metodos': MetodoMarcacionPage,
   '/biometria/dispositivos': DispositivoMarcacionPage,
-
+  
+  // ORGANIZACIÓN
   '/organizacion/microredes': MicroredPage,
   '/organizacion/tipos-establecimiento': TipoEstablecimientoPage,
 
+  // COMPENSACIONES
   '/compensaciones/conceptos-descuento': ConceptoDescuentoPage,
   '/compensaciones/tipos-compensacion': TipoCompensacionPage,
+  
+  // PERSONAL
+  '/personal/regimen-laboral': RegimenLaboralPage,
+  '/personal/tipos-documento-identidad': TipoDocumentoIdentidadPage,
 
+  // PROGRAMACION
+  '/programacion/tipos-cambio-turno': TipoCambioTurnoPage,
+  '/programacion/tipos-periodo':TipoPeriodoProgramacionPage,
+
+  // SEGURIDAD
+  '/seguridad/auditoria': AuditoriaPage,
+  '/seguridad/permisos': PermisoPage,
+    
 };
 
 // =========================================================
