@@ -1,6 +1,7 @@
 import { Fingerprint, Plus } from 'lucide-react';
 import { useCrudResource } from '../../hooks/useCrudResource';
 import Modal from '../../components/Modal';
+import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
 import SearchInput from '../../components/ui/SearchInput';
@@ -58,7 +59,7 @@ export default function MetodoMarcacionPage() {
   });
 
   return (
-    <div className="p-6">
+    <PageContainer>
       <PageHeader title="Métodos de Marcación" subtitle="Biometría · Método de marcación">
         <Button onClick={abrirCrear} icon={Plus}>
           Nuevo método
@@ -100,6 +101,6 @@ export default function MetodoMarcacionPage() {
           <FormActions onCancel={cerrarModal} submitting={guardando} />
         </Form>
       </Modal>
-    </div>
+    </PageContainer>
   );
 }

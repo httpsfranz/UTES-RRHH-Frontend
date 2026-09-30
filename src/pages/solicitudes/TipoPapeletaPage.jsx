@@ -1,4 +1,4 @@
-import { CalendarRange, Plus } from 'lucide-react';
+import { ClipboardList, Plus } from 'lucide-react';
 import { useCrudResource } from '../../hooks/useCrudResource';
 import Modal from '../../components/Modal';
 import PageContainer from '../../components/ui/PageContainer';
@@ -12,40 +12,46 @@ import CardGrid from '../../components/ui/CardGrid';
 import EntityCard from '../../components/ui/EntityCard';
 import Form from '../../components/ui/Form';
 import FormActions from '../../components/ui/FormActions';
-import TipoPeriodoProgramacionForm from './TipoPeriodoProgramacionForm';
+import TipoPapeletaForm from './TipoPapeletaForm';
 
 const campoVacio = {
-  TipoPeriodoProgramacionCodigo: '',
-  TipoPeriodoProgramacionNombre: '',
-  TipoPeriodoProgramacionDias: '',
-  TipoPeriodoProgramacionDescripcion: '',
+  TipoPapeletaCodigo: '',
+  TipoPapeletaNombre: '',
+  TipoPapeletaDescripcion: '',
+  TipoPapeletaEsDescontable: false,
+  TipoPapeletaRequiereSustento: false,
+  TipoPapeletaAfectaJornada: false,
+  TipoPapeletaEsCompensable: false,
 };
 
-function mapToForm(tipo) {
+function mapToForm(item) {
   return {
-    TipoPeriodoProgramacionCodigo: tipo.codigo ?? '',
-    TipoPeriodoProgramacionNombre: tipo.nombre ?? '',
-    TipoPeriodoProgramacionDias: tipo.dias ?? '',
-    TipoPeriodoProgramacionDescripcion: tipo.descripcion ?? '',
+    TipoPapeletaCodigo: item.codigo ?? '',
+    TipoPapeletaNombre: item.nombre ?? '',
+    TipoPapeletaDescripcion: item.descripcion ?? '',
+    TipoPapeletaEsDescontable: Boolean(item.es_descontable),
+    TipoPapeletaRequiereSustento: Boolean(item.requiere_sustento),
+    TipoPapeletaAfectaJornada: Boolean(item.afecta_jornada),
+    TipoPapeletaEsCompensable: Boolean(item.es_compensable),
   };
 }
 
-export default function TipoPeriodoProgramacionPage() {
+export default function TipoPapeletaPage() {
   const {
     items, loading, error, buscar, setBuscar, cargar, modalOpen, editando,
     form, setForm, erroresForm, guardando, abrirCrear, abrirEditar, cerrarModal, guardar, desactivar,
   } = useCrudResource({
-    endpoint: '/tipos-periodo-programacion',
+    endpoint: '/tipos-papeleta',
     emptyForm: campoVacio,
     mapToForm,
-    deactivateErrorMessage: 'No se pudo desactivar el tipo de período.',
+    deactivateErrorMessage: 'No se pudo desactivar el tipo de papeleta.',
   });
 
   return (
     <PageContainer>
-      <PageHeader title="Tipos de período de programación" subtitle="Programación · Tipo de período">
+      <PageHeader title="Tipos de papeleta" subtitle="Solicitudes · Tipo de papeleta">
         <Button onClick={abrirCrear} icon={Plus}>
-          Nuevo tipo de período
+          Nuevo tipo de papeleta
         </Button>
       </PageHeader>
 
@@ -54,18 +60,24 @@ export default function TipoPeriodoProgramacionPage() {
       <Alert>{error}</Alert>
 
       {loading ? (
-        <LoadingState message="Cargando tipos de período…" />
+        <LoadingState message="Cargando tipos de papeleta…" />
       ) : items.length === 0 ? (
-        <EmptyState icon={CalendarRange} message="No hay tipos de período registrados todavía." />
+        <EmptyState icon={ClipboardList} message="No hay tipos de papeleta registrados todavía." />
       ) : (
         <CardGrid>
           {items.map((item) => (
             <EntityCard
               key={item.id}
-              icon={CalendarRange}
+              icon={ClipboardList}
               active={item.activo}
               title={item.nombre}
-              meta={[item.dias && `${item.dias} días`, item.descripcion]}
+              meta={[
+                item.descripcion,
+                item.es_descontable && 'Descontable',
+                item.requiere_sustento && 'Requiere sustento',
+                item.afecta_jornada && 'Afecta jornada',
+                item.es_compensable && 'Compensable',
+              ]}
               footer={item.codigo}
               onEdit={() => abrirEditar(item)}
               onToggle={item.activo ? () => desactivar(item) : undefined}
@@ -77,10 +89,10 @@ export default function TipoPeriodoProgramacionPage() {
       <Modal
         open={modalOpen}
         onClose={cerrarModal}
-        title={editando ? 'Editar tipo de período' : 'Nuevo tipo de período'}
+        title={editando ? 'Editar tipo de papeleta' : 'Nuevo tipo de papeleta'}
       >
         <Form onSubmit={guardar} generalError={erroresForm.general?.[0]}>
-          <TipoPeriodoProgramacionForm form={form} setForm={setForm} errors={erroresForm} />
+          <TipoPapeletaForm form={form} setForm={setForm} errors={erroresForm} />
           <FormActions onCancel={cerrarModal} submitting={guardando} />
         </Form>
       </Modal>

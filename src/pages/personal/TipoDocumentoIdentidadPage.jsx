@@ -1,6 +1,7 @@
 import { FileText, Plus } from 'lucide-react';
 import { useCrudResource } from '../../hooks/useCrudResource';
 import Modal from '../../components/Modal';
+import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
 import SearchInput from '../../components/ui/SearchInput';
@@ -68,7 +69,7 @@ export default function TipoDocumentoIdentidadPage() {
   });
 
   return (
-    <div className="p-6">
+    <PageContainer>
       <PageHeader
         title="Tipos de Documento de Identidad"
         subtitle="Personal · Tipo de documento de identidad"
@@ -78,15 +79,13 @@ export default function TipoDocumentoIdentidadPage() {
         </Button>
       </PageHeader>
 
-      <div className="mb-6">
-        <SearchInput
+      <SearchInput
           value={buscar}
           onChange={setBuscar}
           onSubmit={() => cargar()}
         />
-      </div>
 
-      {error && <Alert className="mb-4">{error}</Alert>}
+      <Alert>{error}</Alert>
 
       {loading ? (
         <LoadingState message="Cargando tipos de documentos de identidad…" />
@@ -150,6 +149,6 @@ export default function TipoDocumentoIdentidadPage() {
           />
         </Form>
       </Modal>
-    </div>
+    </PageContainer>
   );
 }

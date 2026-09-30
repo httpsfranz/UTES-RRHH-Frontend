@@ -1,4 +1,4 @@
-import { CalendarRange, Plus } from 'lucide-react';
+import { FileText, Plus } from 'lucide-react';
 import { useCrudResource } from '../../hooks/useCrudResource';
 import Modal from '../../components/Modal';
 import PageContainer from '../../components/ui/PageContainer';
@@ -12,40 +12,45 @@ import CardGrid from '../../components/ui/CardGrid';
 import EntityCard from '../../components/ui/EntityCard';
 import Form from '../../components/ui/Form';
 import FormActions from '../../components/ui/FormActions';
-import TipoPeriodoProgramacionForm from './TipoPeriodoProgramacionForm';
+import DocumentoSustentoForm from './DocumentoSustentoForm';
 
 const campoVacio = {
-  TipoPeriodoProgramacionCodigo: '',
-  TipoPeriodoProgramacionNombre: '',
-  TipoPeriodoProgramacionDias: '',
-  TipoPeriodoProgramacionDescripcion: '',
+  DocumentoSustentoNombre: '',
+  DocumentoSustentoRuta: '',
+  DocumentoSustentoTipo: '',
+  DocumentoSustentoExtension: '',
+  DocumentoSustentoTamanoBytes: '',
+  DocumentoSustentoHash: '',
 };
 
-function mapToForm(tipo) {
+function mapToForm(item) {
   return {
-    TipoPeriodoProgramacionCodigo: tipo.codigo ?? '',
-    TipoPeriodoProgramacionNombre: tipo.nombre ?? '',
-    TipoPeriodoProgramacionDias: tipo.dias ?? '',
-    TipoPeriodoProgramacionDescripcion: tipo.descripcion ?? '',
+    DocumentoSustentoNombre: item.nombre ?? '',
+    DocumentoSustentoRuta: item.ruta ?? '',
+    DocumentoSustentoTipo: item.tipo ?? '',
+    DocumentoSustentoExtension: item.extension ?? '',
+    DocumentoSustentoTamanoBytes: item.tamano_bytes ?? '',
+    DocumentoSustentoHash: item.hash ?? '',
   };
 }
 
-export default function TipoPeriodoProgramacionPage() {
+export default function DocumentoSustentoPage() {
   const {
     items, loading, error, buscar, setBuscar, cargar, modalOpen, editando,
     form, setForm, erroresForm, guardando, abrirCrear, abrirEditar, cerrarModal, guardar, desactivar,
   } = useCrudResource({
-    endpoint: '/tipos-periodo-programacion',
+    endpoint: '/documentos-sustento',
     emptyForm: campoVacio,
     mapToForm,
-    deactivateErrorMessage: 'No se pudo desactivar el tipo de período.',
+    buildConfirmMessage: (item) => `¿Eliminar el documento "${item.nombre}"?`,
+    deactivateErrorMessage: 'No se pudo eliminar el documento.',
   });
 
   return (
     <PageContainer>
-      <PageHeader title="Tipos de período de programación" subtitle="Programación · Tipo de período">
+      <PageHeader title="Documentos de sustento" subtitle="Soporte · Documento de sustento">
         <Button onClick={abrirCrear} icon={Plus}>
-          Nuevo tipo de período
+          Nuevo documento de sustento
         </Button>
       </PageHeader>
 
@@ -54,21 +59,20 @@ export default function TipoPeriodoProgramacionPage() {
       <Alert>{error}</Alert>
 
       {loading ? (
-        <LoadingState message="Cargando tipos de período…" />
+        <LoadingState message="Cargando documentos de sustento…" />
       ) : items.length === 0 ? (
-        <EmptyState icon={CalendarRange} message="No hay tipos de período registrados todavía." />
+        <EmptyState icon={FileText} message="No hay documentos de sustento registrados todavía." />
       ) : (
         <CardGrid>
           {items.map((item) => (
             <EntityCard
               key={item.id}
-              icon={CalendarRange}
-              active={item.activo}
+              icon={FileText}
               title={item.nombre}
-              meta={[item.dias && `${item.dias} días`, item.descripcion]}
-              footer={item.codigo}
+              meta={[item.tipo, item.ruta, item.fecha_registro]}
+              footer={item.extension && `.${item.extension}`}
               onEdit={() => abrirEditar(item)}
-              onToggle={item.activo ? () => desactivar(item) : undefined}
+              onDelete={() => desactivar(item)}
             />
           ))}
         </CardGrid>
@@ -77,10 +81,10 @@ export default function TipoPeriodoProgramacionPage() {
       <Modal
         open={modalOpen}
         onClose={cerrarModal}
-        title={editando ? 'Editar tipo de período' : 'Nuevo tipo de período'}
+        title={editando ? 'Editar documento de sustento' : 'Nuevo documento de sustento'}
       >
         <Form onSubmit={guardar} generalError={erroresForm.general?.[0]}>
-          <TipoPeriodoProgramacionForm form={form} setForm={setForm} errors={erroresForm} />
+          <DocumentoSustentoForm form={form} setForm={setForm} errors={erroresForm} />
           <FormActions onCancel={cerrarModal} submitting={guardando} />
         </Form>
       </Modal>

@@ -1,6 +1,7 @@
 import { FileText, Plus } from 'lucide-react';
 import { useCrudResource } from '../../hooks/useCrudResource';
 import Modal from '../../components/Modal';
+import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
 import SearchInput from '../../components/ui/SearchInput';
@@ -54,7 +55,7 @@ export default function ConceptoDescuentoPage() {
   });
 
   return (
-    <div className="p-6">
+    <PageContainer>
       <PageHeader
         title="Conceptos de Descuento"
         subtitle="Compensaciones · Concepto de descuento"
@@ -128,6 +129,6 @@ export default function ConceptoDescuentoPage() {
           />
         </Form>
       </Modal>
-    </div>
+    </PageContainer>
   );
 }

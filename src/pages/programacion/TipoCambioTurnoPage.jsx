@@ -1,6 +1,7 @@
 import { ArrowRightLeft, Plus } from 'lucide-react';
 import { useCrudResource } from '../../hooks/useCrudResource';
 import Modal from '../../components/Modal';
+import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
 import SearchInput from '../../components/ui/SearchInput';
@@ -76,7 +77,7 @@ export default function TipoCambioTurnoPage() {
   });
 
   return (
-    <div className="p-6">
+    <PageContainer>
 
       {/* Encabezado */}
       <PageHeader
@@ -89,16 +90,14 @@ export default function TipoCambioTurnoPage() {
       </PageHeader>
 
       {/* Buscador */}
-      <div className="mb-6">
-        <SearchInput
+      <SearchInput
           value={buscar}
           onChange={setBuscar}
           onSubmit={() => cargar()}
         />
-      </div>
 
       {/* Error general */}
-      {error && <Alert className="mb-4">{error}</Alert>}
+      <Alert>{error}</Alert>
 
       {/* Cargando */}
       {loading ? (
@@ -195,6 +194,6 @@ export default function TipoCambioTurnoPage() {
         </Form>
       </Modal>
 
-    </div>
+    </PageContainer>
   );
 }

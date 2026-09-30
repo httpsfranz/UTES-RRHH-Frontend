@@ -1,10 +1,11 @@
 import { FileText, Hash, Tag, Scale } from 'lucide-react';
 import Field from '../../components/ui/Field';
+import FormGrid from '../../components/ui/FormGrid';
 
 export default function RegimenLaboralForm({ form, setForm, errors }) {
   return (
     <>
-      <div className="grid grid-cols-2 gap-4">
+      <FormGrid>
         <Field
           form={form}
           setForm={setForm}
@@ -22,7 +23,7 @@ export default function RegimenLaboralForm({ form, setForm, errors }) {
           label="Nombre"
           icon={Tag}
         />
-      </div>
+      </FormGrid>
 
       <Field
         form={form}

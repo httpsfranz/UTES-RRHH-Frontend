@@ -1,4 +1,4 @@
-import { CalendarRange, Plus } from 'lucide-react';
+import { Shield, Plus } from 'lucide-react';
 import { useCrudResource } from '../../hooks/useCrudResource';
 import Modal from '../../components/Modal';
 import PageContainer from '../../components/ui/PageContainer';
@@ -12,40 +12,38 @@ import CardGrid from '../../components/ui/CardGrid';
 import EntityCard from '../../components/ui/EntityCard';
 import Form from '../../components/ui/Form';
 import FormActions from '../../components/ui/FormActions';
-import TipoPeriodoProgramacionForm from './TipoPeriodoProgramacionForm';
+import RolForm from './RolForm';
 
 const campoVacio = {
-  TipoPeriodoProgramacionCodigo: '',
-  TipoPeriodoProgramacionNombre: '',
-  TipoPeriodoProgramacionDias: '',
-  TipoPeriodoProgramacionDescripcion: '',
+  RolCodigo: '',
+  RolNombre: '',
+  RolDescripcion: '',
 };
 
-function mapToForm(tipo) {
+function mapToForm(item) {
   return {
-    TipoPeriodoProgramacionCodigo: tipo.codigo ?? '',
-    TipoPeriodoProgramacionNombre: tipo.nombre ?? '',
-    TipoPeriodoProgramacionDias: tipo.dias ?? '',
-    TipoPeriodoProgramacionDescripcion: tipo.descripcion ?? '',
+    RolCodigo: item.codigo ?? '',
+    RolNombre: item.nombre ?? '',
+    RolDescripcion: item.descripcion ?? '',
   };
 }
 
-export default function TipoPeriodoProgramacionPage() {
+export default function RolPage() {
   const {
     items, loading, error, buscar, setBuscar, cargar, modalOpen, editando,
     form, setForm, erroresForm, guardando, abrirCrear, abrirEditar, cerrarModal, guardar, desactivar,
   } = useCrudResource({
-    endpoint: '/tipos-periodo-programacion',
+    endpoint: '/roles',
     emptyForm: campoVacio,
     mapToForm,
-    deactivateErrorMessage: 'No se pudo desactivar el tipo de período.',
+    deactivateErrorMessage: 'No se pudo desactivar el rol.',
   });
 
   return (
     <PageContainer>
-      <PageHeader title="Tipos de período de programación" subtitle="Programación · Tipo de período">
+      <PageHeader title="Roles" subtitle="Seguridad · Rol">
         <Button onClick={abrirCrear} icon={Plus}>
-          Nuevo tipo de período
+          Nuevo rol
         </Button>
       </PageHeader>
 
@@ -54,18 +52,18 @@ export default function TipoPeriodoProgramacionPage() {
       <Alert>{error}</Alert>
 
       {loading ? (
-        <LoadingState message="Cargando tipos de período…" />
+        <LoadingState message="Cargando roles…" />
       ) : items.length === 0 ? (
-        <EmptyState icon={CalendarRange} message="No hay tipos de período registrados todavía." />
+        <EmptyState icon={Shield} message="No hay roles registrados todavía." />
       ) : (
         <CardGrid>
           {items.map((item) => (
             <EntityCard
               key={item.id}
-              icon={CalendarRange}
+              icon={Shield}
               active={item.activo}
               title={item.nombre}
-              meta={[item.dias && `${item.dias} días`, item.descripcion]}
+              meta={[item.descripcion]}
               footer={item.codigo}
               onEdit={() => abrirEditar(item)}
               onToggle={item.activo ? () => desactivar(item) : undefined}
@@ -77,10 +75,10 @@ export default function TipoPeriodoProgramacionPage() {
       <Modal
         open={modalOpen}
         onClose={cerrarModal}
-        title={editando ? 'Editar tipo de período' : 'Nuevo tipo de período'}
+        title={editando ? 'Editar rol' : 'Nuevo rol'}
       >
         <Form onSubmit={guardar} generalError={erroresForm.general?.[0]}>
-          <TipoPeriodoProgramacionForm form={form} setForm={setForm} errors={erroresForm} />
+          <RolForm form={form} setForm={setForm} errors={erroresForm} />
           <FormActions onCancel={cerrarModal} submitting={guardando} />
         </Form>
       </Modal>
