@@ -1,6 +1,7 @@
 import { FileText, Plus } from 'lucide-react';
 import { useCrudResource } from '../../hooks/useCrudResource';
 import Modal from '../../components/Modal';
+import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
 import SearchInput from '../../components/ui/SearchInput';
@@ -55,7 +56,7 @@ export default function TipoCompensacionPage() {
   });
 
   return (
-    <div className="p-6">
+    <PageContainer>
       <PageHeader
         title="Tipos de Compensación"
         subtitle="Compensaciones · Tipo de compensación"
@@ -129,6 +130,6 @@ export default function TipoCompensacionPage() {
           />
         </Form>
       </Modal>
-    </div>
+    </PageContainer>
   );
 }

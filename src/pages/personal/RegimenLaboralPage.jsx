@@ -12,25 +12,29 @@ import CardGrid from '../../components/ui/CardGrid';
 import EntityCard from '../../components/ui/EntityCard';
 import Form from '../../components/ui/Form';
 import FormActions from '../../components/ui/FormActions';
-import ConceptoDescuentoForm from './ConceptoDescuentoForm';
+import RegimenLaboralForm from './RegimenLaboralForm';
 
 const campoVacio = {
-  codigo: '',
-  nombre: '',
-  descripcion: '',
+  RegimenLaboralCodigo: '',
+  RegimenLaboralNombre: '',
+  RegimenLaboralBaseLegal: '',
+  RegimenLaboralDescripcion: '',
+  RegimenLaboralEstado: true,
 };
 
-function mapToForm(concepto) {
+function mapToForm(regimen) {
   return {
-    codigo: concepto.codigo ?? '',
-    nombre: concepto.nombre ?? '',
-    descripcion: concepto.descripcion ?? '',
+    RegimenLaboralCodigo: regimen.codigo ?? '',
+    RegimenLaboralNombre: regimen.nombre ?? '',
+    RegimenLaboralBaseLegal: regimen.base_legal ?? '',
+    RegimenLaboralDescripcion: regimen.descripcion ?? '',
+    RegimenLaboralEstado: regimen.activo ?? true,
   };
 }
 
-export default function ConceptoDescuentoPage() {
+export default function RegimenLaboralPage() {
   const {
-    items: conceptos,
+    items: regimenes,
     loading,
     error,
     buscar,
@@ -48,20 +52,21 @@ export default function ConceptoDescuentoPage() {
     guardar,
     desactivar,
   } = useCrudResource({
-    endpoint: '/conceptos-descuento',
+    endpoint: '/regimenes-laborales',
     emptyForm: campoVacio,
     mapToForm,
-    deactivateErrorMessage: 'No se pudo desactivar el concepto de descuento.',
+    deactivateErrorMessage:
+      'No se pudo desactivar el régimen laboral.',
   });
 
   return (
     <PageContainer>
       <PageHeader
-        title="Conceptos de Descuento"
-        subtitle="Compensaciones · Concepto de descuento"
+        title="Regímenes Laborales"
+        subtitle="Personal · Régimen laboral"
       >
         <Button onClick={abrirCrear} icon={Plus}>
-          Nuevo concepto
+          Nuevo régimen
         </Button>
       </PageHeader>
 
@@ -74,29 +79,32 @@ export default function ConceptoDescuentoPage() {
       <Alert>{error}</Alert>
 
       {loading ? (
-        <LoadingState message="Cargando conceptos de descuento…" />
-      ) : conceptos.length === 0 ? (
+        <LoadingState message="Cargando regímenes laborales…" />
+      ) : regimenes.length === 0 ? (
         <EmptyState
           icon={FileText}
-          message="No hay conceptos de descuento registrados todavía."
+          message="No hay regímenes laborales registrados todavía."
         />
       ) : (
         <CardGrid>
-          {conceptos.map((concepto) => (
+          {regimenes.map((regimen) => (
             <EntityCard
-              key={concepto.id}
+              key={regimen.id}
               icon={FileText}
-              active={concepto.activo}
-              title={concepto.nombre}
+              active={regimen.activo}
+              title={regimen.nombre}
               meta={[
-                concepto.codigo && `Código: ${concepto.codigo}`,
-                concepto.descripcion,
-              ]}
-              footer={`ID: ${concepto.id}`}
-              onEdit={() => abrirEditar(concepto)}
+                regimen.codigo &&
+                  `Código: ${regimen.codigo}`,
+                regimen.base_legal &&
+                  `Base legal: ${regimen.base_legal}`,
+                regimen.descripcion,
+              ].filter(Boolean)}
+              footer={`ID: ${regimen.id}`}
+              onEdit={() => abrirEditar(regimen)}
               onToggle={
-                concepto.activo
-                  ? () => desactivar(concepto)
+                regimen.activo
+                  ? () => desactivar(regimen)
                   : undefined
               }
             />
@@ -109,15 +117,15 @@ export default function ConceptoDescuentoPage() {
         onClose={cerrarModal}
         title={
           editando
-            ? 'Editar concepto de descuento'
-            : 'Nuevo concepto de descuento'
+            ? 'Editar régimen laboral'
+            : 'Nuevo régimen laboral'
         }
       >
         <Form
           onSubmit={guardar}
           generalError={erroresForm.general?.[0]}
         >
-          <ConceptoDescuentoForm
+          <RegimenLaboralForm
             form={form}
             setForm={setForm}
             errors={erroresForm}

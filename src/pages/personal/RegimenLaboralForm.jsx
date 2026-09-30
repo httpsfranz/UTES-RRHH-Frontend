@@ -1,8 +1,8 @@
-import { FileText, Hash, Tag } from 'lucide-react';
+import { FileText, Hash, Tag, Scale } from 'lucide-react';
 import Field from '../../components/ui/Field';
 import FormGrid from '../../components/ui/FormGrid';
 
-export default function ConceptoDescuentoForm({ form, setForm, errors }) {
+export default function RegimenLaboralForm({ form, setForm, errors }) {
   return (
     <>
       <FormGrid>
@@ -10,7 +10,7 @@ export default function ConceptoDescuentoForm({ form, setForm, errors }) {
           form={form}
           setForm={setForm}
           errors={errors}
-          name="ConceptoDescuentoCodigo"
+          name="RegimenLaboralCodigo"
           label="Código"
           icon={Hash}
         />
@@ -19,7 +19,7 @@ export default function ConceptoDescuentoForm({ form, setForm, errors }) {
           form={form}
           setForm={setForm}
           errors={errors}
-          name="ConceptoDescuentoNombre"
+          name="RegimenLaboralNombre"
           label="Nombre"
           icon={Tag}
         />
@@ -29,7 +29,16 @@ export default function ConceptoDescuentoForm({ form, setForm, errors }) {
         form={form}
         setForm={setForm}
         errors={errors}
-        name="ConceptoDescuentoDescripcion"
+        name="RegimenLaboralBaseLegal"
+        label="Base legal"
+        icon={Scale}
+      />
+
+      <Field
+        form={form}
+        setForm={setForm}
+        errors={errors}
+        name="RegimenLaboralDescripcion"
         label="Descripción"
         icon={FileText}
       />

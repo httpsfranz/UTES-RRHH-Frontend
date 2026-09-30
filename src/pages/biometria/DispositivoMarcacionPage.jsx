@@ -1,6 +1,7 @@
 import { Plus, ScanFace } from 'lucide-react';
 import { useCrudResource } from '../../hooks/useCrudResource';
 import Modal from '../../components/Modal';
+import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
 import SearchInput from '../../components/ui/SearchInput';
@@ -66,7 +67,7 @@ export default function DispositivoMarcacionPage() {
   });
 
   return (
-    <div className="p-6">
+    <PageContainer>
       <PageHeader title="Dispositivos de Marcación" subtitle="Biometría · Dispositivo de marcación">
         <Button onClick={abrirCrear} icon={Plus}>
           Nuevo dispositivo
@@ -112,6 +113,6 @@ export default function DispositivoMarcacionPage() {
           <FormActions onCancel={cerrarModal} submitting={guardando} />
         </Form>
       </Modal>
-    </div>
+    </PageContainer>
   );
 }

@@ -1,6 +1,7 @@
 import { Building2, Plus } from 'lucide-react';
 import { fieldMapper, useCrudResource } from '../../hooks/useCrudResource';
 import Modal from '../../components/Modal';
+import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
 import SearchInput from '../../components/ui/SearchInput';
@@ -13,7 +14,7 @@ import Form from '../../components/ui/Form';
 import FormActions from '../../components/ui/FormActions';
 import MicroredForm from './MicroredForm';
 
-import { Pencil, Power } from 'lucide-react';
+import RowActions from '../../components/ui/RowActions';
 import Table from '../../components/ui/Table';
 import StatusBadge from '../../components/ui/StatusBadge';
 
@@ -80,34 +81,16 @@ export default function MicroredPage() {
       key: 'acciones',
       header: '',
       render: (microred) => (
-        <div className="flex justify-end gap-1">
-          <button
-            type="button"
-            onClick={() => abrirEditar(microred)}
-            className="rounded-lg p-1.5 text-muted transition-colors hover:bg-page hover:text-brand"
-            aria-label="Editar"
-            title="Editar"
-          >
-            <Pencil size={14} />
-          </button>
-          {microred.activo && (
-            <button
-              type="button"
-              onClick={() => desactivar(microred)}
-              className="rounded-lg p-1.5 text-muted transition-colors hover:bg-red-50 hover:text-red-600"
-              aria-label="Desactivar"
-              title="Desactivar"
-            >
-              <Power size={14} />
-            </button>
-          )}
-        </div>
+        <RowActions
+          onEdit={() => abrirEditar(microred)}
+          onToggle={microred.activo ? () => desactivar(microred) : undefined}
+        />
       ),
     },
   ];
 
   return (
-    <div className="p-6">
+    <PageContainer>
       <PageHeader title="Microredes" subtitle="Organización · Microred">
         <Button onClick={abrirCrear} icon={Plus}>
           Nueva microred
@@ -156,6 +139,6 @@ export default function MicroredPage() {
           <FormActions onCancel={cerrarModal} submitting={guardando} />
         </Form>
       </Modal>
-    </div>
+    </PageContainer>
   );
 }
