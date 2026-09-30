@@ -1,10 +1,10 @@
 import { motion } from 'motion/react';
-import { Pencil, Power } from 'lucide-react';
+import { Pencil, Power, Trash2 } from 'lucide-react';
 import StatusBadge from './StatusBadge';
 
 // La tarjeta de catalogo que se repite en (casi) todos los modulos de mantenimiento:
 // avatar (icono fijo o inicial del nombre) + badge de estado arriba, titulo + lineas
-// de meta-info, y una franja inferior con el dato "corto" (codigo/id) + acciones.
+// de meta-info (el badge se omite si `active` no viene: tablas sin Estado, que se eliminan con onDelete), y una franja inferior con el dato "corto" (codigo/id) + acciones.
 export default function EntityCard({
   icon: Icon,
   initial,
@@ -14,6 +14,7 @@ export default function EntityCard({
   footer,
   onEdit,
   onToggle,
+  onDelete,
 }) {
   return (
     <motion.div
@@ -27,7 +28,7 @@ export default function EntityCard({
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand/10 text-sm font-semibold text-brand">
             {Icon ? <Icon size={20} /> : initial}
           </div>
-          <StatusBadge active={active} />
+          {active !== undefined && <StatusBadge active={active} />}
         </div>
 
         <h3 className="mt-4 line-clamp-2 text-base font-medium leading-tight text-heading">
@@ -64,6 +65,17 @@ export default function EntityCard({
               title="Desactivar"
             >
               <Power size={14} />
+            </button>
+          )}
+          {onDelete && (
+            <button
+              type="button"
+              onClick={onDelete}
+              className="rounded-lg p-1.5 text-muted transition-colors hover:bg-red-50 hover:text-red-600"
+              aria-label="Eliminar"
+              title="Eliminar"
+            >
+              <Trash2 size={14} />
             </button>
           )}
         </div>
