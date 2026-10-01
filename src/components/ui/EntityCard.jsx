@@ -15,6 +15,7 @@ export default function EntityCard({
   onEdit,
   onToggle,
   onDelete,
+  extras,
 }) {
   return (
     <motion.div
@@ -46,7 +47,7 @@ export default function EntityCard({
 
       <div className="flex items-center justify-between gap-3 border-t border-line px-5 py-3">
         <span className="truncate text-xs font-medium text-muted">{footer}</span>
-        <ActionButtons active={active} onEdit={onEdit} onToggle={onToggle} onDelete={onDelete} />
+        <ActionButtons active={active} extras={extras} onEdit={onEdit} onToggle={onToggle} onDelete={onDelete} />
       </div>
     </motion.div>
   );

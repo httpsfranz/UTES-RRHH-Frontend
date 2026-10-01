@@ -23,7 +23,7 @@ const LIMITE_TARJETAS = 8;
  *   card     (item) => ({ icon | initial, title, meta: [...], footer })    la vista de tarjetas (opcional)
  *
  * El badge de Estado y los botones (editar, desactivar/reactivar, eliminar) se agregan solos
- * en ambas vistas. Si el modulo no tiene baja logica (no existe `activo`), no hay badge.
+ * en ambas vistas; `acciones` suma botones propios del modulo ([{ icon, label, onClick(item) }]). Si el modulo no tiene baja logica (no existe `activo`), no hay badge.
  */
 export default function EntityList({
   items,
@@ -38,6 +38,7 @@ export default function EntityList({
   onEdit,
   onToggle,
   onDelete,
+  acciones = [],
   getKey = (item) => item.id,
   threshold = LIMITE_TARJETAS,
 }) {
@@ -51,7 +52,9 @@ export default function EntityList({
   const soloTabla = !card;
   const automatica = items.length > threshold ? 'tabla' : 'tarjetas';
   const efectiva = soloTabla ? 'tabla' : vista === 'auto' ? automatica : vista;
-  const hayAcciones = onEdit || onToggle || onDelete;
+  const hayAcciones = onEdit || onToggle || onDelete || acciones.length > 0;
+  // Acciones propias del modulo: [{ icon, label, onClick(item) }]; cada una recibe el registro de su fila/tarjeta.
+  const extrasDe = (item) => acciones.map((a) => ({ ...a, onClick: () => a.onClick(item) }));
 
   const columnasTabla = [
     ...columns,
@@ -66,6 +69,7 @@ export default function EntityList({
             render: (item) => (
               <ActionButtons
                 active={conEstado ? isActive(item) : undefined}
+                extras={extrasDe(item)}
                 onEdit={onEdit && (() => onEdit(item))}
                 onToggle={onToggle && (() => onToggle(item))}
                 onDelete={onDelete && (() => onDelete(item))}
@@ -96,6 +100,7 @@ export default function EntityList({
               key={getKey(item)}
               {...card(item)}
               active={conEstado ? isActive(item) : undefined}
+              extras={extrasDe(item)}
               onEdit={onEdit && (() => onEdit(item))}
               onToggle={onToggle && (() => onToggle(item))}
               onDelete={onDelete && (() => onDelete(item))}

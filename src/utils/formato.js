@@ -20,3 +20,12 @@ export function formatoFechaHora(valor) {
   const m = /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/.exec(valor ?? '');
   return m ? `${m[3]}/${m[2]}/${m[1]} ${m[4]}:${m[5]}` : (valor ?? '—');
 }
+
+// 480 -> "8 h", 450 -> "7 h 30 min", 45 -> "45 min"
+export function formatoDuracion(minutos) {
+  if (minutos === null || minutos === undefined) return '—';
+  const h = Math.floor(minutos / 60);
+  const m = minutos % 60;
+  if (h === 0) return `${m} min`;
+  return m === 0 ? `${h} h` : `${h} h ${m} min`;
+}

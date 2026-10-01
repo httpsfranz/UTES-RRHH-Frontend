@@ -7,6 +7,14 @@ const FILTROS = {
   digitos: (valor) => valor.replace(/\D/g, ''),
   // Codigos de catalogo: mayusculas, sin espacios, solo letras/numeros y - _ . :
   codigo: (valor) => valor.toUpperCase().replace(/[^A-Z0-9_.:-]/g, ''),
+  // Numero con hasta 2 decimales (horas, factores): un solo punto, sin signo.
+  decimal: (valor) => {
+    const limpio = valor.replace(',', '.').replace(/[^\d.]/g, '');
+    const [entera, ...resto] = limpio.split('.');
+    return resto.length ? `${entera}.${resto.join('').slice(0, 2)}` : entera;
+  },
+  // Documentos alfanumericos (pasaporte): mayusculas, solo letras y numeros.
+  alfanumerico: (valor) => valor.toUpperCase().replace(/[^A-Z0-9]/g, ''),
   // Direccion IP v4/v6.
   ip: (valor) => valor.replace(/[^0-9a-fA-F.:]/g, ''),
 };

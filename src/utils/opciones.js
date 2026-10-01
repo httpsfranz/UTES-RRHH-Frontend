@@ -39,3 +39,21 @@ export const valoresDe = (opciones) => opciones.map((opcion) => opcion.value);
 
 export const etiquetaDe = (opciones, valor) =>
   opciones.find((opcion) => String(opcion.value) === String(valor))?.label ?? valor;
+
+// Categorias de establecimientos de salud (NTS de categorias del MINSA). Espeja EstablecimientoSaludRequest::CATEGORIAS.
+export const CATEGORIAS_EESS = ['I-1', 'I-2', 'I-3', 'I-4', 'II-1', 'II-2', 'II-E', 'III-1', 'III-2', 'III-E'].map((value) => ({
+  value,
+  label: value,
+}));
+
+// Tipo de tramo de la escala de tolerancia (CK_TramoToleranciaTipo).
+export const TIPOS_TRAMO = [
+  { value: 'TARDANZA', label: 'Tardanza al ingreso' },
+  { value: 'SALIDA_ANTICIPADA', label: 'Salida anticipada' },
+];
+
+// Sexo del trabajador (CK_TrabajadorSexo).
+export const SEXOS = [
+  { value: 'F', label: 'Femenino' },
+  { value: 'M', label: 'Masculino' },
+];

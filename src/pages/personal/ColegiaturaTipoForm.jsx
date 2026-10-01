@@ -5,7 +5,7 @@ import Select from '../../components/ui/Select';
 import FormGrid from '../../components/ui/FormGrid';
 
 export default function ColegiaturaTipoForm({ form, setForm, errors }) {
-  const { opciones: opcionesProfesion } = useOpciones('/profesiones', { sinOpcion: 'Sin profesión asociada' });
+  const { opciones: opcionesProfesion } = useOpciones('/profesiones', { actual: form.ProfesionId, sinOpcion: 'Sin profesión asociada' });
 
   return (
     <>

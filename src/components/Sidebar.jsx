@@ -12,7 +12,9 @@ const EASE_OUT = [0.16, 1, 0.3, 1];
 
 export default function Sidebar({ collapsed, onToggle }) {
   const location = useLocation();
-  const [openGroups, setOpenGroups] = useState(() => new Set());
+  // Acordeon: solo un grupo abierto a la vez. Al abrir uno nuevo, el anterior se pliega
+  // (con la misma animacion de altura/opacidad del submenu).
+  const [openGroup, setOpenGroup] = useState(null);
 
   // Si entras directo a una URL (o navegas), el grupo que contiene esa ruta se
   // despliega solo, para que el item activo sea visible sin tener que buscarlo.
@@ -22,20 +24,12 @@ export default function Sidebar({ collapsed, onToggle }) {
       // Sincroniza el estado local (que grupo esta abierto) con la señal externa
       // (la URL actual). Solo cambia cuando cambia la ruta, no en cada render.
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setOpenGroups((prev) => new Set(prev).add(grupoActivo.label));
+      setOpenGroup(grupoActivo.label);
     }
   }, [location.pathname]);
 
   function toggleGroup(label) {
-    setOpenGroups((prev) => {
-      const next = new Set(prev);
-      if (next.has(label)) {
-        next.delete(label);
-      } else {
-        next.add(label);
-      }
-      return next;
-    });
+    setOpenGroup((actual) => (actual === label ? null : label));
   }
 
   return (
@@ -86,7 +80,7 @@ export default function Sidebar({ collapsed, onToggle }) {
         <ul className="space-y-1">
           {menu.map((group) => {
             const Icon = group.icon;
-            const isOpen = openGroups.has(group.label);
+            const isOpen = openGroup === group.label;
 
             return (
               <li key={group.label}>

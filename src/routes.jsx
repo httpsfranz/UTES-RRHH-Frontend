@@ -14,6 +14,8 @@ import EstadoAsistenciaPage from './pages/asistencia/EstadoAsistenciaPage';
 // ORGANIZACIÓN
 import MicroredPage from './pages/organizacion/MicroredPage';
 
+import EstablecimientoSaludPage from './pages/organizacion/EstablecimientoSaludPage';
+
 // BIOMETRÍA
 import MetodoMarcacionPage from './pages/biometria/MetodoMarcacionPage';
 
@@ -33,6 +35,14 @@ import ParametroSistemaPage from './pages/configuracion/ParametroSistemaPage';
 
 import TablaToleranciaPage from './pages/configuracion/TablaToleranciaPage';
 
+import TramoToleranciaPage from './pages/configuracion/TramoToleranciaPage';
+
+import TurnoPage from './pages/configuracion/TurnoPage';
+
+import HorarioPage from './pages/configuracion/HorarioPage';
+
+import ParametroJornadaPage from './pages/configuracion/ParametroJornadaPage';
+
 import TipoJornadaPage from './pages/configuracion/TipoJornadaPage';
 
 // CONSOLIDACIÓN
@@ -42,6 +52,10 @@ import PeriodoAsistenciaPage from './pages/consolidacion/PeriodoAsistenciaPage';
 import TipoFaltaDisciplinariaPage from './pages/disciplina/TipoFaltaDisciplinariaPage';
 
 // PERSONAL
+import TrabajadorPage from './pages/personal/TrabajadorPage';
+
+import CargoPage from './pages/personal/CargoPage';
+
 import RegimenLaboralPage from './pages/personal/RegimenLaboralPage';
 
 import TipoDocumentoIdentidadPage from './pages/personal/TipoDocumentoIdentidadPage';
@@ -71,6 +85,8 @@ import TipoLicenciaPage from './pages/solicitudes/TipoLicenciaPage';
 
 import TipoPapeletaPage from './pages/solicitudes/TipoPapeletaPage';
 
+import MotivoPapeletaPage from './pages/solicitudes/MotivoPapeletaPage';
+
 // SOPORTE
 import CalendarioNoLaborablePage from './pages/soporte/CalendarioNoLaborablePage';
 
@@ -95,6 +111,7 @@ const paginasReales = {
 
   // ORGANIZACIÓN
   '/organizacion/microredes': MicroredPage,
+  '/organizacion/establecimientos': EstablecimientoSaludPage,
   '/organizacion/tipos-establecimiento': TipoEstablecimientoPage,
   '/organizacion/tipos-responsabilidad': TipoResponsabilidadPage,
 
@@ -105,6 +122,10 @@ const paginasReales = {
   // CONFIGURACIÓN
   '/configuracion/parametros-sistema': ParametroSistemaPage,
   '/configuracion/tablas-tolerancia': TablaToleranciaPage,
+  '/configuracion/tramos-tolerancia': TramoToleranciaPage,
+  '/configuracion/turnos': TurnoPage,
+  '/configuracion/horarios': HorarioPage,
+  '/configuracion/parametros-jornada': ParametroJornadaPage,
   '/configuracion/tipos-jornada': TipoJornadaPage,
 
   // CONSOLIDACIÓN
@@ -114,6 +135,8 @@ const paginasReales = {
   '/disciplina/tipos-falta': TipoFaltaDisciplinariaPage,
 
   // PERSONAL
+  '/personal/trabajadores': TrabajadorPage,
+  '/personal/cargos': CargoPage,
   '/personal/regimen-laboral': RegimenLaboralPage,
   '/personal/tipos-documento-identidad': TipoDocumentoIdentidadPage,
   '/personal/grupos-ocupacionales': GrupoOcupacionalPage,
@@ -133,6 +156,7 @@ const paginasReales = {
   // SOLICITUDES
   '/solicitudes/tipos-licencia': TipoLicenciaPage,
   '/solicitudes/tipos-papeleta': TipoPapeletaPage,
+  '/solicitudes/motivos-papeleta': MotivoPapeletaPage,
 
   // SOPORTE
   '/soporte/calendario-no-laborable': CalendarioNoLaborablePage,

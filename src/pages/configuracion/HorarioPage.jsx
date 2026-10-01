@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { KeyRound, Plus, Shield } from 'lucide-react';
+import { CalendarClock, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
 import { validador, codigo, requerido } from '../../utils/validaciones';
+import { siNo } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
@@ -9,51 +9,53 @@ import SearchInput from '../../components/ui/SearchInput';
 import Alert from '../../components/ui/Alert';
 import EntityList from '../../components/ui/EntityList';
 import FormModal from '../../components/ui/FormModal';
-import RolForm from './RolForm';
-import RolPermisosModal from './RolPermisosModal';
+import HorarioForm from './HorarioForm';
 
 const { emptyForm, mapToForm } = formModel({
-  RolCodigo: 'codigo',
-  RolNombre: 'nombre',
-  RolDescripcion: 'descripcion',
+  HorarioCodigo: 'codigo',
+  HorarioNombre: 'nombre',
+  TipoJornadaId: 'tipo_jornada_id',
+  EessId: 'eess_id',
+  HorarioDescripcion: 'descripcion',
+  HorarioEsRotativo: ['es_rotativo', false],
 });
 
 const validate = validador({
-  RolCodigo: [requerido, codigo],
-  RolNombre: [requerido],
+  HorarioCodigo: [requerido, codigo],
+  HorarioNombre: [requerido],
+  TipoJornadaId: [requerido],
 });
 
 const columns = [
   { key: 'codigo', header: 'Código' },
   { key: 'nombre', header: 'Nombre' },
-  { key: 'descripcion', header: 'Descripción' },
+  { key: 'jornada', header: 'Jornada', render: (item) => item.tipo_jornada?.nombre ?? '—' },
+  { key: 'eess', header: 'Alcance', render: (item) => item.eess?.nombre ?? 'Toda la Red' },
+  { key: 'es_rotativo', header: 'Rotativo', render: (item) => siNo(item.es_rotativo) },
 ];
 
 const card = (item) => ({
+  icon: CalendarClock,
   title: item.nombre,
-  meta: [item.descripcion],
+  meta: [item.tipo_jornada?.nombre, item.eess?.nombre ?? 'Toda la Red', item.es_rotativo && 'Rotativo', item.descripcion],
   footer: item.codigo,
-  icon: Shield,
 });
 
-// Roles + asignacion de sus permisos (tabla puente Seguridad.RolPermiso): los permisos de un rol se
-// gestionan desde aqui con el boton "Permisos", no en una pantalla aparte.
-export default function RolPage() {
+export default function HorarioPage() {
   const crud = useCrudResource({
-    endpoint: '/roles',
+    endpoint: '/horarios',
     emptyForm,
     mapToForm,
     validate,
-    estadoKey: 'RolEstado',
+    estadoKey: 'HorarioEstado',
     buildConfirmMessage: (item) => `¿Desactivar "${item.nombre}"?`,
   });
-  const [rolDePermisos, setRolDePermisos] = useState(null);
 
   return (
     <PageContainer>
-      <PageHeader title="Roles" subtitle="Seguridad · Rol">
+      <PageHeader title="Horarios" subtitle="Configuración · Horario">
         <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo rol
+          Nuevo horario
         </Button>
       </PageHeader>
 
@@ -65,12 +67,11 @@ export default function RolPage() {
         items={crud.items}
         total={crud.total}
         loading={crud.loading}
-        loadingMessage="Cargando roles…"
-        emptyIcon={Shield}
-        emptyMessage="No hay roles registrados todavía."
+        loadingMessage="Cargando horarios…"
+        emptyIcon={CalendarClock}
+        emptyMessage="No hay horarios registrados todavía."
         columns={columns}
         card={card}
-        acciones={[{ icon: KeyRound, label: 'Permisos', onClick: setRolDePermisos }]}
         onEdit={crud.abrirEditar}
         onToggle={crud.alternarEstado}
       />
@@ -78,15 +79,13 @@ export default function RolPage() {
       <FormModal
         open={crud.modalOpen}
         onClose={crud.cerrarModal}
-        title={crud.editando ? 'Editar rol' : 'Nuevo rol'}
+        title={crud.editando ? 'Editar horario' : 'Nuevo horario'}
         onSubmit={crud.guardar}
         error={crud.erroresForm.general?.[0]}
         submitting={crud.guardando}
       >
-        <RolForm form={crud.form} setForm={crud.setForm} errors={crud.erroresForm} />
+        <HorarioForm form={crud.form} setForm={crud.setForm} errors={crud.erroresForm} />
       </FormModal>
-
-      <RolPermisosModal rol={rolDePermisos} onClose={() => setRolDePermisos(null)} />
     </PageContainer>
   );
 }

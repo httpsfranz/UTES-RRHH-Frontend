@@ -7,7 +7,7 @@ import FormGrid from '../../components/ui/FormGrid';
 import { TIPOS_DIA_NO_LABORABLE } from '../../utils/opciones';
 
 export default function CalendarioNoLaborableForm({ form, setForm, errors }) {
-  const { opciones: opcionesMicrored } = useOpciones('/microredes', { sinOpcion: 'Toda la Red' });
+  const { opciones: opcionesMicrored } = useOpciones('/microredes', { actual: form.MicroredId, sinOpcion: 'Toda la Red' });
 
   return (
     <>

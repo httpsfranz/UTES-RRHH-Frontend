@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { KeyRound, Plus, Shield } from 'lucide-react';
+import { Briefcase, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
 import { validador, codigo, requerido } from '../../utils/validaciones';
+import { siNo } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
@@ -9,51 +9,51 @@ import SearchInput from '../../components/ui/SearchInput';
 import Alert from '../../components/ui/Alert';
 import EntityList from '../../components/ui/EntityList';
 import FormModal from '../../components/ui/FormModal';
-import RolForm from './RolForm';
-import RolPermisosModal from './RolPermisosModal';
+import CargoForm from './CargoForm';
 
 const { emptyForm, mapToForm } = formModel({
-  RolCodigo: 'codigo',
-  RolNombre: 'nombre',
-  RolDescripcion: 'descripcion',
+  CargoCodigo: 'codigo',
+  GrupoOcupacionalId: 'grupo_ocupacional_id',
+  CargoNombre: 'nombre',
+  CargoDescripcion: 'descripcion',
+  CargoEsJefatura: ['es_jefatura', false],
 });
 
 const validate = validador({
-  RolCodigo: [requerido, codigo],
-  RolNombre: [requerido],
+  CargoCodigo: [codigo],
+  GrupoOcupacionalId: [requerido],
+  CargoNombre: [requerido],
 });
 
 const columns = [
   { key: 'codigo', header: 'Código' },
   { key: 'nombre', header: 'Nombre' },
-  { key: 'descripcion', header: 'Descripción' },
+  { key: 'grupo', header: 'Grupo ocupacional', render: (item) => item.grupo_ocupacional?.nombre ?? '—' },
+  { key: 'es_jefatura', header: 'Jefatura', render: (item) => siNo(item.es_jefatura) },
 ];
 
 const card = (item) => ({
+  initial: item.nombre?.[0],
   title: item.nombre,
-  meta: [item.descripcion],
-  footer: item.codigo,
-  icon: Shield,
+  meta: [item.grupo_ocupacional?.nombre, item.es_jefatura && 'Cargo de jefatura', item.descripcion],
+  footer: item.codigo ?? 'Sin código',
 });
 
-// Roles + asignacion de sus permisos (tabla puente Seguridad.RolPermiso): los permisos de un rol se
-// gestionan desde aqui con el boton "Permisos", no en una pantalla aparte.
-export default function RolPage() {
+export default function CargoPage() {
   const crud = useCrudResource({
-    endpoint: '/roles',
+    endpoint: '/cargos',
     emptyForm,
     mapToForm,
     validate,
-    estadoKey: 'RolEstado',
+    estadoKey: 'CargoEstado',
     buildConfirmMessage: (item) => `¿Desactivar "${item.nombre}"?`,
   });
-  const [rolDePermisos, setRolDePermisos] = useState(null);
 
   return (
     <PageContainer>
-      <PageHeader title="Roles" subtitle="Seguridad · Rol">
+      <PageHeader title="Cargos" subtitle="Personal · Cargo">
         <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo rol
+          Nuevo cargo
         </Button>
       </PageHeader>
 
@@ -65,12 +65,11 @@ export default function RolPage() {
         items={crud.items}
         total={crud.total}
         loading={crud.loading}
-        loadingMessage="Cargando roles…"
-        emptyIcon={Shield}
-        emptyMessage="No hay roles registrados todavía."
+        loadingMessage="Cargando cargos…"
+        emptyIcon={Briefcase}
+        emptyMessage="No hay cargos registrados todavía."
         columns={columns}
         card={card}
-        acciones={[{ icon: KeyRound, label: 'Permisos', onClick: setRolDePermisos }]}
         onEdit={crud.abrirEditar}
         onToggle={crud.alternarEstado}
       />
@@ -78,15 +77,13 @@ export default function RolPage() {
       <FormModal
         open={crud.modalOpen}
         onClose={crud.cerrarModal}
-        title={crud.editando ? 'Editar rol' : 'Nuevo rol'}
+        title={crud.editando ? 'Editar cargo' : 'Nuevo cargo'}
         onSubmit={crud.guardar}
         error={crud.erroresForm.general?.[0]}
         submitting={crud.guardando}
       >
-        <RolForm form={crud.form} setForm={crud.setForm} errors={crud.erroresForm} />
+        <CargoForm form={crud.form} setForm={crud.setForm} errors={crud.erroresForm} />
       </FormModal>
-
-      <RolPermisosModal rol={rolDePermisos} onClose={() => setRolDePermisos(null)} />
     </PageContainer>
   );
 }

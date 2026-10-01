@@ -5,7 +5,7 @@ import Select from '../../components/ui/Select';
 import FormGrid from '../../components/ui/FormGrid';
 
 export default function DispositivoMarcacionForm({ form, setForm, errors }) {
-  const { opciones: opcionesEess } = useOpciones('/establecimientos', { sinOpcion: 'Sin establecimiento asignado' });
+  const { opciones: opcionesEess } = useOpciones('/establecimientos', { actual: form.EessId, sinOpcion: 'Sin establecimiento asignado' });
 
   return (
     <>

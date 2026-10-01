@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { KeyRound, Plus, Shield } from 'lucide-react';
+import { ListChecks, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
 import { validador, codigo, requerido } from '../../utils/validaciones';
 import PageContainer from '../../components/ui/PageContainer';
@@ -9,51 +8,49 @@ import SearchInput from '../../components/ui/SearchInput';
 import Alert from '../../components/ui/Alert';
 import EntityList from '../../components/ui/EntityList';
 import FormModal from '../../components/ui/FormModal';
-import RolForm from './RolForm';
-import RolPermisosModal from './RolPermisosModal';
+import MotivoPapeletaForm from './MotivoPapeletaForm';
 
 const { emptyForm, mapToForm } = formModel({
-  RolCodigo: 'codigo',
-  RolNombre: 'nombre',
-  RolDescripcion: 'descripcion',
+  MotivoPapeletaCodigo: 'codigo',
+  TipoPapeletaId: 'tipo_papeleta_id',
+  MotivoPapeletaNombre: 'nombre',
+  MotivoPapeletaDescripcion: 'descripcion',
 });
 
 const validate = validador({
-  RolCodigo: [requerido, codigo],
-  RolNombre: [requerido],
+  MotivoPapeletaCodigo: [requerido, codigo],
+  TipoPapeletaId: [requerido],
+  MotivoPapeletaNombre: [requerido],
 });
 
 const columns = [
   { key: 'codigo', header: 'Código' },
   { key: 'nombre', header: 'Nombre' },
-  { key: 'descripcion', header: 'Descripción' },
+  { key: 'tipo', header: 'Tipo de papeleta', render: (item) => item.tipo_papeleta?.nombre ?? '—' },
 ];
 
 const card = (item) => ({
+  initial: item.nombre?.[0],
   title: item.nombre,
-  meta: [item.descripcion],
+  meta: [item.tipo_papeleta?.nombre, item.descripcion],
   footer: item.codigo,
-  icon: Shield,
 });
 
-// Roles + asignacion de sus permisos (tabla puente Seguridad.RolPermiso): los permisos de un rol se
-// gestionan desde aqui con el boton "Permisos", no en una pantalla aparte.
-export default function RolPage() {
+export default function MotivoPapeletaPage() {
   const crud = useCrudResource({
-    endpoint: '/roles',
+    endpoint: '/motivos-papeleta',
     emptyForm,
     mapToForm,
     validate,
-    estadoKey: 'RolEstado',
+    estadoKey: 'MotivoPapeletaEstado',
     buildConfirmMessage: (item) => `¿Desactivar "${item.nombre}"?`,
   });
-  const [rolDePermisos, setRolDePermisos] = useState(null);
 
   return (
     <PageContainer>
-      <PageHeader title="Roles" subtitle="Seguridad · Rol">
+      <PageHeader title="Motivos de papeleta" subtitle="Solicitudes · Motivo de papeleta">
         <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo rol
+          Nuevo motivo
         </Button>
       </PageHeader>
 
@@ -65,12 +62,11 @@ export default function RolPage() {
         items={crud.items}
         total={crud.total}
         loading={crud.loading}
-        loadingMessage="Cargando roles…"
-        emptyIcon={Shield}
-        emptyMessage="No hay roles registrados todavía."
+        loadingMessage="Cargando motivos de papeleta…"
+        emptyIcon={ListChecks}
+        emptyMessage="No hay motivos de papeleta registrados todavía."
         columns={columns}
         card={card}
-        acciones={[{ icon: KeyRound, label: 'Permisos', onClick: setRolDePermisos }]}
         onEdit={crud.abrirEditar}
         onToggle={crud.alternarEstado}
       />
@@ -78,15 +74,13 @@ export default function RolPage() {
       <FormModal
         open={crud.modalOpen}
         onClose={crud.cerrarModal}
-        title={crud.editando ? 'Editar rol' : 'Nuevo rol'}
+        title={crud.editando ? 'Editar motivo de papeleta' : 'Nuevo motivo de papeleta'}
         onSubmit={crud.guardar}
         error={crud.erroresForm.general?.[0]}
         submitting={crud.guardando}
       >
-        <RolForm form={crud.form} setForm={crud.setForm} errors={crud.erroresForm} />
+        <MotivoPapeletaForm form={crud.form} setForm={crud.setForm} errors={crud.erroresForm} />
       </FormModal>
-
-      <RolPermisosModal rol={rolDePermisos} onClose={() => setRolDePermisos(null)} />
     </PageContainer>
   );
 }
