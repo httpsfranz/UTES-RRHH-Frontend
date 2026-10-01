@@ -46,7 +46,7 @@ export default function Field({
           const nuevo = filter ? aplicarFiltro(filter, event.target.value) : event.target.value;
           setForm((f) => ({ ...f, [name]: nuevo }));
         }}
-        className={`w-full rounded-xl border bg-surface py-2 ${error ? 'border-red-400' : 'border-line'} ${
+        className={`w-full rounded-xl border bg-surface py-2.5 ${error ? 'border-rose-400' : 'border-line'} ${
           icon ? 'pl-9' : 'pl-3'
         } pr-3 text-sm text-heading outline-none transition-colors focus:border-brand focus:ring-4 focus:ring-brand/10`}
       />

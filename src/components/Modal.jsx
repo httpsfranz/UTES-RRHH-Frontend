@@ -26,7 +26,7 @@ export default function Modal({ open, onClose, title, children }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="absolute inset-0 bg-white/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-navy/25 backdrop-blur-[3px]"
             onClick={onClose}
           />
 
@@ -35,20 +35,20 @@ export default function Modal({ open, onClose, title, children }) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 8 }}
             transition={{ duration: 0.2, ease: EASE_OUT }}
-            className="relative z-10 w-full max-w-lg rounded-xl border border-line bg-surface shadow-xl"
+            className="relative z-10 w-full max-w-lg rounded-3xl border border-line bg-surface shadow-[var(--shadow-pop)]"
           >
-            <div className="flex items-center justify-between border-b border-line px-5 py-4">
-              <h2 className="text-base font-semibold text-heading">{title}</h2>
+            <div className="flex items-center justify-between border-b border-line-soft px-6 py-5">
+              <h2 className="text-[17px] font-semibold tracking-tight text-heading">{title}</h2>
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-lg p-1.5 text-muted transition-colors hover:bg-page hover:text-heading"
+                className="rounded-xl p-2 text-muted transition-colors hover:bg-page hover:text-heading"
                 aria-label="Cerrar"
               >
                 <X size={18} />
               </button>
             </div>
-            <div className="max-h-[70vh] overflow-y-auto px-5 py-4">{children}</div>
+            <div className="max-h-[70vh] overflow-y-auto px-6 py-5">{children}</div>
           </motion.div>
         </div>
       )}

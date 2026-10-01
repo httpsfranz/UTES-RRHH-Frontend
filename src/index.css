@@ -3,36 +3,130 @@
 
 /* Tokens del sistema de diseño. Tailwind v4 los lee directo de aqui: definir
    --color-page genera automaticamente las clases bg-page / text-page / border-page, etc.
-   Si mas adelante quieres cambiar un color en todo el proyecto, se edita en un solo lugar. */
+   Si quieres cambiar un color en todo el proyecto, se edita en un solo lugar. */
 @theme {
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
 
   /* Fondo general vs. superficies (tarjetas, modal, navbar) */
-  --color-page: #f8fafc;
+  --color-page: #f5f8fc;
   --color-surface: #ffffff;
-  --color-line: #e5e7eb;
+  --color-line: #e5eaf1;
+  --color-line-soft: #eef2f7;
 
-  /* Sidebar: el valor base es el que tú ya habías fijado a mano; sidebar-hover es el
-     tono "ligeramente mas claro" que pide el spec para hover/activo. */
-  --color-sidebar: #1d2634;
-  --color-sidebar-hover: #1e293b;
+  /* Sidebar: azul marino institucional. `sidebar-sub` es el tono mas oscuro de los submenus. */
+  --color-navy: #0b2545;
+  --color-sidebar: #0a2540;
+  --color-sidebar-hover: #103258;
+  --color-sidebar-sub: #071d35;
 
   /* Texto */
-  --color-heading: #111827;
+  --color-heading: #0f2742;
   --color-muted: #64748b;
 
-  /* Accion principal */
-  --color-brand: #2563eb;
-  --color-brand-dark: #1d4ed8;
+  /* Accion principal: turquesa / verde azulado */
+  --color-brand: #0f9d94;
+  --color-brand-dark: #0b7f78;
+  --color-brand-soft: #e6f6f5;
 
-  /* Acentos para indicadores puntuales (badges, KPIs) */
-  --color-accent-green: #16a34a;
+  /* Estados semanticos (suaves) */
+  --color-accent-green: #15803d;
   --color-accent-red: #dc2626;
   --color-accent-cyan: #0891b2;
+  --color-accent-amber: #b45309;
+
+  /* Radios y sombras */
+  --radius-card: 1rem;
+  --shadow-card: 0 1px 2px rgb(15 39 66 / 0.04), 0 4px 16px -6px rgb(15 39 66 / 0.07);
+  --shadow-card-hover: 0 2px 4px rgb(15 39 66 / 0.05), 0 12px 28px -10px rgb(15 39 66 / 0.14);
+  --shadow-pop: 0 24px 60px -20px rgb(11 37 69 / 0.35);
 }
 
 body {
   font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
   background-color: var(--color-page);
   color: var(--color-heading);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Foco visible y consistente en todo el sistema (accesibilidad). */
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   Fondo institucional (parte superior derecha del area de contenido).
+   Capas, de atras hacia adelante:
+     1. ::before  manchas circulares de azul muy claro (radial-gradient)
+     2. __img     foto del edificio: desaturada, clara, con blur y una mascara que la
+                  desvanece hacia la izquierda y hacia abajo (nunca un rectangulo)
+     3. ::after   velo blanco degradado que la integra con el fondo de la pagina
+   Si el archivo de imagen no existe, el fondo sigue viendose bien (solo capas 1 y 3).
+   Imagen esperada: /public/assets/images/branding/building-bg.png (ver README de esa carpeta).
+   --------------------------------------------------------------------------- */
+.brand-backdrop {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: -1;
+  width: min(820px, 78%);
+  height: 460px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.brand-backdrop::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 82% 14%, rgb(178 214 244 / 0.55) 0, transparent 34%),
+    radial-gradient(circle at 100% 58%, rgb(196 226 250 / 0.5) 0, transparent 28%),
+    radial-gradient(circle at 52% -6%, rgb(214 236 252 / 0.7) 0, transparent 36%);
+}
+
+.brand-backdrop__img {
+  position: absolute;
+  inset: 0;
+  background: url('/assets/images/branding/building-bg.png') right top / cover no-repeat;
+  opacity: 0.2;
+  filter: grayscale(1) saturate(0.4) brightness(1.18) contrast(0.85) blur(1.5px);
+  -webkit-mask-image:
+    linear-gradient(to left, #000 0%, rgb(0 0 0 / 0.65) 38%, transparent 88%),
+    linear-gradient(to bottom, #000 25%, transparent 96%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to left, #000 0%, rgb(0 0 0 / 0.65) 38%, transparent 88%),
+    linear-gradient(to bottom, #000 25%, transparent 96%);
+  mask-composite: intersect;
+}
+
+.brand-backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 100% 0%, transparent 25%, rgb(245 248 252 / 0.55) 70%, var(--color-page) 100%),
+    linear-gradient(to bottom, transparent 55%, var(--color-page) 100%);
+}
+
+.brand-backdrop__ring {
+  position: absolute;
+  border-radius: 9999px;
+  border: 1px solid rgb(147 197 235 / 0.35);
+  background: radial-gradient(circle at 30% 30%, rgb(219 238 253 / 0.55), rgb(219 238 253 / 0.08));
+  filter: blur(0.5px);
+  z-index: 1;
+}
+
+/* Ilustracion inferior del sidebar: se funde con el azul marino hacia arriba. */
+.sidebar-illustration {
+  -webkit-mask-image: linear-gradient(to top, #000 55%, transparent 100%);
+  mask-image: linear-gradient(to top, #000 55%, transparent 100%);
+}
+
+/* Scrollbar discreta del sidebar */
+.sidebar-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 0.15) transparent;
 }

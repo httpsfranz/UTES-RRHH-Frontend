@@ -15,7 +15,7 @@ export default function Checkbox({ form, setForm, errors = {}, name, label }) {
         />
         {label}
       </label>
-      {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
+      {error && <p className="mt-1 text-xs text-rose-600">{error}</p>}
     </div>
   );
 }

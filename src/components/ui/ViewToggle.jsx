@@ -10,7 +10,7 @@ const OPCIONES = [
 // o forzar una de las dos.
 export default function ViewToggle({ value, onChange }) {
   return (
-    <div className="inline-flex rounded-lg border border-line bg-surface p-0.5" role="group" aria-label="Vista del listado">
+    <div className="inline-flex rounded-xl border border-line bg-surface p-1 shadow-sm" role="group" aria-label="Vista del listado">
       {OPCIONES.map(({ value: opcion, label, icon: Icon }) => (
         <button
           key={opcion}
@@ -18,8 +18,8 @@ export default function ViewToggle({ value, onChange }) {
           onClick={() => onChange(opcion)}
           aria-pressed={value === opcion}
           title={label}
-          className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors ${
-            value === opcion ? 'bg-brand text-white' : 'text-muted hover:bg-page hover:text-heading'
+          className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+            value === opcion ? 'bg-brand text-white shadow-sm' : 'text-muted hover:bg-page hover:text-heading'
           }`}
         >
           <Icon size={14} />

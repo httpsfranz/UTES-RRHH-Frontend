@@ -5,12 +5,14 @@ import PageHeader from '../components/ui/PageHeader';
 import Panel from '../components/ui/Panel';
 import StatCard from '../components/ui/StatCard';
 import StatGrid from '../components/ui/StatGrid';
+import { Building2, Clock, FileText, Users } from 'lucide-react';
+import { TONES } from '../nav/moduleIcons';
 
 const stats = [
-  { label: 'Trabajadores activos', value: '—' },
-  { label: 'Microredes', value: '—' },
-  { label: 'Marcaciones hoy', value: '—' },
-  { label: 'Solicitudes pendientes', value: '—' },
+  { label: 'Trabajadores activos', value: '—', icon: Users, tone: TONES.teal },
+  { label: 'Microredes', value: '—', icon: Building2, tone: TONES.blue },
+  { label: 'Marcaciones hoy', value: '—', icon: Clock, tone: TONES.green },
+  { label: 'Solicitudes pendientes', value: '—', icon: FileText, tone: TONES.orange },
 ];
 
 export default function HomePage() {
@@ -20,7 +22,7 @@ export default function HomePage() {
 
       <StatGrid>
         {stats.map((stat) => (
-          <StatCard key={stat.label} label={stat.label} value={stat.value} />
+          <StatCard key={stat.label} {...stat} />
         ))}
       </StatGrid>
 

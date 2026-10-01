@@ -7,10 +7,10 @@ import { AnimatePresence, motion } from 'motion/react';
 export default function FieldShell({ name, label, icon: Icon, iconPosition = 'center', required, error, children }) {
   return (
     <div>
-      <label className="mb-1 block text-sm font-medium text-heading" htmlFor={name}>
+      <label className="mb-1.5 block text-[13px] font-medium text-heading" htmlFor={name}>
         {label}
         {required && (
-          <span className="ml-0.5 text-red-600" aria-hidden="true">
+          <span className="ml-0.5 text-rose-500" aria-hidden="true">
             *
           </span>
         )}
@@ -35,7 +35,7 @@ export default function FieldShell({ name, label, icon: Icon, iconPosition = 'ce
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
-            className="mt-1 text-xs text-red-600"
+            className="mt-1.5 text-xs text-rose-600"
           >
             {error}
           </motion.p>

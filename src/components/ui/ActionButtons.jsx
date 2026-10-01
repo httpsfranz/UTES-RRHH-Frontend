@@ -7,27 +7,27 @@ import { Pencil, Power, RotateCcw, Trash2 } from 'lucide-react';
 function IconButton({ icon: Icon, label, onClick, tono }) {
   const colores =
     tono === 'peligro'
-      ? 'hover:bg-red-50 hover:text-red-600'
+      ? 'text-rose-400 hover:bg-rose-50 hover:text-rose-600'
       : tono === 'ok'
-        ? 'hover:bg-green-50 hover:text-accent-green'
-        : 'hover:bg-page hover:text-brand';
+        ? 'text-emerald-500 hover:bg-emerald-50 hover:text-emerald-600'
+        : 'text-sky-500/80 hover:bg-sky-50 hover:text-sky-600';
 
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`rounded-lg p-1.5 text-muted transition-colors ${colores}`}
+      className={`rounded-lg p-1.5 transition-colors ${colores}`}
       aria-label={label}
       title={label}
     >
-      <Icon size={14} />
+      <Icon size={16} />
     </button>
   );
 }
 
 export default function ActionButtons({ active, extras = [], onEdit, onToggle, onDelete }) {
   return (
-    <div className="flex shrink-0 justify-end gap-1">
+    <div className="flex shrink-0 justify-end gap-0.5">
       {extras.map((extra) => (
         <IconButton key={extra.label} icon={extra.icon} label={extra.label} onClick={extra.onClick} />
       ))}

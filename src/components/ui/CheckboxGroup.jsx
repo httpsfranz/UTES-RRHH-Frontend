@@ -9,7 +9,7 @@ export default function CheckboxGroup({ title, options, selected, onToggle, onTo
   const todos = marcados === options.length;
 
   return (
-    <fieldset className="rounded-xl border border-line p-3">
+    <fieldset className="rounded-2xl border border-line bg-page/40 p-4">
       <legend className="px-1 text-xs font-semibold uppercase tracking-wide text-muted">{title}</legend>
 
       <label className="mb-2 flex cursor-pointer items-center gap-2 text-xs text-muted">
