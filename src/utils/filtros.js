@@ -15,6 +15,8 @@ const FILTROS = {
   },
   // Documentos alfanumericos (pasaporte): mayusculas, solo letras y numeros.
   alfanumerico: (valor) => valor.toUpperCase().replace(/[^A-Z0-9]/g, ''),
+  // Nombre de usuario de la cuenta: minusculas, numeros y . _ -
+  usuario: (valor) => valor.toLowerCase().replace(/[^a-z0-9._-]/g, ''),
   // Direccion IP v4/v6.
   ip: (valor) => valor.replace(/[^0-9a-fA-F.:]/g, ''),
 };

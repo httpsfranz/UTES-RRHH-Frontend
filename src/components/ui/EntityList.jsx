@@ -30,6 +30,10 @@ const MAX_OPCIONES_FILTRO = 8; // una columna con mas valores distintos no es "c
  * El badge de Estado y los botones (editar, desactivar/reactivar, eliminar) se agregan solos
  * en ambas vistas; `acciones` suma botones propios del modulo ([{ icon, label, onClick(item) }]).
  * Si el modulo no tiene baja logica (no existe `activo`), no hay badge ni filtro de Estado.
+ * `etiquetas` ({ activo, inactivo, desactivar }) renombra el estado y la baja cuando "activo/inactivo" no es lo
+ * que significan (ocurrencias: Vigente / Anulada, boton Anular).
+ * `puedeEditar(item)` / `puedeAlternar(item)` ocultan esos botones en los registros que ya no admiten
+ * el cambio (p. ej. una ocurrencia anulada no se edita ni se reactiva).
  *
  * SIN SCROLL DE PAGINA: el listado ocupa el alto restante de la pantalla y, con "Registros por
  * pagina = Auto", muestra solo las filas/tarjetas que caben; el resto esta en las demas paginas.
@@ -48,6 +52,9 @@ export default function EntityList({
   onToggle,
   onDelete,
   acciones = [],
+  puedeEditar = () => true,
+  puedeAlternar = () => true,
+  etiquetas = {},
   getKey = (item) => item.id,
   threshold = LIMITE_TARJETAS,
 }) {
@@ -159,7 +166,7 @@ export default function EntityList({
   const columnasTabla = [
     ...columns,
     ...(conEstado
-      ? [{ key: '_estado', header: 'Estado', render: (item) => <StatusBadge active={isActive(item)} /> }]
+      ? [{ key: '_estado', header: 'Estado', render: (item) => <StatusBadge active={isActive(item)} label={isActive(item) ? etiquetas.activo : etiquetas.inactivo} /> }]
       : []),
     ...(hayAcciones
       ? [
@@ -170,8 +177,9 @@ export default function EntityList({
               <ActionButtons
                 active={conEstado ? isActive(item) : undefined}
                 extras={extrasDe(item)}
-                onEdit={onEdit && (() => onEdit(item))}
-                onToggle={onToggle && (() => onToggle(item))}
+                labelDesactivar={etiquetas.desactivar}
+                onEdit={onEdit && puedeEditar(item) ? () => onEdit(item) : undefined}
+                onToggle={onToggle && puedeAlternar(item) ? () => onToggle(item) : undefined}
                 onDelete={onDelete && (() => onDelete(item))}
               />
             ),
@@ -229,8 +237,9 @@ export default function EntityList({
                   {...card(item)}
                   active={conEstado ? isActive(item) : undefined}
                   extras={extrasDe(item)}
-                  onEdit={onEdit && (() => onEdit(item))}
-                  onToggle={onToggle && (() => onToggle(item))}
+                  etiquetas={etiquetas}
+                  onEdit={onEdit && puedeEditar(item) ? () => onEdit(item) : undefined}
+                  onToggle={onToggle && puedeAlternar(item) ? () => onToggle(item) : undefined}
                   onDelete={onDelete && (() => onDelete(item))}
                 />
               ))}

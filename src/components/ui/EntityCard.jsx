@@ -27,6 +27,7 @@ export default function EntityCard({
   onToggle,
   onDelete,
   extras,
+  etiquetas = {},
 }) {
   const modulo = useModuleMeta();
   const letra = typeof initial === 'string' ? initial.trim().slice(0, 1).toUpperCase() : '';
@@ -47,7 +48,7 @@ export default function EntityCard({
           ) : (
             <ModuleIcon tone={modulo.tone}>{letra}</ModuleIcon>
           )}
-          {active !== undefined && <StatusBadge active={active} />}
+          {active !== undefined && <StatusBadge active={active} label={active ? etiquetas.activo : etiquetas.inactivo} />}
         </div>
 
         <h3 className="mt-3 line-clamp-2 text-[15px] font-semibold leading-snug text-heading">{title}</h3>
@@ -61,7 +62,14 @@ export default function EntityCard({
 
       <div className="flex items-center justify-between gap-3 border-t border-line-soft bg-page/40 px-4 py-1.5">
         <span className="truncate text-xs font-medium text-muted">{footer}</span>
-        <ActionButtons active={active} extras={extras} onEdit={onEdit} onToggle={onToggle} onDelete={onDelete} />
+        <ActionButtons
+          active={active}
+          extras={extras}
+          onEdit={onEdit}
+          onToggle={onToggle}
+          onDelete={onDelete}
+          labelDesactivar={etiquetas.desactivar}
+        />
       </div>
     </motion.div>
   );

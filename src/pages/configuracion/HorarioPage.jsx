@@ -1,4 +1,5 @@
-import { CalendarClock, Plus } from 'lucide-react';
+import { useState } from 'react';
+import { CalendarClock, CalendarDays, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
 import { validador, codigo, requerido } from '../../utils/validaciones';
 import { siNo } from '../../utils/formato';
@@ -10,6 +11,7 @@ import Alert from '../../components/ui/Alert';
 import EntityList from '../../components/ui/EntityList';
 import FormModal from '../../components/ui/FormModal';
 import HorarioForm from './HorarioForm';
+import HorarioDetalleModal from './HorarioDetalleModal';
 
 const { emptyForm, mapToForm } = formModel({
   HorarioCodigo: 'codigo',
@@ -41,6 +43,8 @@ const card = (item) => ({
   footer: item.codigo,
 });
 
+// Horarios + su detalle semanal (tabla Configuracion.HorarioDetalle): los turnos de cada dia se gestionan
+// desde aqui con el boton "Detalle semanal", no en una pantalla aparte.
 export default function HorarioPage() {
   const crud = useCrudResource({
     endpoint: '/horarios',
@@ -50,6 +54,7 @@ export default function HorarioPage() {
     estadoKey: 'HorarioEstado',
     buildConfirmMessage: (item) => `¿Desactivar "${item.nombre}"?`,
   });
+  const [horarioDeDetalle, setHorarioDeDetalle] = useState(null);
 
   return (
     <PageContainer>
@@ -72,6 +77,7 @@ export default function HorarioPage() {
         emptyMessage="No hay horarios registrados todavía."
         columns={columns}
         card={card}
+        acciones={[{ icon: CalendarDays, label: 'Detalle semanal', onClick: setHorarioDeDetalle }]}
         onEdit={crud.abrirEditar}
         onToggle={crud.alternarEstado}
       />
@@ -86,6 +92,8 @@ export default function HorarioPage() {
       >
         <HorarioForm form={crud.form} setForm={crud.setForm} errors={crud.erroresForm} />
       </FormModal>
+
+      <HorarioDetalleModal horario={horarioDeDetalle} onClose={() => setHorarioDeDetalle(null)} />
     </PageContainer>
   );
 }

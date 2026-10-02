@@ -40,6 +40,9 @@ export function formModel(spec) {
 
 const IDENTIDAD = (item) => item;
 
+// `emptyForm` puede ser una funcion cuando algun valor inicial depende del momento (p. ej. la fecha y hora de hoy).
+const valorInicial = (emptyForm) => (typeof emptyForm === 'function' ? emptyForm() : emptyForm);
+
 /**
  * Estado y acciones comunes a cualquier pantalla de catalogo: listar (todas las paginas), buscar,
  * crear, editar, desactivar/reactivar. La unica diferencia entre modulos entra por config; el hook
@@ -80,7 +83,7 @@ export function useCrudResource({
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editando, setEditando] = useState(null); // null = creando, item = editando
-  const [form, setForm] = useState(emptyForm);
+  const [form, setForm] = useState(() => valorInicial(emptyForm));
   const [erroresForm, setErroresForm] = useState({});
   const [guardando, setGuardando] = useState(false);
 
@@ -124,7 +127,7 @@ export function useCrudResource({
 
   function abrirCrear() {
     setEditando(null);
-    setForm(emptyForm);
+    setForm(valorInicial(emptyForm));
     setErroresForm({});
     setModalOpen(true);
   }

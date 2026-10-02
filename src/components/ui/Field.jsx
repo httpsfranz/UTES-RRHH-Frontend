@@ -11,6 +11,7 @@ import { aplicarFiltro } from '../../utils/filtros';
 //   maxLength  largo maximo de la columna: el navegador no deja escribir mas
 //   filter     limpia lo escrito mientras se escribe: 'digitos' | 'codigo' | 'ip'
 //   inputMode  teclado movil: 'numeric' | 'tel' | 'decimal' | 'email'...
+//   autoComplete  'off' por defecto; 'new-password' en los campos de contrasena nueva
 export default function Field({
   form,
   setForm,
@@ -24,6 +25,7 @@ export default function Field({
   maxLength,
   filter,
   inputMode,
+  autoComplete = 'off',
 }) {
   const value = form[name] ?? '';
   const error = errors[name]?.[0];
@@ -38,7 +40,7 @@ export default function Field({
         placeholder={placeholder}
         maxLength={maxLength}
         inputMode={inputMode ?? (filter === 'digitos' ? 'numeric' : undefined)}
-        autoComplete="off"
+        autoComplete={autoComplete}
         aria-required={required || undefined}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? `${name}-error` : undefined}

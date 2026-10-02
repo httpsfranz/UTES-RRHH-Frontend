@@ -29,3 +29,7 @@ export function formatoDuracion(minutos) {
   if (h === 0) return `${m} min`;
   return m === 0 ? `${h} h` : `${h} h ${m} min`;
 }
+
+// "Quispe Huamán, María Elena (DNI 70000001)": como se elige un trabajador en un select.
+export const etiquetaTrabajador = (trabajador) =>
+  `${trabajador.nombre_completo} (${trabajador.numero_documento})${trabajador.activo === false ? ' (inactivo)' : ''}`;

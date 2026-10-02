@@ -3,6 +3,7 @@ import { Pencil, Power, RotateCcw, Trash2 } from 'lucide-react';
 // Botones de accion de una tarjeta (EntityCard) o de una fila (EntityList en modo tabla).
 // `active` decide que hace el boton de estado: desactivar si esta activo, reactivar si no.
 // Las tablas sin columna de Estado (se eliminan de verdad) usan onDelete en vez de onToggle.
+// `labelDesactivar` renombra la baja cuando el modulo no "desactiva" sino "anula" (ocurrencias de porteria).
 // `extras` son acciones propias del modulo: [{ icon, label, onClick }] (p. ej. "Permisos" de un rol).
 function IconButton({ icon: Icon, label, onClick, tono }) {
   const colores =
@@ -25,7 +26,7 @@ function IconButton({ icon: Icon, label, onClick, tono }) {
   );
 }
 
-export default function ActionButtons({ active, extras = [], onEdit, onToggle, onDelete }) {
+export default function ActionButtons({ active, extras = [], onEdit, onToggle, onDelete, labelDesactivar = 'Desactivar' }) {
   return (
     <div className="flex shrink-0 justify-end gap-0.5">
       {extras.map((extra) => (
@@ -36,7 +37,7 @@ export default function ActionButtons({ active, extras = [], onEdit, onToggle, o
         (active === false ? (
           <IconButton icon={RotateCcw} label="Reactivar" tono="ok" onClick={onToggle} />
         ) : (
-          <IconButton icon={Power} label="Desactivar" tono="peligro" onClick={onToggle} />
+          <IconButton icon={Power} label={labelDesactivar} tono="peligro" onClick={onToggle} />
         ))}
       {onDelete && <IconButton icon={Trash2} label="Eliminar" tono="peligro" onClick={onDelete} />}
     </div>

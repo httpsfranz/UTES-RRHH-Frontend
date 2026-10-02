@@ -17,6 +17,12 @@ import MicroredPage from './pages/organizacion/MicroredPage';
 import EstablecimientoSaludPage from './pages/organizacion/EstablecimientoSaludPage';
 
 // BIOMETRÍA
+import PlantillaBiometricaPage from './pages/biometria/PlantillaBiometricaPage';
+
+import AutorizacionMetodoPage from './pages/biometria/AutorizacionMetodoPage';
+
+import ConsentimientoBiometricoPage from './pages/biometria/ConsentimientoBiometricoPage';
+
 import MetodoMarcacionPage from './pages/biometria/MetodoMarcacionPage';
 
 import DispositivoMarcacionPage from './pages/biometria/DispositivoMarcacionPage';
@@ -52,6 +58,10 @@ import PeriodoAsistenciaPage from './pages/consolidacion/PeriodoAsistenciaPage';
 import TipoFaltaDisciplinariaPage from './pages/disciplina/TipoFaltaDisciplinariaPage';
 
 // PERSONAL
+import VinculoLaboralPage from './pages/personal/VinculoLaboralPage';
+
+import ColegiaturaPage from './pages/personal/ColegiaturaPage';
+
 import TrabajadorPage from './pages/personal/TrabajadorPage';
 
 import CargoPage from './pages/personal/CargoPage';
@@ -80,12 +90,16 @@ import PermisoPage from './pages/seguridad/PermisoPage';
 
 import RolPage from './pages/seguridad/RolPage';
 
+import UsuarioPage from './pages/seguridad/UsuarioPage';
+
 // SOLICITUDES
 import TipoLicenciaPage from './pages/solicitudes/TipoLicenciaPage';
 
 import TipoPapeletaPage from './pages/solicitudes/TipoPapeletaPage';
 
 import MotivoPapeletaPage from './pages/solicitudes/MotivoPapeletaPage';
+
+import OcurrenciaPorteriaPage from './pages/solicitudes/OcurrenciaPorteriaPage';
 
 // SOPORTE
 import CalendarioNoLaborablePage from './pages/soporte/CalendarioNoLaborablePage';
@@ -108,6 +122,9 @@ const paginasReales = {
   // BIOMETRÍA
   '/biometria/metodos': MetodoMarcacionPage,
   '/biometria/dispositivos': DispositivoMarcacionPage,
+  '/biometria/plantillas': PlantillaBiometricaPage,
+  '/biometria/autorizaciones': AutorizacionMetodoPage,
+  '/biometria/consentimientos': ConsentimientoBiometricoPage,
 
   // ORGANIZACIÓN
   '/organizacion/microredes': MicroredPage,
@@ -136,6 +153,8 @@ const paginasReales = {
 
   // PERSONAL
   '/personal/trabajadores': TrabajadorPage,
+  '/personal/vinculos-laborales': VinculoLaboralPage,
+  '/personal/colegiaturas': ColegiaturaPage,
   '/personal/cargos': CargoPage,
   '/personal/regimen-laboral': RegimenLaboralPage,
   '/personal/tipos-documento-identidad': TipoDocumentoIdentidadPage,
@@ -152,11 +171,13 @@ const paginasReales = {
   '/seguridad/auditoria': AuditoriaPage,
   '/seguridad/permisos': PermisoPage,
   '/seguridad/roles': RolPage,
+  '/seguridad/usuarios': UsuarioPage,
 
   // SOLICITUDES
   '/solicitudes/tipos-licencia': TipoLicenciaPage,
   '/solicitudes/tipos-papeleta': TipoPapeletaPage,
   '/solicitudes/motivos-papeleta': MotivoPapeletaPage,
+  '/solicitudes/ocurrencias-porteria': OcurrenciaPorteriaPage,
 
   // SOPORTE
   '/soporte/calendario-no-laborable': CalendarioNoLaborablePage,
