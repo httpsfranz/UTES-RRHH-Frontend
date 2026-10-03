@@ -1,5 +1,6 @@
 import { CalendarClock, FileText, Hospital, ListChecks, UserRound } from 'lucide-react';
 import { useOpciones } from '../../hooks/useOpciones';
+import { etiquetaVinculo } from '../../utils/formato';
 import { ESTADOS_OCURRENCIA, TIPOS_OCURRENCIA } from '../../utils/opciones';
 import Field from '../../components/ui/Field';
 import Select from '../../components/ui/Select';
@@ -7,10 +8,6 @@ import SelectBuscable from '../../components/ui/SelectBuscable';
 import Textarea from '../../components/ui/Textarea';
 import FormGrid from '../../components/ui/FormGrid';
 import HelpText from '../../components/ui/HelpText';
-
-const etiquetaVinculo = (vinculo) =>
-  [vinculo.trabajador?.nombre_completo, vinculo.cargo?.nombre, vinculo.eess?.nombre].filter(Boolean).join(' · ') +
-  (vinculo.vigente ? '' : ' (no vigente)');
 
 export default function OcurrenciaPorteriaForm({ form, setForm, errors, editando }) {
   const { opciones: establecimientos } = useOpciones('/establecimientos', { actual: form.EessId });

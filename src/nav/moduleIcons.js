@@ -182,6 +182,8 @@ const PATH_ICONS = {
   // Seguridad
   '/seguridad/usuarios': UserRound,
   '/seguridad/roles': ShieldCheck,
+  '/seguridad/usuarios-roles': UserCog,
+  '/seguridad/usuarios-ambitos': Network,
   '/seguridad/permisos': KeyRound,
   '/seguridad/sesiones': Clock,
   '/seguridad/auditoria': ScrollText,

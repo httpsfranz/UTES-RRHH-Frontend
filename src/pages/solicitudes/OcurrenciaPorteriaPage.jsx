@@ -2,7 +2,7 @@ import { BookOpenText, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
 import { fechaHoraNoFutura, requerido, requeridoSi, unoDe, validador } from '../../utils/validaciones';
 import { ESTADOS_OCURRENCIA, TIPOS_OCURRENCIA, etiquetaDe, valoresDe } from '../../utils/opciones';
-import { formatoFechaHora } from '../../utils/formato';
+import { aCampoFecha, ahoraLocal, formatoFechaHora } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
@@ -11,15 +11,6 @@ import Alert from '../../components/ui/Alert';
 import EntityList from '../../components/ui/EntityList';
 import FormModal from '../../components/ui/FormModal';
 import OcurrenciaPorteriaForm from './OcurrenciaPorteriaForm';
-
-// El navegador trabaja con "AAAA-MM-DDTHH:MM" (datetime-local); la API entrega y recibe "AAAA-MM-DD HH:MM[:SS]".
-const aCampoFecha = (fechaHora) => (fechaHora ? fechaHora.slice(0, 16).replace(' ', 'T') : '');
-
-function ahoraLocal() {
-  const ahora = new Date();
-  const dosDigitos = (n) => String(n).padStart(2, '0');
-  return `${ahora.getFullYear()}-${dosDigitos(ahora.getMonth() + 1)}-${dosDigitos(ahora.getDate())}T${dosDigitos(ahora.getHours())}:${dosDigitos(ahora.getMinutes())}`;
-}
 
 const modelo = formModel({
   EessId: 'eess_id',

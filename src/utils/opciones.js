@@ -82,7 +82,6 @@ export const TIPOS_OCURRENCIA = [
   { value: 'RETORNO_DE_PAPELETA', label: 'Retorno de papeleta' },
   { value: 'EXCESO_DE_PAPELETA', label: 'Exceso de papeleta' },
   { value: 'SALIDA_SIN_AUTORIZACION', label: 'Salida sin autorización' },
-  { value: 'INGRESO_FUERA_DE_HORARIO', label: 'Ingreso fuera de horario' },
   { value: 'OTRO', label: 'Otro' },
 ];
 
@@ -103,4 +102,122 @@ export const DIAS_SEMANA = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'
 export const DECISIONES_CONSENTIMIENTO = [
   { value: '1', label: 'Acepta el tratamiento de sus datos biométricos' },
   { value: '0', label: 'Revoca su consentimiento' },
+];
+
+// Tipo de marcacion (CK_MarcacionTipo).
+export const TIPOS_MARCACION = [
+  { value: 'ENTRADA', label: 'Entrada' },
+  { value: 'SALIDA', label: 'Salida' },
+  { value: 'SALIDA_PAPELETA', label: 'Salida con papeleta' },
+  { value: 'RETORNO_PAPELETA', label: 'Retorno de papeleta' },
+  { value: 'SALIDA_REFRIGERIO', label: 'Salida a refrigerio' },
+  { value: 'RETORNO_REFRIGERIO', label: 'Retorno de refrigerio' },
+];
+
+// Estados de una solicitud con aprobacion (justificaciones, papeletas, licencias, descansos medicos...).
+export const ESTADOS_SOLICITUD = [
+  { value: 'PENDIENTE', label: 'Pendiente' },
+  { value: 'APROBADO', label: 'Aprobada' },
+  { value: 'RECHAZADO', label: 'Rechazada' },
+  { value: 'ANULADO', label: 'Anulada' },
+];
+
+// Estado editable de una carga de asistencia manual (ANULADO se alcanza eliminando la carga).
+export const ESTADOS_CARGA = [
+  { value: 'REGISTRADO', label: 'Registrado' },
+  { value: 'PROCESADO', label: 'Procesado' },
+  { value: 'OBSERVADO', label: 'Observado' },
+];
+
+// Resultado de una constatacion domiciliaria (ANULADO se alcanza eliminando el registro).
+export const ESTADOS_CONSTATACION = [
+  { value: 'PENDIENTE', label: 'Pendiente de visita' },
+  { value: 'CONFORME', label: 'Conforme' },
+  { value: 'NO_CONFORME', label: 'No conforme' },
+];
+
+// Estados editables de una carga de programacion (ANULADO se alcanza eliminando la carga).
+export const ESTADOS_CARGA_PROGRAMACION = [
+  { value: 'REGISTRADO', label: 'Registrado' },
+  { value: 'OBSERVADO', label: 'Observado' },
+  { value: 'CONFORME', label: 'Conforme' },
+];
+
+// Ciclo de vida de la programacion de un periodo.
+export const ESTADOS_PROGRAMACION = [
+  { value: 'BORRADOR', label: 'Borrador' },
+  { value: 'PUBLICADA', label: 'Publicada' },
+  { value: 'CERRADA', label: 'Cerrada' },
+  { value: 'ANULADA', label: 'Anulada' },
+];
+
+// Estados de un consolidado de asistencia (CERRADO lo pone el cierre del periodo).
+export const ESTADOS_CONSOLIDADO = [
+  { value: 'GENERADO', label: 'Generado' },
+  { value: 'OBSERVADO', label: 'Observado' },
+  { value: 'CONFORME', label: 'Conforme' },
+  { value: 'CERRADO', label: 'Cerrado' },
+];
+
+// Estados de una compensacion horaria.
+export const ESTADOS_COMPENSACION = [
+  { value: 'PENDIENTE', label: 'Pendiente' },
+  { value: 'APROBADO', label: 'Aprobada' },
+  { value: 'CONSUMIDO', label: 'Consumida' },
+  { value: 'VENCIDO', label: 'Vencida' },
+  { value: 'ANULADO', label: 'Anulada' },
+];
+
+// Estados del periodo vacacional (ANULADO se alcanza eliminando el registro).
+export const ESTADOS_PERIODO_VACACIONAL = [
+  { value: 'ABIERTO', label: 'Abierto' },
+  { value: 'CERRADO', label: 'Cerrado' },
+  { value: 'ANULADO', label: 'Anulado' },
+];
+
+// Etapas del procedimiento administrativo disciplinario (ANULADO se alcanza eliminando el expediente).
+export const ESTADOS_PAD = [
+  { value: 'INICIADO', label: 'Iniciado' },
+  { value: 'EN_PROCESO', label: 'En proceso' },
+  { value: 'RESUELTO', label: 'Resuelto' },
+  { value: 'ARCHIVADO', label: 'Archivado' },
+  { value: 'ANULADO', label: 'Anulado' },
+];
+
+// Siguiente etapa permitida desde cada una (el procedimiento avanza, no retrocede).
+export const SIGUIENTES_PAD = {
+  INICIADO: ['INICIADO', 'EN_PROCESO', 'ARCHIVADO'],
+  EN_PROCESO: ['EN_PROCESO', 'RESUELTO', 'ARCHIVADO'],
+};
+
+// Resultado de una supervision inopinada (ANULADO se alcanza eliminando el registro).
+export const ESTADOS_SUPERVISION = [
+  { value: 'REGISTRADO', label: 'Registrada' },
+  { value: 'CONFORME', label: 'Conforme' },
+  { value: 'OBSERVADO', label: 'Observada' },
+  { value: 'ANULADO', label: 'Anulada' },
+];
+
+// Estados de un turno programado (REPROGRAMADO lo pone un cambio de turno aprobado; CUMPLIDO, "Marcar cumplido").
+export const ESTADOS_TURNO_PROGRAMADO = [
+  { value: 'PROGRAMADO', label: 'Programado' },
+  { value: 'REPROGRAMADO', label: 'Reprogramado' },
+  { value: 'CUMPLIDO', label: 'Cumplido' },
+  { value: 'ANULADO', label: 'Anulado' },
+];
+
+// Ciclo de vida de una liquidacion de descuentos (RIT, Art. 25).
+export const ESTADOS_LIQUIDACION = [
+  { value: 'GENERADO', label: 'Generada' },
+  { value: 'APROBADO', label: 'Aprobada' },
+  { value: 'REMITIDO', label: 'Remitida a planilla' },
+  { value: 'ANULADO', label: 'Anulada' },
+];
+
+// Estados de una programacion del Rol de Vacaciones.
+export const ESTADOS_ROL_VACACIONAL = [
+  { value: 'PROGRAMADO', label: 'Programado' },
+  { value: 'GOZADO', label: 'Gozado' },
+  { value: 'REPROGRAMADO', label: 'Reprogramado' },
+  { value: 'ANULADO', label: 'Anulado' },
 ];

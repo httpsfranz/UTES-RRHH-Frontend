@@ -9,13 +9,19 @@ export default function Checkbox({ form, setForm, errors = {}, name, label }) {
           id={name}
           name={name}
           type="checkbox"
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? `${name}-error` : undefined}
           checked={Boolean(form[name])}
           onChange={(event) => setForm((f) => ({ ...f, [name]: event.target.checked }))}
           className="h-4 w-4 rounded border-line accent-brand"
         />
         {label}
       </label>
-      {error && <p className="mt-1 text-xs text-rose-600">{error}</p>}
+      {error && (
+        <p id={`${name}-error`} className="mt-1 text-xs text-rose-600">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

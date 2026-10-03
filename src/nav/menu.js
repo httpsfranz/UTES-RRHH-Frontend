@@ -155,6 +155,8 @@ export const menu = [
     children: [
       { label: 'Usuarios', path: '/seguridad/usuarios' },
       { label: 'Roles', path: '/seguridad/roles' },
+      { label: 'Roles de usuario', path: '/seguridad/usuarios-roles' },
+      { label: 'Ámbitos de usuario', path: '/seguridad/usuarios-ambitos' },
       { label: 'Permisos', path: '/seguridad/permisos' },
       { label: 'Sesiones de acceso', path: '/seguridad/sesiones' },
       { label: 'Auditoría', path: '/seguridad/auditoria' },

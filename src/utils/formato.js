@@ -33,3 +33,37 @@ export function formatoDuracion(minutos) {
 // "Quispe Huamán, María Elena (DNI 70000001)": como se elige un trabajador en un select.
 export const etiquetaTrabajador = (trabajador) =>
   `${trabajador.nombre_completo} (${trabajador.numero_documento})${trabajador.activo === false ? ' (inactivo)' : ''}`;
+
+// El navegador trabaja con "AAAA-MM-DDTHH:MM" (datetime-local); la API entrega y recibe "AAAA-MM-DD HH:MM[:SS]".
+export const aCampoFecha = (fechaHora) => (fechaHora ? fechaHora.slice(0, 16).replace(' ', 'T') : '');
+
+// Ahora mismo, en formato datetime-local.
+export function ahoraLocal() {
+  const ahora = new Date();
+  const dosDigitos = (n) => String(n).padStart(2, '0');
+  return `${ahora.getFullYear()}-${dosDigitos(ahora.getMonth() + 1)}-${dosDigitos(ahora.getDate())}T${dosDigitos(ahora.getHours())}:${dosDigitos(ahora.getMinutes())}`;
+}
+
+// "Quispe Huamán, María Elena · Enfermero(a) · C.S. La Esperanza": como se elige un vinculo laboral en un select.
+export const etiquetaVinculo = (vinculo) =>
+  [vinculo.trabajador?.nombre_completo, vinculo.cargo?.nombre, vinculo.eess?.nombre].filter(Boolean).join(' · ') +
+  (vinculo.vigente === false ? ' (no vigente)' : '');
+
+// Ultimo dia de un descanso de `dias` dias calendario desde `inicio` (AAAA-MM-DD), sin pasar por la zona horaria.
+export function finDelDescanso(inicio, dias) {
+  const n = Number(dias);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(inicio ?? '') || !Number.isInteger(n) || n < 1) return null;
+  const fecha = new Date(`${inicio}T12:00:00Z`);
+  fecha.setUTCDate(fecha.getUTCDate() + n - 1);
+  return fecha.toISOString().slice(0, 10);
+}
+
+// Dias calendario entre dos fechas AAAA-MM-DD, ambas incluidas (null si falta alguna o el fin es anterior al inicio).
+export function diasCalendario(inicio, fin) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(inicio ?? '') || !/^\d{4}-\d{2}-\d{2}$/.test(fin ?? '')) return null;
+  const dias = Math.round((Date.parse(`${fin}T12:00:00Z`) - Date.parse(`${inicio}T12:00:00Z`)) / 86400000) + 1;
+  return dias >= 1 ? dias : null;
+}
+
+// 218.75 -> "S/ 218.75"
+export const formatoSoles = (monto) => `S/ ${Number(monto ?? 0).toFixed(2)}`;

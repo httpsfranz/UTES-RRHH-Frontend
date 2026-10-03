@@ -81,7 +81,7 @@ export default function VinculoLaboralForm({ form, setForm, errors }) {
       )}
       <HelpText>
         Deja la fecha de fin vacía mientras el vínculo siga vigente. Un trabajador no puede tener dos vínculos activos con fechas
-        superpuestas (RIT, Art. 86).
+        superpuestas (RIT, Art. 86), salvo el personal médico, que puede tener un segundo vínculo autorizado.
       </HelpText>
     </>
   );

@@ -28,7 +28,7 @@ const MAX_OPCIONES_FILTRO = 8; // una columna con mas valores distintos no es "c
  *   card     (item) => ({ icon | initial, title, meta: [...], footer })    la vista de tarjetas (opcional)
  *
  * El badge de Estado y los botones (editar, desactivar/reactivar, eliminar) se agregan solos
- * en ambas vistas; `acciones` suma botones propios del modulo ([{ icon, label, onClick(item) }]).
+ * en ambas vistas; `acciones` suma botones propios del modulo ([{ icon, label, onClick(item), visible?(item) }]).
  * Si el modulo no tiene baja logica (no existe `activo`), no hay badge ni filtro de Estado.
  * `etiquetas` ({ activo, inactivo, desactivar }) renombra el estado y la baja cuando "activo/inactivo" no es lo
  * que significan (ocurrencias: Vigente / Anulada, boton Anular).
@@ -161,7 +161,8 @@ export default function EntityList({
 
   const hayAcciones = onEdit || onToggle || onDelete || acciones.length > 0;
   // Acciones propias del modulo: [{ icon, label, onClick(item) }]; cada una recibe el registro de su fila/tarjeta.
-  const extrasDe = (item) => acciones.map((a) => ({ ...a, onClick: () => a.onClick(item) }));
+  const extrasDe = (item) =>
+    acciones.filter((a) => !a.visible || a.visible(item)).map((a) => ({ ...a, onClick: () => a.onClick(item) }));
 
   const columnasTabla = [
     ...columns,
