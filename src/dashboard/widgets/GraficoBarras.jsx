@@ -8,6 +8,8 @@ const ANCHO = 640;
 const ALTO = 230;
 const MARGEN = { izq: 34, der: 8, arriba: 10, abajo: 24 };
 
+const porcentaje = (parte, total) => (total === 0 ? '0 %' : `${Math.round((parte / total) * 100)} %`);
+
 // Barras horizontales en HTML: una fila por categoria. Con una sola serie la barra mide su valor respecto al maximo; con
 // varias y `normalizado`, cada fila reparte el 100 % entre las series (sirve para comparar establecimientos de distinto tamano).
 function Horizontales({ categorias, series, apiladas, normalizado }) {
@@ -21,13 +23,13 @@ function Horizontales({ categorias, series, apiladas, normalizado }) {
           <span className="w-32 shrink-0 truncate text-slate-700 sm:w-40" title={categoria}>
             {categoria}
           </span>
-          <div className="flex h-3.5 flex-1 overflow-hidden rounded-full bg-line-soft" title={series.map((s) => `${s.nombre}: ${s.valores[i]}`).join(' · ')}>
+          <div className="flex h-3.5 flex-1 overflow-hidden rounded-full bg-line-soft" title={series.map((s) => `${s.nombre}: ${normalizado ? porcentaje(s.valores[i], totales[i]) : s.valores[i]}`).join(' · ')}>
             {series.map((serie) => {
               const base = apiladas && normalizado ? Math.max(totales[i], 1) : maximo;
               return <span key={serie.nombre} className={`h-full transition-all ${tonoDe(serie.tono).bg}`} style={{ width: `${(serie.valores[i] / base) * 100}%` }} />;
             })}
           </div>
-          <span className="w-10 text-right font-semibold text-heading">{apiladas ? totales[i] : series[0].valores[i]}</span>
+          <span className="w-12 text-right font-semibold text-heading">{normalizado ? porcentaje(series[0].valores[i], totales[i]) : apiladas ? totales[i] : series[0].valores[i]}</span>
         </li>
       ))}
     </ul>

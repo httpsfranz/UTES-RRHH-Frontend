@@ -1,9 +1,11 @@
 import { CalendarDays, GraduationCap, IdCard, Mail, MapPin, Phone, User, Users } from 'lucide-react';
+import { useConsultaDni } from '../../hooks/useConsultaDni';
 import { useOpciones } from '../../hooks/useOpciones';
 import { SEXOS } from '../../utils/opciones';
 import Field from '../../components/ui/Field';
 import Select from '../../components/ui/Select';
 import FormGrid from '../../components/ui/FormGrid';
+import HelpText from '../../components/ui/HelpText';
 
 // El formato del numero depende del tipo de documento (mismas reglas que App\Rules\DocumentoIdentidad):
 // DNI = 8 digitos; CE y PTP = solo digitos (hasta 12); pasaporte y otros = letras y numeros.
@@ -14,12 +16,26 @@ function reglasDelDocumento(tipo) {
   return { filter: 'alfanumerico', maxLength: Math.max(6, tipo?.longitud ?? 20), placeholder: 'Letras y números' };
 }
 
-export default function TrabajadorForm({ form, setForm, errors }) {
+const MENSAJES_DNI = {
+  consultando: 'Consultando el DNI…',
+  encontrado: 'Nombres y apellidos completados desde RENIEC. Revísalos antes de guardar.',
+  no_encontrado: 'No se encontró ese DNI: escribe los datos manualmente.',
+  no_disponible: 'La consulta automática no está disponible: escribe los datos manualmente.',
+};
+
+export default function TrabajadorForm({ form, setForm, errors, editando = false }) {
   const tipos = useOpciones('/tipos-documento-identidad', { actual: form.TipoDocumentoIdentidadId });
   const { opciones: opcionesProfesion } = useOpciones('/profesiones', { actual: form.ProfesionId, sinOpcion: 'Sin profesión registrada' });
 
   const tipo = tipos.filas.find((fila) => String(fila.id) === String(form.TipoDocumentoIdentidadId));
   const documento = reglasDelDocumento(tipo);
+
+  // Al crear con DNI, nombres y apellidos se autocompletan; si el servicio falla, todo se escribe a mano.
+  const consulta = useConsultaDni({
+    activo: !editando && String(tipo?.codigo ?? '').toUpperCase() === 'DNI',
+    dni: form.TrabajadorNumeroDocumento ?? '',
+    alEncontrar: (datos) => setForm((f) => ({ ...f, TrabajadorNombres: datos.nombres, TrabajadorApellidoPaterno: datos.apellido_paterno, TrabajadorApellidoMaterno: datos.apellido_materno })),
+  });
 
   return (
     <>
@@ -47,6 +63,8 @@ export default function TrabajadorForm({ form, setForm, errors }) {
           placeholder={documento.placeholder}
         />
       </FormGrid>
+      {consulta.yaRegistrado && <p className="-mt-2 text-xs font-medium text-amber-700">Ya existe un trabajador con este DNI.</p>}
+      {MENSAJES_DNI[consulta.estado] && <HelpText>{MENSAJES_DNI[consulta.estado]}</HelpText>}
       <Field form={form} setForm={setForm} errors={errors} name="TrabajadorNombres" label="Nombres" icon={User} required maxLength={100} />
       <FormGrid>
         <Field form={form} setForm={setForm} errors={errors} name="TrabajadorApellidoPaterno" label="Apellido paterno" icon={Users} required maxLength={100} />

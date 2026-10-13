@@ -1,8 +1,7 @@
 import { CalendarRange, Lock, Plus, Send } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
 import { useAccionDeRegistro } from '../../hooks/useAccionDeRegistro';
-import { useOpciones } from '../../hooks/useOpciones';
-import { entero, fecha, noAnteriorA, requerido, requeridoSi, validador } from '../../utils/validaciones';
+import { fecha, noAnteriorA, requerido, validador } from '../../utils/validaciones';
 import { ESTADOS_PROGRAMACION, MESES, etiquetaDe } from '../../utils/opciones';
 import { formatoFecha } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
@@ -17,9 +16,6 @@ import ProgramacionPeriodoForm from './ProgramacionPeriodoForm';
 const { emptyForm, mapToForm } = formModel({
   EessId: 'eess_id',
   TipoPeriodoProgramacionId: 'tipo_periodo_programacion_id',
-  ProgramacionPeriodoAnio: 'anio',
-  ProgramacionPeriodoMes: 'mes',
-  ProgramacionPeriodoNumero: 'numero',
   ProgramacionPeriodoFechaInicio: 'fecha_inicio',
   ProgramacionPeriodoFechaFin: 'fecha_fin',
   ProgramacionPeriodoObservacion: 'observacion',
@@ -50,16 +46,9 @@ const card = (item) => ({
 });
 
 export default function ProgramacionPeriodoPage() {
-  // Mes y numero dependen del tipo de periodo: la validacion de usuario necesita el catalogo.
-  const tipos = useOpciones('/tipos-periodo-programacion');
-  const codigoDe = (form) => tipos.filas.find((fila) => String(fila.id) === String(form.TipoPeriodoProgramacionId))?.codigo;
-
   const validate = validador({
     EessId: [requerido],
     TipoPeriodoProgramacionId: [requerido],
-    ProgramacionPeriodoAnio: [requerido, entero({ min: 2000, max: 2100 })],
-    ProgramacionPeriodoMes: [requeridoSi((form) => ['MENSUAL', 'QUINCENAL', 'SEMANAL'].includes(codigoDe(form)), 'Indica el mes de la programación.')],
-    ProgramacionPeriodoNumero: [requeridoSi((form) => ['QUINCENAL', 'SEMANAL'].includes(codigoDe(form)), 'Indica el número de quincena o semana.')],
     ProgramacionPeriodoFechaInicio: [requerido, fecha],
     ProgramacionPeriodoFechaFin: [requerido, fecha, noAnteriorA('ProgramacionPeriodoFechaInicio', 'La fecha final no puede ser anterior a la inicial.')],
   });

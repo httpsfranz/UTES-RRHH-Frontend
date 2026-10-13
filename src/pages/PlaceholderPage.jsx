@@ -1,6 +1,4 @@
-// Pagina generica: por ahora cada item del menu sin modulo propio usa esta misma pantalla, con su
-// propio titulo. Cuando construyas un modulo de verdad, creas su archivo en src/pages y lo
-// conectas en src/routes.jsx en lugar de PlaceholderPage.
+// Pagina generica de los items del menu que no tienen modulo propio: muestra su titulo.
 import PageContainer from '../components/ui/PageContainer';
 import PageHeader from '../components/ui/PageHeader';
 import EmptyState from '../components/ui/EmptyState';

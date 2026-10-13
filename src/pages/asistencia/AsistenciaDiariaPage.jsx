@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Building2, Calculator, CalendarDays, Plus } from 'lucide-react';
+import { Building2, Calculator, CalendarDays } from 'lucide-react';
 import { api } from '../../api/client';
 import { mensajeDeError } from '../../api/paginado';
 import { useAlcanceDeEess } from '../../hooks/useAlcanceDeEess';
@@ -52,7 +52,7 @@ const anios = () => {
 /**
  * Asistencia diaria: calendario mensual de un establecimiento (trabajadores en filas, dias en columnas). El
  * administrador elige el EESS y el mes; "Exportar PDF" genera el mismo calendario como documento apaisado (ambos salen de
- * GET /asistencia-diaria/calendario). Pulsar una celda abre el detalle del dia para editarlo, eliminarlo o registrarlo.
+ * GET /asistencia-diaria/calendario). Pulsar una celda abre el detalle del dia para corregirlo, eliminarlo o registrarlo a mano (excepcion).
  *
  * Distribucion: PageContainer ocupa exactamente el alto de la pantalla, asi que cada bloque sobre el calendario resta alto
  * a este. Por eso todo lo de arriba es una sola barra de controles y una sola franja con titulo y leyenda, y el calendario
@@ -113,9 +113,6 @@ export default function AsistenciaDiariaPage() {
       <PageHeader title="Asistencia diaria" subtitle="Asistencia · Asistencia diaria">
         <Button onClick={() => setCalculando(true)} icon={Calculator}>
           Calcular asistencia
-        </Button>
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nueva asistencia
         </Button>
       </PageHeader>
 

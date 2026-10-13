@@ -130,7 +130,7 @@ export default function TrabajadorPage() {
         error={crud.erroresForm.general?.[0]}
         submitting={crud.guardando}
       >
-        <TrabajadorForm form={crud.form} setForm={crud.setForm} errors={crud.erroresForm} />
+        <TrabajadorForm form={crud.form} setForm={crud.setForm} errors={crud.erroresForm} editando={Boolean(crud.editando)} />
       </FormModal>
       <ImportarTrabajadoresModal open={importando} onClose={() => setImportando(false)} onImportado={() => crud.cargar()} />
     </PageContainer>
