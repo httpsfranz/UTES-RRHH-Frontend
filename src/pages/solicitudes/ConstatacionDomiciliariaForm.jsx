@@ -4,6 +4,7 @@ import { etiquetaVinculo, formatoFecha } from '../../utils/formato';
 import { ESTADOS_CONSTATACION } from '../../utils/opciones';
 import Field from '../../components/ui/Field';
 import Select from '../../components/ui/Select';
+import SelectorDeDocumento from '../../components/ui/SelectorDeDocumento';
 import SelectBuscable from '../../components/ui/SelectBuscable';
 import Textarea from '../../components/ui/Textarea';
 import FormGrid from '../../components/ui/FormGrid';
@@ -50,7 +51,7 @@ export default function ConstatacionDomiciliariaForm({ form, setForm, errors }) 
         maxLength={500}
         required={resuelta}
       />
-      <Select form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Acta de la visita" icon={FileText} options={documentos} />
+      <SelectorDeDocumento form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Acta de la visita" icon={FileText} options={documentos} />
       <HelpText>
         La constatación verifica el estado de salud de quien está con descanso médico y se hace dentro de sus fechas. Al resolverla como
         conforme o no conforme, queda como constancia y ya no se modifica.

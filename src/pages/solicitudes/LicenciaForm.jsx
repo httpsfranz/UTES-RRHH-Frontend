@@ -3,6 +3,7 @@ import { useOpciones } from '../../hooks/useOpciones';
 import { etiquetaVinculo } from '../../utils/formato';
 import Field from '../../components/ui/Field';
 import Select from '../../components/ui/Select';
+import SelectorDeDocumento from '../../components/ui/SelectorDeDocumento';
 import SelectBuscable from '../../components/ui/SelectBuscable';
 import Textarea from '../../components/ui/Textarea';
 import FormGrid from '../../components/ui/FormGrid';
@@ -32,7 +33,7 @@ export default function LicenciaForm({ form, setForm, errors }) {
       </FormGrid>
       <Field form={form} setForm={setForm} errors={errors} name="LicenciaNumeroResolucion" label="N.º de resolución" icon={Hash} maxLength={60} />
       <FormGrid>
-        <Select form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Documento de sustento" icon={FileText} options={documentos} />
+        <SelectorDeDocumento form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Documento de sustento" icon={FileText} options={documentos} />
       </FormGrid>
       <Textarea form={form} setForm={setForm} errors={errors} name="LicenciaMotivo" label="Motivo" icon={FileText} maxLength={1000} />
       <HelpText>

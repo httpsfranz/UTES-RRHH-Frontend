@@ -1,7 +1,7 @@
 import { Briefcase, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
 import { useOpciones } from '../../hooks/useOpciones';
-import { alfanumerico, codigo, fecha, noAnteriorA, numeroPlaza, requerido, requeridoSi, validador } from '../../utils/validaciones';
+import { alfanumerico, fecha, noAnteriorA, requerido, requeridoSi, validador } from '../../utils/validaciones';
 import { formatoFecha, siNo } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
@@ -18,9 +18,7 @@ const { emptyForm, mapToForm } = formModel({
   RegimenLaboralId: 'regimen_laboral_id',
   CondicionLaboralId: 'condicion_laboral_id',
   CargoId: 'cargo_id',
-  VinculoLaboralCodigo: 'codigo',
   VinculoLaboralCodigoAirhsp: 'codigo_airhsp',
-  VinculoLaboralNumeroPlaza: 'numero_plaza',
   VinculoLaboralFechaInicio: 'fecha_inicio',
   VinculoLaboralFechaFin: 'fecha_fin',
   VinculoLaboralMotivoCese: 'motivo_cese',
@@ -63,9 +61,7 @@ export default function VinculoLaboralPage() {
     RegimenLaboralId: [requerido],
     CondicionLaboralId: [requerido],
     CargoId: [requerido],
-    VinculoLaboralCodigo: [codigo],
     VinculoLaboralCodigoAirhsp: [requeridoSi(exigeAirhsp, 'Esta condición laboral exige el código AIRHSP.'), alfanumerico],
-    VinculoLaboralNumeroPlaza: [numeroPlaza],
     VinculoLaboralFechaInicio: [requerido, fecha],
     VinculoLaboralFechaFin: [fecha, noAnteriorA('VinculoLaboralFechaInicio', 'La fecha de fin no puede ser anterior a la de inicio.')],
   });

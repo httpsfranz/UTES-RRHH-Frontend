@@ -59,19 +59,7 @@ export default function VinculoLaboralForm({ form, setForm, errors }) {
           filter="alfanumerico"
           placeholder={condicion?.requiere_airhsp ? 'Obligatorio para esta condición' : 'Opcional'}
         />
-        <Field form={form} setForm={setForm} errors={errors} name="VinculoLaboralNumeroPlaza" label="Número de plaza" icon={Hash} maxLength={30} />
       </FormGrid>
-      <Field
-        form={form}
-        setForm={setForm}
-        errors={errors}
-        name="VinculoLaboralCodigo"
-        label="Código interno"
-        icon={Hash}
-        maxLength={50}
-        filter="codigo"
-        placeholder="Opcional. Ej. VL-0100"
-      />
       <FormGrid>
         <Field form={form} setForm={setForm} errors={errors} name="VinculoLaboralFechaInicio" label="Fecha de inicio" icon={CalendarDays} type="date" required />
         <Field form={form} setForm={setForm} errors={errors} name="VinculoLaboralFechaFin" label="Fecha de fin" icon={CalendarDays} type="date" />

@@ -17,7 +17,6 @@ import ProgramacionPeriodoForm from './ProgramacionPeriodoForm';
 const { emptyForm, mapToForm } = formModel({
   EessId: 'eess_id',
   TipoPeriodoProgramacionId: 'tipo_periodo_programacion_id',
-  ProgramacionPeriodoCodigo: 'codigo',
   ProgramacionPeriodoAnio: 'anio',
   ProgramacionPeriodoMes: 'mes',
   ProgramacionPeriodoNumero: 'numero',

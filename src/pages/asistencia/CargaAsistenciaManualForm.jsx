@@ -3,6 +3,7 @@ import { useOpciones } from '../../hooks/useOpciones';
 import { ESTADOS_CARGA } from '../../utils/opciones';
 import Field from '../../components/ui/Field';
 import Select from '../../components/ui/Select';
+import SelectorDeDocumento from '../../components/ui/SelectorDeDocumento';
 import Textarea from '../../components/ui/Textarea';
 import FormGrid from '../../components/ui/FormGrid';
 import HelpText from '../../components/ui/HelpText';
@@ -24,7 +25,7 @@ export default function CargaAsistenciaManualForm({ form, setForm, errors, edita
         <Field form={form} setForm={setForm} errors={errors} name="CargaAsistenciaManualNombreArchivo" label="Nombre del archivo" icon={FileSpreadsheet} maxLength={255} placeholder="Ej. parte-diario-0930.xlsx" />
         <Field form={form} setForm={setForm} errors={errors} name="CargaAsistenciaManualRegistros" label="Registros cargados" icon={Hash} maxLength={7} filter="digitos" />
       </FormGrid>
-      <Select form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Parte diario escaneado" icon={FileText} options={documentos} />
+      <SelectorDeDocumento form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Parte diario escaneado" icon={FileText} options={documentos} />
       {editando && (
         <Select form={form} setForm={setForm} errors={errors} name="CargaAsistenciaManualEstado" label="Estado" icon={ListChecks} options={ESTADOS_CARGA} required />
       )}

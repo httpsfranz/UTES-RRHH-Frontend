@@ -4,6 +4,7 @@ import { ESTADOS_SUPERVISION } from '../../utils/opciones';
 import { etiquetaVinculo } from '../../utils/formato';
 import Field from '../../components/ui/Field';
 import Select from '../../components/ui/Select';
+import SelectorDeDocumento from '../../components/ui/SelectorDeDocumento';
 import SelectBuscable from '../../components/ui/SelectBuscable';
 import Textarea from '../../components/ui/Textarea';
 import FormGrid from '../../components/ui/FormGrid';
@@ -62,7 +63,7 @@ export default function SupervisionInopinadaForm({ form, setForm, errors, editan
         maxLength={1000}
         required={form.SupervisionInopinadaEstado === 'OBSERVADO'}
       />
-      <Select form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Acta de supervisión" icon={FileText} options={documentos} />
+      <SelectorDeDocumento form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Acta de supervisión" icon={FileText} options={documentos} />
       <HelpText>
         Las supervisiones inopinadas verifican la asistencia y permanencia del personal (RIT, Art. 24 y 29). Si hay observaciones, el jefe
         del establecimiento envía su informe detallado en un plazo de 3 días.

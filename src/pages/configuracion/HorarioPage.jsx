@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { CalendarClock, CalendarDays, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
-import { validador, codigo, requerido } from '../../utils/validaciones';
+import { validador, requerido } from '../../utils/validaciones';
 import { siNo } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
@@ -14,7 +14,6 @@ import HorarioForm from './HorarioForm';
 import HorarioDetalleModal from './HorarioDetalleModal';
 
 const { emptyForm, mapToForm } = formModel({
-  HorarioCodigo: 'codigo',
   HorarioNombre: 'nombre',
   TipoJornadaId: 'tipo_jornada_id',
   EessId: 'eess_id',
@@ -23,7 +22,6 @@ const { emptyForm, mapToForm } = formModel({
 });
 
 const validate = validador({
-  HorarioCodigo: [requerido, codigo],
   HorarioNombre: [requerido],
   TipoJornadaId: [requerido],
 });

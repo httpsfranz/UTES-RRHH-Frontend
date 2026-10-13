@@ -1,4 +1,4 @@
-import { BadgeCheck, FileText, Hash, Hospital, Landmark, Layers, MapPin, Network, Phone } from 'lucide-react';
+import { BadgeCheck, FileText, Hospital, Landmark, Layers, MapPin, Network, Phone } from 'lucide-react';
 import { useOpciones } from '../../hooks/useOpciones';
 import Field from '../../components/ui/Field';
 import Select from '../../components/ui/Select';
@@ -12,18 +12,6 @@ export default function EstablecimientoSaludForm({ form, setForm, errors }) {
   return (
     <>
       <FormGrid>
-        <Field
-          form={form}
-          setForm={setForm}
-          errors={errors}
-          name="EessCodigo"
-          label="Código"
-          icon={Hash}
-          required
-          maxLength={30}
-          filter="codigo"
-          placeholder="Ej. EESS-LE-01"
-        />
         <Field
           form={form}
           setForm={setForm}

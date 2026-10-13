@@ -1,6 +1,6 @@
 import { FileCheck, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
-import { validador, codigo, entero, requerido } from '../../utils/validaciones';
+import { validador, entero, requerido } from '../../utils/validaciones';
 import { siNo } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
@@ -12,7 +12,6 @@ import FormModal from '../../components/ui/FormModal';
 import TipoLicenciaForm from './TipoLicenciaForm';
 
 const { emptyForm, mapToForm } = formModel({
-  TipoLicenciaCodigo: 'codigo',
   TipoLicenciaNombre: 'nombre',
   TipoLicenciaDescripcion: 'descripcion',
   TipoLicenciaMaximoDias: 'maximo_dias',
@@ -21,7 +20,6 @@ const { emptyForm, mapToForm } = formModel({
 });
 
 const validate = validador({
-  TipoLicenciaCodigo: [requerido, codigo],
   TipoLicenciaNombre: [requerido],
   TipoLicenciaMaximoDias: [entero({ min: 1, max: 3650 })],
 });

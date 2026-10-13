@@ -1,6 +1,6 @@
 import { Scale, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
-import { validador, codigo, requerido } from '../../utils/validaciones';
+import { validador, requerido } from '../../utils/validaciones';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
@@ -11,14 +11,12 @@ import FormModal from '../../components/ui/FormModal';
 import RegimenLaboralForm from './RegimenLaboralForm';
 
 const { emptyForm, mapToForm } = formModel({
-  RegimenLaboralCodigo: 'codigo',
   RegimenLaboralNombre: 'nombre',
   RegimenLaboralBaseLegal: 'base_legal',
   RegimenLaboralDescripcion: 'descripcion',
 });
 
 const validate = validador({
-  RegimenLaboralCodigo: [requerido, codigo],
   RegimenLaboralNombre: [requerido],
 });
 

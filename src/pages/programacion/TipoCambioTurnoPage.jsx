@@ -1,6 +1,6 @@
 import { Repeat, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
-import { validador, codigo, requerido } from '../../utils/validaciones';
+import { validador, requerido } from '../../utils/validaciones';
 import { siNo } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
@@ -12,14 +12,12 @@ import FormModal from '../../components/ui/FormModal';
 import TipoCambioTurnoForm from './TipoCambioTurnoForm';
 
 const { emptyForm, mapToForm } = formModel({
-  TipoCambioTurnoCodigo: 'codigo',
   TipoCambioTurnoNombre: 'nombre',
   TipoCambioTurnoDescripcion: 'descripcion',
   TipoCambioTurnoRequiereReemplazante: ['requiere_reemplazante', false],
 });
 
 const validate = validador({
-  TipoCambioTurnoCodigo: [requerido, codigo],
   TipoCambioTurnoNombre: [requerido],
 });
 

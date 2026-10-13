@@ -1,6 +1,6 @@
 import { Clock, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
-import { validador, codigo, duracionDeTurno, entero, hora, requerido } from '../../utils/validaciones';
+import { validador, duracionDeTurno, entero, hora, requerido } from '../../utils/validaciones';
 import { siNo } from '../../utils/formato';
 import { formatoDuracion } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
@@ -13,7 +13,6 @@ import FormModal from '../../components/ui/FormModal';
 import TurnoForm from './TurnoForm';
 
 const { emptyForm, mapToForm } = formModel({
-  TurnoCodigo: 'codigo',
   TurnoNombre: 'nombre',
   TipoJornadaId: 'tipo_jornada_id',
   TablaToleranciaId: 'tabla_tolerancia_id',
@@ -27,7 +26,6 @@ const { emptyForm, mapToForm } = formModel({
 });
 
 const validate = validador({
-  TurnoCodigo: [requerido, codigo],
   TurnoNombre: [requerido],
   TipoJornadaId: [requerido],
   TurnoHoraEntrada: [requerido, hora],

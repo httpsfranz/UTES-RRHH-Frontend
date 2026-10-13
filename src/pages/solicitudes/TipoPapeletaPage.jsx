@@ -1,6 +1,6 @@
 import { FileBadge, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
-import { validador, codigo, requerido } from '../../utils/validaciones';
+import { validador, requerido } from '../../utils/validaciones';
 import { siNo } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
@@ -12,7 +12,6 @@ import FormModal from '../../components/ui/FormModal';
 import TipoPapeletaForm from './TipoPapeletaForm';
 
 const { emptyForm, mapToForm } = formModel({
-  TipoPapeletaCodigo: 'codigo',
   TipoPapeletaNombre: 'nombre',
   TipoPapeletaDescripcion: 'descripcion',
   TipoPapeletaEsDescontable: ['es_descontable', false],
@@ -22,7 +21,6 @@ const { emptyForm, mapToForm } = formModel({
 });
 
 const validate = validador({
-  TipoPapeletaCodigo: [requerido, codigo],
   TipoPapeletaNombre: [requerido],
 });
 

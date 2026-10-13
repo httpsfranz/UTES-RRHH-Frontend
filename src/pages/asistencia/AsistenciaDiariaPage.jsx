@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Building2, Calculator, CalendarDays, FileDown, Plus, ScrollText } from 'lucide-react';
+import { Building2, Calculator, CalendarDays, Plus } from 'lucide-react';
 import { api } from '../../api/client';
 import { mensajeDeError } from '../../api/paginado';
 import { useAlcanceDeEess } from '../../hooks/useAlcanceDeEess';
@@ -18,18 +18,13 @@ import FormModal from '../../components/ui/FormModal';
 import Toolbar, { ToolbarItem } from '../../components/ui/Toolbar';
 import BarraDeCalendario from '../../components/ui/BarraDeCalendario';
 import CampoBusqueda from '../../components/ui/CampoBusqueda';
+import ExportarCalendarioPdf from '../../components/ui/ExportarCalendarioPdf';
 import CalendarioAsistencia from '../../components/ui/CalendarioAsistencia';
 import LeyendaAsistencia from '../../components/ui/LeyendaAsistencia';
 import AsistenciaDiariaForm from './AsistenciaDiariaForm';
 import CalcularAsistenciaModal from './CalcularAsistenciaModal';
 import CeldaAsistenciaModal from './CeldaAsistenciaModal';
 import { buildConfirmMessage, deactivateErrorMessage, emptyForm, mapToForm, validate } from './asistenciaDiariaModelo';
-
-// El PDF sale siempre en horizontal; aqui solo se elige el tamaño de hoja.
-const PAPELES = [
-  { value: 'a4', label: 'A4' },
-  { value: 'a3', label: 'A3' },
-];
 
 const CLAVE_EESS = 'asistencia.calendario.eess';
 
@@ -66,7 +61,7 @@ const anios = () => {
 export default function AsistenciaDiariaPage() {
   const { puedeElegir, eessFijo, eessPermitidos } = useAlcanceDeEess();
   const hoy = new Date();
-  const [filtros, setFiltros] = useState({ EessId: eessFijo ?? eessRecordado(), Mes: String(hoy.getMonth() + 1), Anio: String(hoy.getFullYear()), Papel: 'a4' });
+  const [filtros, setFiltros] = useState({ EessId: eessFijo ?? eessRecordado(), Mes: String(hoy.getMonth() + 1), Anio: String(hoy.getFullYear()) });
   const [buscar, setBuscar] = useState('');
   const [buscarAplicado, setBuscarAplicado] = useState('');
   const [seleccion, setSeleccion] = useState(null);
@@ -136,12 +131,7 @@ export default function AsistenciaDiariaPage() {
         <ToolbarItem ancho="sm">
           <Select form={filtros} setForm={cambiarFiltros} name="Anio" label="Año" options={anios()} />
         </ToolbarItem>
-        <ToolbarItem ancho="sm">
-          <Select form={filtros} setForm={cambiarFiltros} name="Papel" label="Papel PDF" icon={ScrollText} options={PAPELES} />
-        </ToolbarItem>
-        <Button variant="secondary" icon={FileDown} disabled={sinEess || !calendario || cal.exportando} onClick={() => cal.exportarPdf(filtros.Papel)}>
-          {cal.exportando ? 'Generando PDF…' : 'Exportar PDF'}
-        </Button>
+        <ExportarCalendarioPdf cal={cal} />
         <CampoBusqueda value={buscar} onChange={setBuscar} onBuscar={() => setBuscarAplicado(buscar)} placeholder="Buscar trabajador por nombre o DNI…" />
       </Toolbar>
 

@@ -1,6 +1,6 @@
 import { ScanFace, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
-import { validador, codigo, ip, requerido } from '../../utils/validaciones';
+import { validador, ip, requerido } from '../../utils/validaciones';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
@@ -11,7 +11,6 @@ import FormModal from '../../components/ui/FormModal';
 import DispositivoMarcacionForm from './DispositivoMarcacionForm';
 
 const { emptyForm, mapToForm } = formModel({
-  DispositivoMarcacionCodigo: 'codigo',
   DispositivoMarcacionNombre: 'nombre',
   DispositivoMarcacionTipo: 'tipo',
   EessId: 'eess_id',
@@ -20,7 +19,6 @@ const { emptyForm, mapToForm } = formModel({
 });
 
 const validate = validador({
-  DispositivoMarcacionCodigo: [requerido, codigo],
   DispositivoMarcacionNombre: [requerido],
   DispositivoMarcacionTipo: [requerido],
   DispositivoMarcacionIp: [ip],

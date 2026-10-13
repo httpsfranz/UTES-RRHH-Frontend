@@ -1,4 +1,4 @@
-import { FileBadge, FileText, Hash, Tag } from 'lucide-react';
+import { FileBadge, FileText, Tag } from 'lucide-react';
 import { useOpciones } from '../../hooks/useOpciones';
 import Field from '../../components/ui/Field';
 import Select from '../../components/ui/Select';
@@ -10,18 +10,6 @@ export default function MotivoPapeletaForm({ form, setForm, errors }) {
   return (
     <>
       <FormGrid>
-        <Field
-          form={form}
-          setForm={setForm}
-          errors={errors}
-          name="MotivoPapeletaCodigo"
-          label="Código"
-          icon={Hash}
-          required
-          maxLength={30}
-          filter="codigo"
-          placeholder="Ej. COM_REUNION"
-        />
         <Select
           form={form}
           setForm={setForm}

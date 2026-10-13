@@ -1,6 +1,6 @@
 import { Gavel, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
-import { validador, codigo, requerido, unoDe } from '../../utils/validaciones';
+import { validador, requerido, unoDe } from '../../utils/validaciones';
 import { GRAVEDADES, etiquetaDe, valoresDe } from '../../utils/opciones';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
@@ -12,7 +12,6 @@ import FormModal from '../../components/ui/FormModal';
 import TipoFaltaDisciplinariaForm from './TipoFaltaDisciplinariaForm';
 
 const { emptyForm, mapToForm } = formModel({
-  TipoFaltaDisciplinariaCodigo: 'codigo',
   TipoFaltaDisciplinariaNombre: 'nombre',
   TipoFaltaDisciplinariaGravedad: 'gravedad',
   TipoFaltaDisciplinariaBaseLegal: 'base_legal',
@@ -20,7 +19,6 @@ const { emptyForm, mapToForm } = formModel({
 });
 
 const validate = validador({
-  TipoFaltaDisciplinariaCodigo: [requerido, codigo],
   TipoFaltaDisciplinariaNombre: [requerido],
   TipoFaltaDisciplinariaGravedad: [unoDe(valoresDe(GRAVEDADES))],
 });

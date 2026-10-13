@@ -1,5 +1,7 @@
 import { Boxes, FileText, Hash, Tag } from 'lucide-react';
+import { conValorActual, MODULOS_DE_PERMISO } from '../../utils/opciones';
 import Field from '../../components/ui/Field';
+import Select from '../../components/ui/Select';
 
 export default function PermisoForm({ form, setForm, errors }) {
   return (
@@ -26,16 +28,7 @@ export default function PermisoForm({ form, setForm, errors }) {
         required
         maxLength={150}
       />
-      <Field
-        form={form}
-        setForm={setForm}
-        errors={errors}
-        name="PermisoModulo"
-        label="Módulo"
-        icon={Boxes}
-        maxLength={60}
-        placeholder="Ej. ASISTENCIA"
-      />
+      <Select form={form} setForm={setForm} errors={errors} name="PermisoModulo" label="Módulo" icon={Boxes} options={conValorActual(MODULOS_DE_PERMISO, form.PermisoModulo)} />
       <Field
         form={form}
         setForm={setForm}

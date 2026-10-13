@@ -13,6 +13,7 @@ import LoadingState from '../../components/ui/LoadingState';
 import Toolbar, { ToolbarItem } from '../../components/ui/Toolbar';
 import BarraDeCalendario from '../../components/ui/BarraDeCalendario';
 import CampoBusqueda from '../../components/ui/CampoBusqueda';
+import ExportarCalendarioPdf from '../../components/ui/ExportarCalendarioPdf';
 import CalendarioAsistencia from '../../components/ui/CalendarioAsistencia';
 import LeyendaAsistencia from '../../components/ui/LeyendaAsistencia';
 
@@ -85,6 +86,7 @@ export default function CalendarioPlanificacionPage({ titulo, subtitulo, endpoin
         <ToolbarItem ancho="sm">
           <Select form={filtros} setForm={cambiarFiltros} name="Anio" label="Año" options={anios()} />
         </ToolbarItem>
+        <ExportarCalendarioPdf cal={cal} />
         <CampoBusqueda value={buscar} onChange={setBuscar} onBuscar={() => setBuscarAplicado(buscar)} placeholder="Buscar trabajador por nombre o DNI…" />
       </Toolbar>
 

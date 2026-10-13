@@ -1,6 +1,6 @@
 import { CalendarRange, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
-import { validador, codigo, entero, requerido } from '../../utils/validaciones';
+import { validador, entero, requerido } from '../../utils/validaciones';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
@@ -11,14 +11,12 @@ import FormModal from '../../components/ui/FormModal';
 import TipoPeriodoProgramacionForm from './TipoPeriodoProgramacionForm';
 
 const { emptyForm, mapToForm } = formModel({
-  TipoPeriodoProgramacionCodigo: 'codigo',
   TipoPeriodoProgramacionNombre: 'nombre',
   TipoPeriodoProgramacionDias: 'dias',
   TipoPeriodoProgramacionDescripcion: 'descripcion',
 });
 
 const validate = validador({
-  TipoPeriodoProgramacionCodigo: [requerido, codigo],
   TipoPeriodoProgramacionNombre: [requerido],
   TipoPeriodoProgramacionDias: [entero({ min: 1, max: 366 })],
 });

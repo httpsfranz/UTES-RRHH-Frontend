@@ -1,6 +1,6 @@
 import { Briefcase, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
-import { validador, codigo, requerido } from '../../utils/validaciones';
+import { validador, requerido } from '../../utils/validaciones';
 import { siNo } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
@@ -12,7 +12,6 @@ import FormModal from '../../components/ui/FormModal';
 import CargoForm from './CargoForm';
 
 const { emptyForm, mapToForm } = formModel({
-  CargoCodigo: 'codigo',
   GrupoOcupacionalId: 'grupo_ocupacional_id',
   CargoNombre: 'nombre',
   CargoDescripcion: 'descripcion',
@@ -20,7 +19,6 @@ const { emptyForm, mapToForm } = formModel({
 });
 
 const validate = validador({
-  CargoCodigo: [codigo],
   GrupoOcupacionalId: [requerido],
   CargoNombre: [requerido],
 });

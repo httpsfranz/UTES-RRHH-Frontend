@@ -1,7 +1,7 @@
 import { FilePlus2, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
 import { useOpciones } from '../../hooks/useOpciones';
-import { codigo, entero, fecha, noFutura, requerido, requeridoSi, validador } from '../../utils/validaciones';
+import { entero, fecha, noFutura, requerido, requeridoSi, validador } from '../../utils/validaciones';
 import { ESTADOS_CARGA_PROGRAMACION, MESES, etiquetaDe } from '../../utils/opciones';
 import { formatoFecha } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
@@ -18,7 +18,6 @@ const { emptyForm, mapToForm } = formModel({
   DocumentoSustentoId: 'documento_sustento_id',
   TipoPeriodoProgramacionId: 'tipo_periodo_programacion_id',
   ProgramacionPeriodoId: 'programacion_periodo_id',
-  CargaProgramacionCodigo: 'codigo',
   CargaProgramacionAnio: 'anio',
   CargaProgramacionMes: 'mes',
   CargaProgramacionNumero: 'numero',
@@ -54,7 +53,6 @@ export default function CargaProgramacionPage() {
   const validate = validador({
     EessId: [requerido],
     DocumentoSustentoId: [requerido],
-    CargaProgramacionCodigo: [codigo],
     CargaProgramacionAnio: [requerido, entero({ min: 2000, max: 2100 })],
     CargaProgramacionMes: [requerido],
     CargaProgramacionNumero: [

@@ -1,6 +1,6 @@
 import { Percent, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
-import { validador, codigo, requerido } from '../../utils/validaciones';
+import { validador, requerido } from '../../utils/validaciones';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
@@ -11,13 +11,11 @@ import FormModal from '../../components/ui/FormModal';
 import TablaToleranciaForm from './TablaToleranciaForm';
 
 const { emptyForm, mapToForm } = formModel({
-  TablaToleranciaCodigo: 'codigo',
   TablaToleranciaNombre: 'nombre',
   TablaToleranciaDescripcion: 'descripcion',
 });
 
 const validate = validador({
-  TablaToleranciaCodigo: [requerido, codigo],
   TablaToleranciaNombre: [requerido],
 });
 

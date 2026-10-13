@@ -1,6 +1,6 @@
 import { Fingerprint, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
-import { validador, codigo, requerido } from '../../utils/validaciones';
+import { validador, requerido } from '../../utils/validaciones';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
@@ -11,13 +11,11 @@ import FormModal from '../../components/ui/FormModal';
 import MetodoMarcacionForm from './MetodoMarcacionForm';
 
 const { emptyForm, mapToForm } = formModel({
-  MetodoMarcacionCodigo: 'codigo',
   MetodoMarcacionNombre: 'nombre',
   MetodoMarcacionDescripcion: 'descripcion',
 });
 
 const validate = validador({
-  MetodoMarcacionCodigo: [requerido, codigo],
   MetodoMarcacionNombre: [requerido],
 });
 

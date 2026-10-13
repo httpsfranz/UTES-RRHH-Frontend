@@ -1,70 +1,63 @@
 import { useState } from 'react';
 import { HeartPulse } from 'lucide-react';
 
-// Pantalla de acceso: a la izquierda (solo en pantallas anchas) un panel institucional con la imagen de fondo y el logo,
-// ambos con difuminados; a la derecha la tarjeta con el formulario. Todo el efecto es CSS: si faltan las imagenes
-// (public/assets/images/branding/login-bg.jpg y logo.png) se usa la foto del edificio del sistema (building-bg.png) y un
-// icono institucional, junto con las manchas de color.
+// Pantalla de acceso centrada: fondo a pantalla completa (foto difuminada, degradado institucional y manchas de color) y,
+// al centro, una tarjeta de cristal con el logo de la Gerencia Regional de Salud sobre un panel blanco difuminado. Todo el
+// efecto es CSS; si faltan las imagenes se queda el degradado y, en lugar del logo, un icono institucional.
 //
 //   children  el formulario de acceso
 const IMAGENES_DE_FONDO = ['/assets/images/branding/login-bg.jpg', '/assets/images/branding/building-bg.png'];
-const LOGO = '/assets/images/branding/logo.png';
+const LOGO = '/assets/images/documents/logo-gerencia-salud.jpg';
+const ILUSTRACION = '/assets/images/branding/sidebar-illustration.png';
 
 // Imagen de fondo: la primera que exista; si ninguna carga, solo quedan las manchas de color.
-function FondoDelPanel() {
+function FondoDePantalla() {
   const [indice, setIndice] = useState(0);
   if (indice >= IMAGENES_DE_FONDO.length) return null;
-  return <img src={IMAGENES_DE_FONDO[indice]} alt="" onError={() => setIndice((i) => i + 1)} className="absolute inset-0 h-full w-full scale-110 object-cover opacity-55 blur-[3px]" />;
+  return <img src={IMAGENES_DE_FONDO[indice]} alt="" onError={() => setIndice((i) => i + 1)} className="absolute inset-0 h-full w-full scale-110 object-cover opacity-45 blur-[4px]" />;
 }
 
-// Logo institucional; si el archivo no existe se muestra el icono de la Red.
-function Logo({ tamano, clase }) {
+// Logo institucional (JPG con fondo blanco): sus bordes se disuelven con una mascara radial para fundirse con el panel blanco.
+function Logo() {
   const [falta, setFalta] = useState(false);
-  if (falta) return <HeartPulse size={tamano} strokeWidth={1.6} className={clase} />;
-  return <img src={LOGO} alt="" onError={() => setFalta(true)} className={`object-contain ${clase}`} />;
+  return (
+    <div className="relative mx-auto flex h-36 w-36 items-center justify-center">
+      <span className="absolute -inset-3 rounded-full bg-white/80 blur-2xl" />
+      <span className="absolute inset-0 rounded-full bg-white shadow-[0_8px_30px_rgba(11,37,69,0.18)] ring-1 ring-brand/10" />
+      {falta ? (
+        <HeartPulse size={56} strokeWidth={1.6} className="relative text-brand" />
+      ) : (
+        <img
+          src={LOGO}
+          alt="Gerencia Regional de Salud"
+          onError={() => setFalta(true)}
+          className="relative h-32 w-32 object-contain [mask-image:radial-gradient(closest-side,#000_72%,transparent_100%)]"
+        />
+      )}
+    </div>
+  );
 }
 
 export default function LoginLayout({ children }) {
   return (
-    <div className="grid min-h-screen w-screen bg-page lg:grid-cols-[1.15fr_1fr]">
-      {/* Panel institucional */}
-      <aside className="relative hidden overflow-hidden bg-navy lg:block" aria-hidden="true">
-        <FondoDelPanel />
-        <div className="absolute inset-0 bg-gradient-to-br from-navy/85 via-navy/70 to-brand-dark/60" />
-        <span className="absolute -left-24 -top-24 h-96 w-96 rounded-full bg-brand/40 blur-3xl" />
-        <span className="absolute -bottom-32 right-0 h-[28rem] w-[28rem] rounded-full bg-cyan-400/25 blur-3xl" />
-        <span className="absolute left-1/3 top-1/2 h-64 w-64 rounded-full bg-sky-300/20 blur-3xl" />
+    <div className="relative flex min-h-screen w-screen items-center justify-center overflow-hidden bg-navy px-4 py-10">
+      <FondoDePantalla />
+      <div className="absolute inset-0 bg-gradient-to-br from-navy/90 via-navy/75 to-brand-dark/70" />
+      <span className="absolute -left-24 -top-24 h-[28rem] w-[28rem] rounded-full bg-brand/40 blur-3xl" />
+      <span className="absolute -bottom-32 -right-24 h-[32rem] w-[32rem] rounded-full bg-cyan-400/25 blur-3xl" />
+      <span className="absolute left-1/2 top-1/3 h-72 w-72 -translate-x-1/2 rounded-full bg-sky-300/15 blur-3xl" />
+      <img src={ILUSTRACION} alt="" aria-hidden="true" className="pointer-events-none absolute bottom-0 left-1/2 w-[min(70rem,140vw)] max-w-none -translate-x-1/2 opacity-25 blur-[1px] [mask-image:linear-gradient(to_top,#000_35%,transparent_95%)]" />
 
-        <div className="relative flex h-full flex-col items-center justify-center gap-8 px-12 text-center">
-          <div className="relative flex h-44 w-44 items-center justify-center">
-            <span className="absolute inset-0 rounded-full bg-white/25 blur-2xl" />
-            <span className="absolute inset-4 rounded-full bg-white/10 ring-1 ring-white/30 backdrop-blur-md" />
-            <Logo tamano={72} clase="relative z-10 max-h-28 max-w-28 text-white drop-shadow-xl" />
-          </div>
-          <div className="max-w-md space-y-3 text-white">
-            <h1 className="text-3xl font-semibold tracking-tight">Red de Salud Trujillo</h1>
-            <p className="text-base text-white/80">Sistema de control de asistencia y gestión de recursos humanos</p>
-          </div>
-          <p className="absolute bottom-8 text-xs tracking-wide text-white/55">Comprometidos con tu bienestar</p>
-        </div>
-      </aside>
-
-      {/* Formulario */}
-      <main className="relative flex items-center justify-center overflow-hidden px-4 py-10 sm:px-8">
-        <span className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-brand/15 blur-3xl" />
-        <span className="pointer-events-none absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-cyan-400/15 blur-3xl" />
-        <div className="relative w-full max-w-md rounded-3xl border border-white/70 bg-surface/85 p-8 shadow-[var(--shadow-pop)] backdrop-blur-xl sm:p-10">
-          <div className="mb-8 flex flex-col items-center gap-3 text-center lg:items-start lg:text-left">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-soft ring-1 ring-brand/15 lg:hidden">
-              <Logo tamano={30} clase="max-h-9 max-w-9 text-brand" />
-            </div>
-            <div>
-              <h2 className="text-2xl font-semibold tracking-tight text-heading">Iniciar sesión</h2>
-              <p className="mt-1 text-sm text-muted">Ingresa con tu usuario del sistema UTES · RRHH.</p>
-            </div>
+      <main className="relative w-full max-w-md">
+        <div className="rounded-[2rem] border border-white/60 bg-white/85 p-8 shadow-[0_30px_80px_-20px_rgba(2,12,27,0.6)] backdrop-blur-2xl sm:p-10">
+          <div className="mb-8 text-center">
+            <Logo />
+            <h1 className="mt-5 text-2xl font-semibold tracking-tight text-heading">Red de Salud Trujillo</h1>
+            <p className="mt-1 text-sm text-muted">Control de asistencia y recursos humanos · UTES</p>
           </div>
           {children}
         </div>
+        <p className="mt-6 text-center text-xs tracking-wide text-white/70">Gerencia Regional de Salud · Comprometidos con tu bienestar</p>
       </main>
     </div>
   );

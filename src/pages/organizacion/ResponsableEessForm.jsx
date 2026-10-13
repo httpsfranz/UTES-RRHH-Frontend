@@ -3,6 +3,7 @@ import { useOpciones } from '../../hooks/useOpciones';
 import { etiquetaVinculo } from '../../utils/formato';
 import Field from '../../components/ui/Field';
 import Select from '../../components/ui/Select';
+import SelectorDeDocumento from '../../components/ui/SelectorDeDocumento';
 import SelectBuscable from '../../components/ui/SelectBuscable';
 import FormGrid from '../../components/ui/FormGrid';
 import HelpText from '../../components/ui/HelpText';
@@ -28,7 +29,7 @@ export default function ResponsableEessForm({ form, setForm, errors }) {
       </FormGrid>
       <FormGrid>
         <Field form={form} setForm={setForm} errors={errors} name="ResponsableEessDocumentoNumero" label="N.º de resolución o memorando" icon={Hash} maxLength={60} />
-        <Select form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Documento de designación" icon={FileText} options={documentos} />
+        <SelectorDeDocumento form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Documento de designación" icon={FileText} options={documentos} />
       </FormGrid>
       <Field form={form} setForm={setForm} errors={errors} name="ResponsableEessObservacion" label="Observación" icon={FileText} maxLength={500} />
       <HelpText>

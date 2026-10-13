@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { empezarActividad, terminarActividad } from './actividad';
 
 const CLAVE_TOKEN = 'utes.token';
 
@@ -32,6 +33,7 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
+  empezarActividad();
   const token = leerToken();
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
@@ -42,8 +44,12 @@ api.interceptors.request.use((config) => {
 export const EVENTO_SESION_VENCIDA = 'utes:sesion-vencida';
 
 api.interceptors.response.use(
-  (respuesta) => respuesta,
+  (respuesta) => {
+    terminarActividad();
+    return respuesta;
+  },
   (error) => {
+    terminarActividad();
     const url = error.config?.url ?? '';
     if (error.response?.status === 401 && !url.includes('auth/login') && leerToken()) {
       guardarToken(null);

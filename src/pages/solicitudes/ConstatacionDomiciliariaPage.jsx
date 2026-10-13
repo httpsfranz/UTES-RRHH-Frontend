@@ -37,6 +37,7 @@ const nombreEstado = (item) => etiquetaDe([...ESTADOS_CONSTATACION, { value: 'AN
 const columns = [
   { key: 'fecha', header: 'Fecha', render: (item) => formatoFecha(item.fecha) },
   { key: 'trabajador', header: 'Trabajador', render: (item) => item.trabajador?.nombre_completo ?? '—' },
+  { key: 'eess', header: 'Establecimiento', render: (item) => item.vinculo?.eess?.nombre ?? '—' },
   { key: 'descanso', header: 'Descanso (CITT)', render: (item) => item.descanso?.numero_citt ?? '—' },
   { key: 'direccion', header: 'Dirección', render: (item) => item.direccion ?? '—' },
   { key: 'estado', header: 'Resultado', render: nombreEstado },

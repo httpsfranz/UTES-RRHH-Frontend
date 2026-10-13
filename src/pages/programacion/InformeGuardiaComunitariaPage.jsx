@@ -46,6 +46,7 @@ const validate = validador({
 const columns = [
   { key: 'fecha', header: 'Fecha', render: (item) => formatoFecha(item.fecha) },
   { key: 'trabajador', header: 'Trabajador', render: (item) => item.trabajador?.nombre_completo ?? '—' },
+  { key: 'eess', header: 'Establecimiento', render: (item) => item.vinculo?.eess?.nombre ?? '—' },
   { key: 'horario', header: 'Horario', render: horario },
   { key: 'descripcion', header: 'Actividades' },
   { key: 'estado', header: 'Resolución', render: (item) => etiquetaDe(ESTADOS_SOLICITUD, item.estado) },

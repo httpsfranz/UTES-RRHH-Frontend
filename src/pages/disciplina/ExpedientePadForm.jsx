@@ -1,9 +1,10 @@
 import { CalendarDays, FileText, Gavel, Hash, ListChecks, UserRound } from 'lucide-react';
 import { useOpciones } from '../../hooks/useOpciones';
-import { ESTADOS_PAD, SIGUIENTES_PAD } from '../../utils/opciones';
+import { conValorActual, ESTADOS_PAD, SANCIONES_PAD, SIGUIENTES_PAD } from '../../utils/opciones';
 import { etiquetaVinculo } from '../../utils/formato';
 import Field from '../../components/ui/Field';
 import Select from '../../components/ui/Select';
+import SelectorDeDocumento from '../../components/ui/SelectorDeDocumento';
 import SelectBuscable from '../../components/ui/SelectBuscable';
 import Textarea from '../../components/ui/Textarea';
 import FormGrid from '../../components/ui/FormGrid';
@@ -33,7 +34,7 @@ export default function ExpedientePadForm({ form, setForm, errors, estadoActual 
       <Select form={form} setForm={setForm} errors={errors} name="TipoFaltaDisciplinariaId" label="Falta imputada" icon={Gavel} options={tipos} required />
       <FormGrid>
         <Field form={form} setForm={setForm} errors={errors} name="ExpedientePadNumero" label="N.º de expediente" icon={Hash} maxLength={50} placeholder="Ej. PAD-2026-005" />
-        <Select form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Documento de inicio" icon={FileText} options={documentos} />
+        <SelectorDeDocumento form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Documento de inicio" icon={FileText} options={documentos} />
       </FormGrid>
       <FormGrid>
         <Field form={form} setForm={setForm} errors={errors} name="ExpedientePadFechaInicio" label="Inicio del procedimiento" icon={CalendarDays} type="date" required />
@@ -41,17 +42,7 @@ export default function ExpedientePadForm({ form, setForm, errors, estadoActual 
       </FormGrid>
       {etapas && <Select form={form} setForm={setForm} errors={errors} name="ExpedientePadEstado" label="Etapa" icon={ListChecks} options={etapas} required />}
       {(resolviendo || form.ExpedientePadSancion) && (
-        <Field
-          form={form}
-          setForm={setForm}
-          errors={errors}
-          name="ExpedientePadSancion"
-          label="Sanción"
-          icon={Gavel}
-          required={resolviendo}
-          maxLength={300}
-          placeholder="Ej. Suspensión sin goce de remuneraciones por 15 días"
-        />
+        <Select form={form} setForm={setForm} errors={errors} name="ExpedientePadSancion" label="Sanción" icon={Gavel} options={conValorActual(SANCIONES_PAD, form.ExpedientePadSancion)} required={resolviendo} />
       )}
       <Textarea form={form} setForm={setForm} errors={errors} name="ExpedientePadDescripcion" label="Descripción de los hechos" icon={FileText} maxLength={1500} />
       <HelpText>

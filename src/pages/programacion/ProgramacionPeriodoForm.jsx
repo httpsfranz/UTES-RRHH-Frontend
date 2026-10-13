@@ -21,7 +21,6 @@ export default function ProgramacionPeriodoForm({ form, setForm, errors }) {
       <Select form={form} setForm={setForm} errors={errors} name="EessId" label="Establecimiento" icon={Hospital} options={establecimientos} required />
       <FormGrid>
         <Select form={form} setForm={setForm} errors={errors} name="TipoPeriodoProgramacionId" label="Tipo de período" icon={ListChecks} options={tipos.opciones} required />
-        <Field form={form} setForm={setForm} errors={errors} name="ProgramacionPeriodoCodigo" label="Código (opcional)" icon={Hash} maxLength={50} filter="codigo" placeholder="Ej. PGM-LE-2026-11" />
       </FormGrid>
       <FormGrid>
         <Field form={form} setForm={setForm} errors={errors} name="ProgramacionPeriodoAnio" label="Año" icon={CalendarDays} maxLength={4} filter="digitos" required />

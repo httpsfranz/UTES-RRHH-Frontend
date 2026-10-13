@@ -40,13 +40,13 @@ export default function SearchInput({
     alEnviar.current = onSubmit;
   });
 
-  const primera = useRef(true);
+  // Solo se vuelve a consultar cuando el texto CAMBIA: la carga inicial ya la hace la Page (y el doble montaje de React en
+  // desarrollo vuelve a ejecutar este efecto sin que el texto cambie).
+  const ultimoTexto = useRef(value);
   useEffect(() => {
     setBusqueda?.(value);
-    if (primera.current) {
-      primera.current = false; // la carga inicial ya la hace la Page
-      return undefined;
-    }
+    if (ultimoTexto.current === value) return undefined;
+    ultimoTexto.current = value;
     const temporizador = setTimeout(() => alEnviar.current?.(), ESPERA_MS);
     return () => clearTimeout(temporizador);
   }, [value, setBusqueda]);

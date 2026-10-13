@@ -3,6 +3,7 @@ import { useOpciones } from '../../hooks/useOpciones';
 import { etiquetaTrabajador } from '../../utils/formato';
 import Field from '../../components/ui/Field';
 import Select from '../../components/ui/Select';
+import SelectorDeDocumento from '../../components/ui/SelectorDeDocumento';
 import SelectBuscable from '../../components/ui/SelectBuscable';
 import Textarea from '../../components/ui/Textarea';
 import Checkbox from '../../components/ui/Checkbox';
@@ -49,7 +50,7 @@ export default function ColegiaturaForm({ form, setForm, errors }) {
         <Field form={form} setForm={setForm} errors={errors} name="ColegiaturaFechaHabilitacion" label="Habilitado desde" icon={CalendarDays} type="date" />
       </FormGrid>
       <Field form={form} setForm={setForm} errors={errors} name="ColegiaturaFechaVencimiento" label="La habilitación vence el" icon={CalendarDays} type="date" />
-      <Select form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Constancia de habilitación" icon={FileText} options={documentos} />
+      <SelectorDeDocumento form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Constancia de habilitación" icon={FileText} options={documentos} />
       <Textarea form={form} setForm={setForm} errors={errors} name="ColegiaturaObservacion" label="Observación" icon={FileText} maxLength={500} />
       <Checkbox form={form} setForm={setForm} errors={errors} name="ColegiaturaEsHabilitado" label="Habilitado por su colegio profesional" />
       <Checkbox form={form} setForm={setForm} errors={errors} name="ColegiaturaEsPrincipal" label="Es la colegiatura principal del trabajador" />

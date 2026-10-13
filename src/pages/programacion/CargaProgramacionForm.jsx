@@ -3,6 +3,7 @@ import { useOpciones } from '../../hooks/useOpciones';
 import { ESTADOS_CARGA_PROGRAMACION, MESES } from '../../utils/opciones';
 import Field from '../../components/ui/Field';
 import Select from '../../components/ui/Select';
+import SelectorDeDocumento from '../../components/ui/SelectorDeDocumento';
 import Textarea from '../../components/ui/Textarea';
 import FormGrid from '../../components/ui/FormGrid';
 import HelpText from '../../components/ui/HelpText';
@@ -52,13 +53,12 @@ export default function CargaProgramacionForm({ form, setForm, errors, editando 
           />
         )}
       </FormGrid>
-      <Select form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Documento escaneado" icon={FileText} options={documentos} required />
+      <SelectorDeDocumento form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Documento escaneado" icon={FileText} options={documentos} required />
       <FormGrid>
         <Field form={form} setForm={setForm} errors={errors} name="CargaProgramacionFechaDocumento" label="Fecha del documento" icon={CalendarDays} type="date" required />
         <Field form={form} setForm={setForm} errors={errors} name="CargaProgramacionDocumentoNumero" label="N.º de oficio o memorando" icon={Hash} maxLength={60} />
       </FormGrid>
       <FormGrid>
-        <Field form={form} setForm={setForm} errors={errors} name="CargaProgramacionCodigo" label="Código (automático)" icon={Hash} maxLength={50} filter="codigo" placeholder="PROG-AAAA-MM-NNN" />
       </FormGrid>
       <Select form={form} setForm={setForm} errors={errors} name="ProgramacionPeriodoId" label="Programación estructurada (opcional)" icon={CalendarDays} options={opcionesProgramacion} />
       {editando && (

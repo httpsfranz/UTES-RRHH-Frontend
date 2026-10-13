@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { api } from '../api/client';
 import { invalidarOpciones } from '../api/cacheDeOpciones';
+import { aFormData, tieneArchivo } from '../api/documentos';
 import { mensajeDeError, traerTodo } from '../api/paginado';
 
 /**
@@ -108,7 +109,8 @@ export function useCrudResource({
         filas = data.data ?? [];
         cantidad = data.meta?.total ?? filas.length;
       } else {
-        filas = await traerTodo(endpoint, params);
+        // Lo ultimo que se registro aparece primero (los ids crecen con cada alta).
+        filas = [...(await traerTodo(endpoint, params))].sort((x, y) => (Number(y[idKey]) || 0) - (Number(x[idKey]) || 0));
         cantidad = filas.length;
       }
       if (consulta !== ultimaConsulta.current) return;
@@ -160,8 +162,14 @@ export function useCrudResource({
 
     setGuardando(true);
     try {
+      // Un formulario con un archivo se envia como multipart (la edicion usa POST con _method=PATCH: PHP no lee multipart en PATCH).
+      const conArchivo = tieneArchivo(form);
+      const multipart = { headers: { 'Content-Type': 'multipart/form-data' } };
       if (editando) {
-        await api.patch(`${endpoint}/${editando[idKey]}`, form);
+        if (conArchivo) await api.post(`${endpoint}/${editando[idKey]}`, aFormData(form, { _method: 'PATCH' }), multipart);
+        else await api.patch(`${endpoint}/${editando[idKey]}`, form);
+      } else if (conArchivo) {
+        await api.post(endpoint, aFormData(form), multipart);
       } else {
         await api.post(endpoint, form);
       }

@@ -1,5 +1,6 @@
-import { Building2, Hash, MapPin, ScanFace, Tag, Wifi } from 'lucide-react';
+import { Building2, MapPin, ScanFace, Tag, Wifi } from 'lucide-react';
 import { useOpciones } from '../../hooks/useOpciones';
+import { conValorActual, TIPOS_DISPOSITIVO } from '../../utils/opciones';
 import Field from '../../components/ui/Field';
 import Select from '../../components/ui/Select';
 import FormGrid from '../../components/ui/FormGrid';
@@ -10,29 +11,7 @@ export default function DispositivoMarcacionForm({ form, setForm, errors }) {
   return (
     <>
       <FormGrid>
-        <Field
-          form={form}
-          setForm={setForm}
-          errors={errors}
-          name="DispositivoMarcacionCodigo"
-          label="Código"
-          icon={Hash}
-          required
-          maxLength={50}
-          filter="codigo"
-          placeholder="Ej. DISP-001"
-        />
-        <Field
-          form={form}
-          setForm={setForm}
-          errors={errors}
-          name="DispositivoMarcacionTipo"
-          label="Tipo"
-          icon={Tag}
-          required
-          maxLength={50}
-          placeholder="Ej. Huella dactilar / Facial / Tarjeta"
-        />
+        <Select form={form} setForm={setForm} errors={errors} name="DispositivoMarcacionTipo" label="Tipo" icon={Tag} options={conValorActual(TIPOS_DISPOSITIVO, form.DispositivoMarcacionTipo)} required />
       </FormGrid>
       <Field
         form={form}

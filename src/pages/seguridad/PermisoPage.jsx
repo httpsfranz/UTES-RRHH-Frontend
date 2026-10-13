@@ -26,6 +26,7 @@ const columns = [
   { key: 'codigo', header: 'Código' },
   { key: 'nombre', header: 'Nombre' },
   { key: 'modulo', header: 'Módulo' },
+  { key: 'roles', header: 'Roles que lo tienen', render: (item) => String(item.roles_total ?? 0) },
 ];
 
 const card = (item) => ({

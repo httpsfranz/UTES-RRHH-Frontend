@@ -38,6 +38,7 @@ const noAnulada = (item) => item.estado !== 'ANULADO';
 const columns = [
   { key: 'fecha', header: 'Fecha', render: (item) => formatoFecha(item.fecha) },
   { key: 'trabajador', header: 'Trabajador', render: (item) => item.trabajador?.nombre_completo ?? '—' },
+  { key: 'eess', header: 'Establecimiento', render: (item) => item.vinculo?.eess?.nombre ?? '—' },
   { key: 'tipo', header: 'Tipo', render: (item) => item.tipo?.nombre ?? '—' },
   { key: 'horario', header: 'Horario', render: horario },
   { key: 'numero', header: 'N.º', render: (item) => item.numero ?? '—' },

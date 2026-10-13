@@ -35,6 +35,8 @@ const validate = validador({
 const columns = [
   { key: 'nombre', header: 'Usuario' },
   { key: 'trabajador', header: 'Trabajador', render: (item) => item.trabajador?.nombre_completo ?? '—' },
+  { key: 'roles', header: 'Roles', render: (item) => (item.roles ?? []).map((x) => x.nombre).join(' · ') || '—' },
+  { key: 'alcance', header: 'Alcance de datos', render: (item) => (item.ambitos ?? []).map((x) => x.nombre).join(' · ') || '—' },
   { key: 'documento', header: 'Documento', render: (item) => item.trabajador?.numero_documento ?? '—' },
   { key: 'correo', header: 'Correo', render: (item) => item.correo ?? '—' },
   { key: 'fecha_creacion', header: 'Creado', render: (item) => formatoFechaHora(item.fecha_creacion) },
@@ -43,7 +45,7 @@ const columns = [
 const card = (item) => ({
   icon: UserCog,
   title: item.nombre,
-  meta: [item.trabajador?.nombre_completo, item.correo, `Creado ${formatoFechaHora(item.fecha_creacion)}`],
+  meta: [item.trabajador?.nombre_completo, `Roles: ${(item.roles ?? []).map((x) => x.nombre).join(' · ') || '—'}`, item.correo, `Creado ${formatoFechaHora(item.fecha_creacion)}`],
   footer: item.trabajador?.numero_documento && `Doc. ${item.trabajador.numero_documento}`,
 });
 

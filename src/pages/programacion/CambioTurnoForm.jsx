@@ -2,6 +2,7 @@ import { ArrowLeftRight, CalendarClock, Clock, FileText, ListChecks, UserRound, 
 import { useOpciones } from '../../hooks/useOpciones';
 import { ahoraLocal, etiquetaVinculo, formatoFecha } from '../../utils/formato';
 import Select from '../../components/ui/Select';
+import SelectorDeDocumento from '../../components/ui/SelectorDeDocumento';
 import SelectBuscable from '../../components/ui/SelectBuscable';
 import Textarea from '../../components/ui/Textarea';
 import HelpText from '../../components/ui/HelpText';
@@ -111,7 +112,7 @@ export default function CambioTurnoForm({ form, setForm, errors }) {
         />
       )}
       <Textarea form={form} setForm={setForm} errors={errors} name="CambioTurnoMotivo" label="Motivo" icon={FileText} maxLength={1000} required={sinReemplazante} />
-      <Select form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Documento que sustenta o autoriza" icon={FileText} options={documentos.opciones} required={sinReemplazante} />
+      <SelectorDeDocumento form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Documento que sustenta o autoriza" icon={FileText} options={documentos.opciones} required={sinReemplazante} />
       <Textarea form={form} setForm={setForm} errors={errors} name="CambioTurnoObservacion" label="Observación" icon={FileText} maxLength={1000} />
       <HelpText>
         RIT, Art. 16 y 20: es la única forma de modificar una programación ya publicada. Se pide con 48 horas de anticipación (con menos,

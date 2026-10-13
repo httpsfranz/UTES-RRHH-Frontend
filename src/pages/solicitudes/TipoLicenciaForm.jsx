@@ -11,18 +11,6 @@ export default function TipoLicenciaForm({ form, setForm, errors }) {
           form={form}
           setForm={setForm}
           errors={errors}
-          name="TipoLicenciaCodigo"
-          label="Código"
-          icon={Hash}
-          required
-          maxLength={30}
-          filter="codigo"
-          placeholder="Ej. MATERNIDAD"
-        />
-        <Field
-          form={form}
-          setForm={setForm}
-          errors={errors}
           name="TipoLicenciaNombre"
           label="Nombre"
           icon={Tag}

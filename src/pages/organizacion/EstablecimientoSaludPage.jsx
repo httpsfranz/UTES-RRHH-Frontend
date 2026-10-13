@@ -1,6 +1,6 @@
 import { Hospital, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
-import { validador, codigo, digitosExactos, requerido, telefonoPeruano, ubigeo, unoDe } from '../../utils/validaciones';
+import { validador, digitosExactos, requerido, telefonoPeruano, ubigeo, unoDe } from '../../utils/validaciones';
 import { CATEGORIAS_EESS, valoresDe } from '../../utils/opciones';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
@@ -12,7 +12,6 @@ import FormModal from '../../components/ui/FormModal';
 import EstablecimientoSaludForm from './EstablecimientoSaludForm';
 
 const { emptyForm, mapToForm } = formModel({
-  EessCodigo: 'codigo',
   EessCodigoRenipres: 'renipres',
   EessNombre: 'nombre',
   MicroredId: 'microred_id',
@@ -25,7 +24,6 @@ const { emptyForm, mapToForm } = formModel({
 });
 
 const validate = validador({
-  EessCodigo: [requerido, codigo],
   EessCodigoRenipres: [digitosExactos(8, 'El código RENIPRESS')],
   EessNombre: [requerido],
   MicroredId: [requerido],
@@ -41,6 +39,7 @@ const columns = [
   { key: 'microred', header: 'Microred', render: (item) => item.microred?.nombre ?? '—' },
   { key: 'tipo', header: 'Tipo', render: (item) => item.tipo?.nombre ?? '—' },
   { key: 'categoria', header: 'Categoría' },
+  { key: 'trabajadores', header: 'Trabajadores', render: (item) => String(item.trabajadores_total ?? 0) },
 ];
 
 const card = (item) => ({

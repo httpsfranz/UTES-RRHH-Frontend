@@ -3,6 +3,7 @@ import { useOpciones } from '../../hooks/useOpciones';
 import { etiquetaVinculo } from '../../utils/formato';
 import Field from '../../components/ui/Field';
 import Select from '../../components/ui/Select';
+import SelectorDeDocumento from '../../components/ui/SelectorDeDocumento';
 import SelectBuscable from '../../components/ui/SelectBuscable';
 import Textarea from '../../components/ui/Textarea';
 import FormGrid from '../../components/ui/FormGrid';
@@ -28,7 +29,7 @@ export default function JustificacionFaltaForm({ form, setForm, errors }) {
         <Field form={form} setForm={setForm} errors={errors} name="JustificacionFaltaFechaFin" label="Hasta" icon={CalendarDays} type="date" required />
       </FormGrid>
       <FormGrid>
-        <Select
+        <SelectorDeDocumento
           form={form}
           setForm={setForm}
           errors={errors}

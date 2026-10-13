@@ -1,4 +1,4 @@
-import { Building2, FileText, Hash, MapPin, Phone } from 'lucide-react';
+import { Building2, FileText, MapPin, Phone } from 'lucide-react';
 import Field from '../../components/ui/Field';
 import FormGrid from '../../components/ui/FormGrid';
 
@@ -6,18 +6,6 @@ export default function MicroredForm({ form, setForm, errors }) {
   return (
     <>
       <FormGrid>
-        <Field
-          form={form}
-          setForm={setForm}
-          errors={errors}
-          name="MicroredCodigo"
-          label="Código"
-          icon={Hash}
-          required
-          maxLength={30}
-          filter="codigo"
-          placeholder="Ej. MR-LE"
-        />
         <Field
           form={form}
           setForm={setForm}

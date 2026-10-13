@@ -10,7 +10,7 @@ const MAX_PAGINAS = 50; // tope de seguridad: 5000 registros
  *
  * La primera pagina dice cuantas hay (meta.last_page); las demas se piden a la vez, no una tras otra.
  */
-export async function traerTodo(endpoint, params = {}) {
+async function traerTodoSinCompartir(endpoint, params) {
   const pedir = (pagina) => api.get(endpoint, { params: { ...params, por_pagina: POR_PAGINA, page: pagina } }).then(({ data }) => data);
 
   const primera = await pedir(1);
@@ -19,6 +19,18 @@ export async function traerTodo(endpoint, params = {}) {
 
   const restantes = await Promise.all(Array.from({ length: ultima - 1 }, (_, i) => pedir(i + 2)));
   return [primera, ...restantes].flatMap((pagina) => pagina.data ?? []);
+}
+
+// Dos pantallas (o el doble montaje de React en desarrollo) que piden la misma lista a la vez comparten una sola consulta.
+// Solo se comparte mientras esta en curso: despues de guardar, la siguiente consulta siempre va al servidor.
+const enVuelo = new Map();
+
+export function traerTodo(endpoint, params = {}) {
+  const clave = `${endpoint}?${JSON.stringify(params)}`;
+  if (enVuelo.has(clave)) return enVuelo.get(clave);
+  const promesa = traerTodoSinCompartir(endpoint, params).finally(() => enVuelo.delete(clave));
+  enVuelo.set(clave, promesa);
+  return promesa;
 }
 
 /** Mensaje de error de una respuesta HTTP de la API (o null si no hubo respuesta: sin conexion). */

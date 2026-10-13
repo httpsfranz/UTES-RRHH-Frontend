@@ -30,6 +30,7 @@ const vigencia = (item) => `${formatoFecha(item.fecha_inicio)} – ${item.fecha_
 
 const columns = [
   { key: 'trabajador', header: 'Trabajador', render: (item) => item.trabajador?.nombre_completo ?? '—' },
+  { key: 'eess', header: 'Establecimiento', render: (item) => item.vinculo?.eess?.nombre ?? '—' },
   { key: 'horario', header: 'Horario', render: (item) => item.horario?.nombre ?? '—' },
   { key: 'vigencia', header: 'Vigencia', render: vigencia },
 ];

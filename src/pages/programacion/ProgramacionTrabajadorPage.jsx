@@ -24,6 +24,7 @@ const horas = (item) => (item.horas_programadas ? `${item.horas_programadas} h` 
 
 const columns = [
   { key: 'trabajador', header: 'Trabajador', render: (item) => item.trabajador?.nombre_completo ?? '—' },
+  { key: 'eess', header: 'Establecimiento', render: (item) => item.vinculo?.eess?.nombre ?? '—' },
   { key: 'periodo', header: 'Período', render: periodo },
   { key: 'turnos', header: 'Turnos', render: (item) => String(item.turnos_programados ?? 0) },
   { key: 'horas', header: 'Horas programadas', render: horas },

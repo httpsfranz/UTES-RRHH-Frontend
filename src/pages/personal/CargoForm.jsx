@@ -1,4 +1,4 @@
-import { Briefcase, FileText, Hash, Users } from 'lucide-react';
+import { Briefcase, FileText, Users } from 'lucide-react';
 import { useOpciones } from '../../hooks/useOpciones';
 import Field from '../../components/ui/Field';
 import Select from '../../components/ui/Select';
@@ -11,17 +11,6 @@ export default function CargoForm({ form, setForm, errors }) {
   return (
     <>
       <FormGrid>
-        <Field
-          form={form}
-          setForm={setForm}
-          errors={errors}
-          name="CargoCodigo"
-          label="Código (opcional)"
-          icon={Hash}
-          maxLength={30}
-          filter="codigo"
-          placeholder="Ej. CG-010"
-        />
         <Select
           form={form}
           setForm={setForm}

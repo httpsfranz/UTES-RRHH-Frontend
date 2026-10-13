@@ -1,72 +1,12 @@
-import { FileText, FileType, Fingerprint, FolderOpen, Hash, Tag } from 'lucide-react';
-import Field from '../../components/ui/Field';
-import FormGrid from '../../components/ui/FormGrid';
+import CampoArchivo from '../../components/ui/CampoArchivo';
+import HelpText from '../../components/ui/HelpText';
 
-export default function DocumentoSustentoForm({ form, setForm, errors }) {
+// Un solo campo: el archivo. El nombre, el tipo, el tamaño y el hash los toma el servidor del propio archivo.
+export default function DocumentoSustentoForm({ form, setForm, errors, actual }) {
   return (
     <>
-      <Field
-        form={form}
-        setForm={setForm}
-        errors={errors}
-        name="DocumentoSustentoNombre"
-        label="Nombre del archivo"
-        icon={FileText}
-        required
-        maxLength={255}
-        placeholder="Ej. certificado-medico.pdf"
-      />
-      <Field
-        form={form}
-        setForm={setForm}
-        errors={errors}
-        name="DocumentoSustentoRuta"
-        label="Ruta de almacenamiento"
-        icon={FolderOpen}
-        maxLength={500}
-        placeholder="Ej. /storage/documentos/2026/09/archivo.pdf"
-      />
-      <FormGrid>
-        <Field
-          form={form}
-          setForm={setForm}
-          errors={errors}
-          name="DocumentoSustentoTipo"
-          label="Tipo (MIME)"
-          icon={Tag}
-          maxLength={100}
-          placeholder="Ej. application/pdf"
-        />
-        <Field
-          form={form}
-          setForm={setForm}
-          errors={errors}
-          name="DocumentoSustentoExtension"
-          label="Extensión"
-          icon={FileType}
-          maxLength={10}
-          placeholder="Ej. pdf"
-        />
-      </FormGrid>
-      <Field
-        form={form}
-        setForm={setForm}
-        errors={errors}
-        name="DocumentoSustentoTamanoBytes"
-        label="Tamaño (bytes)"
-        icon={Hash}
-        maxLength={12}
-        filter="digitos"
-      />
-      <Field
-        form={form}
-        setForm={setForm}
-        errors={errors}
-        name="DocumentoSustentoHash"
-        label="Hash SHA-256"
-        icon={Fingerprint}
-        maxLength={128}
-      />
+      <CampoArchivo form={form} setForm={setForm} errors={errors} name="archivo" label="Archivo" required={!actual} accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx" actual={actual} />
+      <HelpText>Se admiten PDF, imágenes (JPG, PNG), Word y Excel hasta el tamaño máximo configurado (por omisión 5 MB). Un mismo archivo no se puede registrar dos veces.</HelpText>
     </>
   );
 }

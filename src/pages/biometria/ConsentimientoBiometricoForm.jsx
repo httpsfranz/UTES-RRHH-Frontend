@@ -4,6 +4,7 @@ import { etiquetaTrabajador } from '../../utils/formato';
 import { DECISIONES_CONSENTIMIENTO } from '../../utils/opciones';
 import Field from '../../components/ui/Field';
 import Select from '../../components/ui/Select';
+import SelectorDeDocumento from '../../components/ui/SelectorDeDocumento';
 import SelectBuscable from '../../components/ui/SelectBuscable';
 import FormGrid from '../../components/ui/FormGrid';
 import HelpText from '../../components/ui/HelpText';
@@ -49,7 +50,7 @@ export default function ConsentimientoBiometricoForm({ form, setForm, errors }) 
           maxLength={30}
           placeholder="Ej. v1.0"
         />
-        <Select form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Formato firmado" icon={FileText} options={documentos} />
+        <SelectorDeDocumento form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Formato firmado" icon={FileText} options={documentos} />
       </FormGrid>
       <HelpText>
         Cada decisión queda en el historial y no se edita ni se elimina: el último evento es el consentimiento vigente. Al revocarlo se

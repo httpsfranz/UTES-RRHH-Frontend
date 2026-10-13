@@ -1,6 +1,6 @@
 import { Building2, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
-import { validador, codigo, requerido, telefonoPeruano, ubigeo } from '../../utils/validaciones';
+import { validador, requerido, telefonoPeruano, ubigeo } from '../../utils/validaciones';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
@@ -11,7 +11,6 @@ import FormModal from '../../components/ui/FormModal';
 import MicroredForm from './MicroredForm';
 
 const { emptyForm, mapToForm } = formModel({
-  MicroredCodigo: 'codigo',
   MicroredUbigeo: 'ubigeo',
   MicroredNombre: 'nombre',
   MicroredDistrito: 'distrito',
@@ -21,7 +20,6 @@ const { emptyForm, mapToForm } = formModel({
 });
 
 const validate = validador({
-  MicroredCodigo: [requerido, codigo],
   MicroredUbigeo: [ubigeo],
   MicroredNombre: [requerido],
   MicroredTelefono: [telefonoPeruano],
@@ -31,6 +29,7 @@ const columns = [
   { key: 'codigo', header: 'Código' },
   { key: 'nombre', header: 'Nombre' },
   { key: 'distrito', header: 'Distrito' },
+  { key: 'eess', header: 'Establecimientos', render: (item) => String(item.establecimientos_total ?? 0) },
   { key: 'telefono', header: 'Teléfono' },
 ];
 

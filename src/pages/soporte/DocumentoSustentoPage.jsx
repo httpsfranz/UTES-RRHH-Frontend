@@ -1,6 +1,6 @@
-import { FileText, Plus } from 'lucide-react';
-import { formModel, useCrudResource } from '../../hooks/useCrudResource';
-import { validador, entero, requerido } from '../../utils/validaciones';
+import { Download, Eye, FileText, Plus } from 'lucide-react';
+import { abrirDocumento } from '../../api/documentos';
+import { useCrudResource } from '../../hooks/useCrudResource';
 import { formatoBytes, formatoFecha } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
@@ -11,23 +11,13 @@ import EntityList from '../../components/ui/EntityList';
 import FormModal from '../../components/ui/FormModal';
 import DocumentoSustentoForm from './DocumentoSustentoForm';
 
-const { emptyForm, mapToForm } = formModel({
-  DocumentoSustentoNombre: 'nombre',
-  DocumentoSustentoRuta: 'ruta',
-  DocumentoSustentoTipo: 'tipo',
-  DocumentoSustentoExtension: 'extension',
-  DocumentoSustentoTamanoBytes: 'tamano_bytes',
-  DocumentoSustentoHash: 'hash',
-});
-
-const validate = validador({
-  DocumentoSustentoNombre: [requerido],
-  DocumentoSustentoTamanoBytes: [entero({ min: 0 })],
-});
+// El unico dato que se escribe es el archivo; lo demas lo calcula el servidor al recibirlo.
+const emptyForm = { archivo: '' };
+const mapToForm = () => ({ archivo: '' });
 
 const columns = [
   { key: 'nombre', header: 'Nombre' },
-  { key: 'tipo', header: 'Tipo' },
+  { key: 'tipo', header: 'Tipo', render: (item) => (item.extension ? item.extension.toUpperCase() : '—') },
   { key: 'tamano_bytes', header: 'Tamaño', render: (item) => formatoBytes(item.tamano_bytes) },
   { key: 'fecha_registro', header: 'Registrado', render: (item) => formatoFecha(item.fecha_registro) },
 ];
@@ -35,7 +25,7 @@ const columns = [
 const card = (item) => ({
   icon: FileText,
   title: item.nombre,
-  meta: [item.tipo, item.tamano_bytes !== null && formatoBytes(item.tamano_bytes), item.ruta, formatoFecha(item.fecha_registro)],
+  meta: [item.tamano_bytes !== null && formatoBytes(item.tamano_bytes), formatoFecha(item.fecha_registro)],
   footer: item.extension && `.${item.extension}`,
 });
 
@@ -44,16 +34,22 @@ export default function DocumentoSustentoPage() {
     endpoint: '/documentos-sustento',
     emptyForm,
     mapToForm,
-    validate,
+    validate: (form) => (!crud.editando && !form.archivo ? { archivo: ['Elige el archivo que quieres subir.'] } : {}),
     buildConfirmMessage: (item) => `¿Eliminar el documento "${item.nombre}"?`,
     deactivateErrorMessage: 'No se pudo eliminar el documento.',
   });
+
+  const abrir = (item, descargar) => abrirDocumento(item.id, { descargar, nombre: item.nombre }).catch(() => window.alert('No se pudo abrir el documento.'));
+  const acciones = [
+    { icon: Eye, label: 'Ver', onClick: (item) => abrir(item, false), visible: (item) => item.tiene_archivo },
+    { icon: Download, label: 'Descargar', onClick: (item) => abrir(item, true), visible: (item) => item.tiene_archivo },
+  ];
 
   return (
     <PageContainer>
       <PageHeader title="Documentos de sustento" subtitle="Soporte · Documento de sustento">
         <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo documento
+          Subir documento
         </Button>
       </PageHeader>
 
@@ -70,6 +66,7 @@ export default function DocumentoSustentoPage() {
         emptyMessage="No hay documentos de sustento registrados todavía."
         columns={columns}
         card={card}
+        acciones={acciones}
         onEdit={crud.abrirEditar}
         onDelete={crud.desactivar}
       />
@@ -77,12 +74,12 @@ export default function DocumentoSustentoPage() {
       <FormModal
         open={crud.modalOpen}
         onClose={crud.cerrarModal}
-        title={crud.editando ? 'Editar documento de sustento' : 'Nuevo documento de sustento'}
+        title={crud.editando ? 'Reemplazar archivo' : 'Subir documento de sustento'}
         onSubmit={crud.guardar}
         error={crud.erroresForm.general?.[0]}
         submitting={crud.guardando}
       >
-        <DocumentoSustentoForm form={crud.form} setForm={crud.setForm} errors={crud.erroresForm} />
+        <DocumentoSustentoForm form={crud.form} setForm={crud.setForm} errors={crud.erroresForm} actual={crud.editando?.nombre} />
       </FormModal>
     </PageContainer>
   );

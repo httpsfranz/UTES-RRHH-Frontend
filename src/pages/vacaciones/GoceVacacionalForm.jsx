@@ -2,7 +2,7 @@ import { CalendarDays, FileText, Palmtree } from 'lucide-react';
 import { useOpciones } from '../../hooks/useOpciones';
 import { diasCalendario, formatoFecha } from '../../utils/formato';
 import Field from '../../components/ui/Field';
-import Select from '../../components/ui/Select';
+import SelectorDeDocumento from '../../components/ui/SelectorDeDocumento';
 import SelectBuscable from '../../components/ui/SelectBuscable';
 import FormGrid from '../../components/ui/FormGrid';
 import HelpText from '../../components/ui/HelpText';
@@ -25,7 +25,7 @@ export default function GoceVacacionalForm({ form, setForm, errors }) {
         <Field form={form} setForm={setForm} errors={errors} name="GoceVacacionalFechaInicio" label="Inicio del goce" icon={CalendarDays} type="date" required />
         <Field form={form} setForm={setForm} errors={errors} name="GoceVacacionalFechaFin" label="Fin del goce" icon={CalendarDays} type="date" required />
       </FormGrid>
-      <Select form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Documento de sustento" icon={FileText} options={documentos.opciones} required={fraccionado} />
+      <SelectorDeDocumento form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Documento de sustento" icon={FileText} options={documentos.opciones} required={fraccionado} />
       <HelpText>
         {dias ? `Son ${dias} día${dias === 1 ? '' : 's'} calendario${fraccionado ? ': un goce menor de 7 días es un fraccionamiento y se solicita por escrito, con el documento que lo sustenta. ' : '. '}` : ''}
         El goce debe caer dentro del descanso programado. No se otorga a quien esté incapacitado por enfermedad o accidente (RIT, Art. 70). Al

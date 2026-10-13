@@ -4,6 +4,15 @@ import { mensajeDeError } from '../api/paginado';
 import { limpiarCacheDeOpciones } from '../api/cacheDeOpciones';
 import { AuthContext } from './authContext';
 
+// La verificacion del token en curso se comparte: el doble montaje de React en desarrollo no la repite.
+let verificacion = null;
+const verificarSesion = () => {
+  verificacion ??= api.get('/auth/me').finally(() => {
+    verificacion = null;
+  });
+  return verificacion;
+};
+
 const SIN_SESION = { usuario: null, roles: [], permisos: [], alcance: { global: false, propio: false, eess_ids: [] } };
 
 /**
@@ -23,8 +32,7 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     let vigente = true;
     if (leerToken()) {
-      api
-        .get('/auth/me')
+      verificarSesion()
         .then(({ data }) => vigente && setPerfil(data))
         .catch(() => vigente && cerrarLocal())
         .finally(() => vigente && setCargando(false));

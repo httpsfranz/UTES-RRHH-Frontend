@@ -1,6 +1,6 @@
 import { UserCheck, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
-import { validador, codigo, requerido } from '../../utils/validaciones';
+import { validador, requerido } from '../../utils/validaciones';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
@@ -11,13 +11,11 @@ import FormModal from '../../components/ui/FormModal';
 import TipoResponsabilidadForm from './TipoResponsabilidadForm';
 
 const { emptyForm, mapToForm } = formModel({
-  TipoResponsabilidadCodigo: 'codigo',
   TipoResponsabilidadNombre: 'nombre',
   TipoResponsabilidadDescripcion: 'descripcion',
 });
 
 const validate = validador({
-  TipoResponsabilidadCodigo: [requerido, codigo],
   TipoResponsabilidadNombre: [requerido],
 });
 

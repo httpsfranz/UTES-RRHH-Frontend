@@ -33,6 +33,7 @@ const noAnulada = (item) => item.estado !== 'ANULADO';
 
 const columns = [
   { key: 'trabajador', header: 'Trabajador', render: (item) => item.trabajador?.nombre_completo ?? '—' },
+  { key: 'eess', header: 'Establecimiento', render: (item) => item.vinculo?.eess?.nombre ?? '—' },
   { key: 'tipo', header: 'Tipo', render: (item) => item.tipo?.nombre ?? '—' },
   { key: 'fechas', header: 'Fechas', render: rango },
   { key: 'goce', header: 'Con goce', render: (item) => (item.tipo?.con_goce ? 'Sí' : 'No') },

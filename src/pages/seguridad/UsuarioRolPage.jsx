@@ -28,7 +28,7 @@ const validate = validador({
 const vigencia = (item) => `${formatoFecha(item.fecha_inicio)} – ${item.fecha_fin ? formatoFecha(item.fecha_fin) : 'sin fin'}`;
 
 const columns = [
-  { key: 'usuario', header: 'Usuario', render: (item) => item.usuario?.nombre ?? '—' },
+  { key: 'usuario', header: 'Usuario', render: (item) => (item.usuario?.trabajador ? `${item.usuario.nombre} — ${item.usuario.trabajador}` : (item.usuario?.nombre ?? '—')) },
   { key: 'rol', header: 'Rol', render: (item) => item.rol?.nombre ?? '—' },
   { key: 'vigencia', header: 'Vigencia', render: vigencia },
 ];

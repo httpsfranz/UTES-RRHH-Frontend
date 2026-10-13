@@ -221,3 +221,75 @@ export const ESTADOS_ROL_VACACIONAL = [
   { value: 'REPROGRAMADO', label: 'Reprogramado' },
   { value: 'ANULADO', label: 'Anulado' },
 ];
+
+// Si el valor guardado ya no esta en la lista (dato historico), se agrega para que el formulario no lo muestre vacio.
+export const conValorActual = (opciones, valor) =>
+  valor && !opciones.some((opcion) => String(opcion.value) === String(valor)) ? [...opciones, { value: valor, label: String(valor) }] : opciones;
+
+const aOpciones = (valores) => valores.map((value) => ({ value, label: value }));
+
+// Modulos del catalogo de permisos (primer segmento del codigo: ASISTENCIA_VER -> ASISTENCIA).
+export const MODULOS_DE_PERMISO = [
+  ['ASISTENCIA', 'Asistencia'],
+  ['PERSONAL', 'Personal'],
+  ['ORGANIZACION', 'Organización'],
+  ['PROGRAMACION', 'Programación'],
+  ['SOLICITUDES', 'Solicitudes'],
+  ['VACACIONES', 'Vacaciones'],
+  ['COMPENSACIONES', 'Compensaciones'],
+  ['CONSOLIDACION', 'Consolidación'],
+  ['DISCIPLINA', 'Disciplina'],
+  ['BIOMETRIA', 'Biometría'],
+  ['CONFIGURACION', 'Configuración'],
+  ['SEGURIDAD', 'Seguridad'],
+  ['SOPORTE', 'Soporte'],
+  ['REPORTES', 'Reportes'],
+  ['SISTEMA', 'Sistema'],
+].map(([value, label]) => ({ value, label }));
+
+// Tipos de dispositivo de marcacion (texto libre en BD; estos son los que usa el sistema).
+export const TIPOS_DISPOSITIVO = aOpciones(['Huella dactilar', 'Facial', 'Tarjeta de proximidad', 'Aplicativo móvil', 'Manual']);
+
+// Tipos de notificacion que genera el sistema; GENERAL es la que se redacta a mano.
+export const TIPOS_NOTIFICACION = [
+  { value: 'GENERAL', label: 'General' },
+  { value: 'ALERTA_FALTAS_REITERADAS', label: 'Alerta de faltas reiteradas' },
+  { value: 'CARGA_OBSERVADA', label: 'Carga observada' },
+  { value: 'JUSTIFICACION_APROBADA', label: 'Justificación aprobada' },
+  { value: 'JUSTIFICACION_RECHAZADA', label: 'Justificación rechazada' },
+];
+
+// Sanciones de la Ley 30057 (RIT, Art. 101); la amonestacion verbal no pasa por el PAD.
+export const SANCIONES_PAD = aOpciones([
+  'Amonestación escrita',
+  'Suspensión sin goce de remuneraciones por 5 días',
+  'Suspensión sin goce de remuneraciones por 10 días',
+  'Suspensión sin goce de remuneraciones por 15 días',
+  'Suspensión sin goce de remuneraciones por 30 días',
+  'Suspensión sin goce de remuneraciones por 60 días',
+  'Destitución',
+]);
+
+export const TIPOS_MIME = [
+  { value: 'application/pdf', label: 'PDF (application/pdf)' },
+  { value: 'image/jpeg', label: 'Imagen JPEG (image/jpeg)' },
+  { value: 'image/png', label: 'Imagen PNG (image/png)' },
+  { value: 'application/msword', label: 'Word (application/msword)' },
+  { value: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', label: 'Word (.docx)' },
+  { value: 'application/vnd.ms-excel', label: 'Excel (application/vnd.ms-excel)' },
+  { value: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', label: 'Excel (.xlsx)' },
+];
+
+export const EXTENSIONES_DOCUMENTO = aOpciones(['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx', 'xls', 'xlsx']);
+
+// Parametros del sistema cuyo valor es una eleccion y no un texto libre (codigo -> opciones).
+const SI_NO = [
+  { value: '1', label: 'Sí' },
+  { value: '0', label: 'No' },
+];
+export const PARAMETROS_CON_OPCIONES = {
+  REFRIGERIO_DESCUENTA_JORNADA: SI_NO,
+  MODO_IMPORTACION_LEGADO: SI_NO,
+  ZONA_HORARIA: aOpciones(['America/Lima', 'America/Bogota', 'America/Guayaquil', 'America/Santiago']),
+  FORMATO_FECHA: aOpciones(['dd/MM/yyyy', 'yyyy-MM-dd', 'MM/dd/yyyy']),
+};

@@ -40,6 +40,7 @@ const validate = validador({
 const columns = [
   { key: 'fecha_hora', header: 'Fecha y hora', render: (item) => formatoFechaHora(item.fecha_hora) },
   { key: 'trabajador', header: 'Trabajador', render: (item) => item.trabajador?.nombre_completo ?? '—' },
+  { key: 'eess', header: 'Establecimiento', render: (item) => item.vinculo?.eess?.nombre ?? '—' },
   { key: 'tipo', header: 'Tipo', render: (item) => etiquetaDe(TIPOS_MARCACION, item.tipo) },
   { key: 'metodo', header: 'Método', render: (item) => item.metodo?.nombre ?? '—' },
   { key: 'origen', header: 'Origen', render: (item) => item.origen ?? '—' },

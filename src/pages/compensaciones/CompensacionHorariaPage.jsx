@@ -34,6 +34,7 @@ const estado = (item) => (item.vencida && item.estado !== 'VENCIDO' ? `${etiquet
 
 const columns = [
   { key: 'trabajador', header: 'Trabajador', render: (item) => item.trabajador?.nombre_completo ?? '—' },
+  { key: 'eess', header: 'Establecimiento', render: (item) => item.vinculo?.eess?.nombre ?? '—' },
   { key: 'tipo', header: 'Origen', render: (item) => item.tipo?.nombre ?? '—' },
   { key: 'horas_generadas', header: 'Generadas (h)' },
   { key: 'horas_pendientes', header: 'Pendientes (h)' },

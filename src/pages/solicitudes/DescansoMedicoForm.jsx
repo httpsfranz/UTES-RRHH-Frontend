@@ -2,7 +2,7 @@ import { CalendarDays, FileText, Hash, Stethoscope, UserRound } from 'lucide-rea
 import { useOpciones } from '../../hooks/useOpciones';
 import { etiquetaVinculo } from '../../utils/formato';
 import Field from '../../components/ui/Field';
-import Select from '../../components/ui/Select';
+import SelectorDeDocumento from '../../components/ui/SelectorDeDocumento';
 import SelectBuscable from '../../components/ui/SelectBuscable';
 import Textarea from '../../components/ui/Textarea';
 import FormGrid from '../../components/ui/FormGrid';
@@ -25,7 +25,7 @@ export default function DescansoMedicoForm({ form, setForm, errors }) {
       </FormGrid>
       <FormGrid>
         <Field form={form} setForm={setForm} errors={errors} name="DescansoMedicoNumeroCitt" label="N.º de CITT" icon={Hash} maxLength={60} placeholder="Ej. CITT-4471" />
-        <Select form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Certificado o CITT escaneado" icon={FileText} options={documentos} />
+        <SelectorDeDocumento form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Certificado o CITT escaneado" icon={FileText} options={documentos} />
       </FormGrid>
       <Field form={form} setForm={setForm} errors={errors} name="DescansoMedicoDiagnostico" label="Diagnóstico" icon={Stethoscope} maxLength={300} />
       <Textarea form={form} setForm={setForm} errors={errors} name="DescansoMedicoObservacion" label="Observación" icon={FileText} maxLength={1000} />

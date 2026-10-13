@@ -1,6 +1,6 @@
 import { Landmark, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
-import { validador, codigo, requerido } from '../../utils/validaciones';
+import { validador, requerido } from '../../utils/validaciones';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
@@ -11,13 +11,11 @@ import FormModal from '../../components/ui/FormModal';
 import TipoEstablecimientoForm from './TipoEstablecimientoForm';
 
 const { emptyForm, mapToForm } = formModel({
-  TipoEstablecimientoCodigo: 'codigo',
   TipoEstablecimientoNombre: 'nombre',
   TipoEstablecimientoDescripcion: 'descripcion',
 });
 
 const validate = validador({
-  TipoEstablecimientoCodigo: [requerido, codigo],
   TipoEstablecimientoNombre: [requerido],
 });
 

@@ -1,4 +1,4 @@
-import { Clock, FileText, Hash, Hospital, Tag } from 'lucide-react';
+import { Clock, FileText, Hospital, Tag } from 'lucide-react';
 import { useOpciones } from '../../hooks/useOpciones';
 import Field from '../../components/ui/Field';
 import Select from '../../components/ui/Select';
@@ -12,18 +12,6 @@ export default function HorarioForm({ form, setForm, errors }) {
   return (
     <>
       <FormGrid>
-        <Field
-          form={form}
-          setForm={setForm}
-          errors={errors}
-          name="HorarioCodigo"
-          label="Código"
-          icon={Hash}
-          required
-          maxLength={30}
-          filter="codigo"
-          placeholder="Ej. HOR-ADM-LV"
-        />
         <Select
           form={form}
           setForm={setForm}

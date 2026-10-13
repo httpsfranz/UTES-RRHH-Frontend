@@ -39,6 +39,7 @@ const noAnulada = (item) => item.estado !== 'ANULADO';
 
 const columns = [
   { key: 'trabajador', header: 'Trabajador', render: (item) => item.trabajador?.nombre_completo ?? '—' },
+  { key: 'eess', header: 'Establecimiento', render: (item) => item.vinculo?.eess?.nombre ?? '—' },
   { key: 'citt', header: 'CITT', render: (item) => item.numero_citt ?? '—' },
   { key: 'diagnostico', header: 'Diagnóstico', render: (item) => item.diagnostico ?? '—' },
   { key: 'fechas', header: 'Fechas', render: rango },

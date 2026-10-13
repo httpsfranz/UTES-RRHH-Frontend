@@ -32,6 +32,7 @@ const editable = (item) => item.estado !== 'CERRADO' && item.estado !== 'CONFORM
 const columns = [
   { key: 'periodo', header: 'Período', render: periodo },
   { key: 'trabajador', header: 'Trabajador', render: (item) => item.trabajador?.nombre_completo ?? '—' },
+  { key: 'eess', header: 'Establecimiento', render: (item) => item.vinculo?.eess?.nombre ?? '—' },
   { key: 'dias_trabajados', header: 'Trabajados' },
   { key: 'dias_falta', header: 'Faltas' },
   { key: 'dias_falta_justificada', header: 'Justificadas' },

@@ -1,4 +1,5 @@
-import { Plus, UserRound } from 'lucide-react';
+import { useState } from 'react';
+import { FileSpreadsheet, Plus, UserRound } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
 import { useOpciones } from '../../hooks/useOpciones';
 import {
@@ -14,6 +15,7 @@ import {
 } from '../../utils/validaciones';
 import { SEXOS, valoresDe } from '../../utils/opciones';
 import PageContainer from '../../components/ui/PageContainer';
+import ImportarTrabajadoresModal from './ImportarTrabajadoresModal';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
 import SearchInput from '../../components/ui/SearchInput';
@@ -41,6 +43,9 @@ const documentoDe = (item) => (item.tipo_documento ? `${item.tipo_documento.abre
 const columns = [
   { key: 'documento', header: 'Documento', render: documentoDe },
   { key: 'nombre_completo', header: 'Trabajador' },
+  { key: 'eess', header: 'Establecimiento', render: (item) => item.vinculos?.map((v) => v.eess).filter(Boolean).join(' · ') || 'Sin vínculo vigente' },
+  { key: 'cargo', header: 'Cargo', render: (item) => item.vinculos?.map((v) => v.cargo).filter(Boolean).join(' · ') || '—' },
+  { key: 'condicion', header: 'Condición', render: (item) => item.vinculos?.map((v) => v.condicion).filter(Boolean).join(' · ') || '—' },
   { key: 'profesion', header: 'Profesión', render: (item) => item.profesion?.nombre ?? '—' },
   { key: 'telefono', header: 'Teléfono' },
   { key: 'correo', header: 'Correo' },
@@ -74,6 +79,7 @@ export default function TrabajadorPage() {
       TrabajadorTelefono: [telefonoPeruano],
     })(form);
 
+  const [importando, setImportando] = useState(false);
   const crud = useCrudResource({
     endpoint: '/trabajadores',
     emptyForm,
@@ -86,6 +92,9 @@ export default function TrabajadorPage() {
   return (
     <PageContainer>
       <PageHeader title="Trabajadores" subtitle="Personal · Trabajador">
+        <Button variant="secondary" onClick={() => setImportando(true)} icon={FileSpreadsheet}>
+          Importar desde Excel
+        </Button>
         <Button onClick={crud.abrirCrear} icon={Plus}>
           Nuevo trabajador
         </Button>
@@ -123,6 +132,7 @@ export default function TrabajadorPage() {
       >
         <TrabajadorForm form={crud.form} setForm={crud.setForm} errors={crud.erroresForm} />
       </FormModal>
+      <ImportarTrabajadoresModal open={importando} onClose={() => setImportando(false)} onImportado={() => crud.cargar()} />
     </PageContainer>
   );
 }

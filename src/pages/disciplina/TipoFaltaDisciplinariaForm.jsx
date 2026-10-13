@@ -1,4 +1,4 @@
-import { AlertTriangle, FileText, Hash, Scale, Tag } from 'lucide-react';
+import { AlertTriangle, FileText, Scale, Tag } from 'lucide-react';
 import Field from '../../components/ui/Field';
 import Select from '../../components/ui/Select';
 import FormGrid from '../../components/ui/FormGrid';
@@ -8,18 +8,6 @@ export default function TipoFaltaDisciplinariaForm({ form, setForm, errors }) {
   return (
     <>
       <FormGrid>
-        <Field
-          form={form}
-          setForm={setForm}
-          errors={errors}
-          name="TipoFaltaDisciplinariaCodigo"
-          label="Código"
-          icon={Hash}
-          required
-          maxLength={50}
-          filter="codigo"
-          placeholder="Ej. TARDANZA_REIT"
-        />
         <Select
           form={form}
           setForm={setForm}

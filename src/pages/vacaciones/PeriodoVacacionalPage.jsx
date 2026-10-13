@@ -48,6 +48,7 @@ const noAnulado = (item) => item.estado !== 'ANULADO';
 
 const columns = [
   { key: 'trabajador', header: 'Trabajador', render: (item) => item.trabajador?.nombre_completo ?? '—' },
+  { key: 'eess', header: 'Establecimiento', render: (item) => item.vinculo?.eess?.nombre ?? '—' },
   { key: 'anio', header: 'Año' },
   { key: 'record', header: 'Récord', render: (item) => `${formatoFecha(item.fecha_inicio)} – ${formatoFecha(item.fecha_fin)}` },
   { key: 'dias_ganados', header: 'Ganados' },

@@ -48,6 +48,7 @@ const enCurso = (item) => item.estado === 'INICIADO' || item.estado === 'EN_PROC
 const columns = [
   { key: 'numero', header: 'N.º', render: (item) => item.numero ?? '—' },
   { key: 'trabajador', header: 'Servidor', render: (item) => item.trabajador?.nombre_completo ?? '—' },
+  { key: 'eess', header: 'Establecimiento', render: (item) => item.vinculo?.eess?.nombre ?? '—' },
   { key: 'falta', header: 'Falta', render: (item) => item.tipo_falta?.nombre ?? '—' },
   { key: 'inicio', header: 'Inicio', render: (item) => formatoFecha(item.fecha_inicio) },
   { key: 'sancion', header: 'Sanción', render: (item) => item.sancion ?? '—' },

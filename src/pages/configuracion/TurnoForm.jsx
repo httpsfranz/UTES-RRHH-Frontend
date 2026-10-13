@@ -1,4 +1,4 @@
-import { Clock, Coffee, Hash, LogIn, LogOut, Percent, Tag, Timer } from 'lucide-react';
+import { Clock, Coffee, LogIn, LogOut, Percent, Tag, Timer } from 'lucide-react';
 import { useOpciones } from '../../hooks/useOpciones';
 import Field from '../../components/ui/Field';
 import Select from '../../components/ui/Select';
@@ -12,18 +12,6 @@ export default function TurnoForm({ form, setForm, errors }) {
   return (
     <>
       <FormGrid>
-        <Field
-          form={form}
-          setForm={setForm}
-          errors={errors}
-          name="TurnoCodigo"
-          label="Código"
-          icon={Hash}
-          required
-          maxLength={30}
-          filter="codigo"
-          placeholder="Ej. M"
-        />
         <Select
           form={form}
           setForm={setForm}

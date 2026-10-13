@@ -1,6 +1,6 @@
 import { ClipboardList, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
-import { validador, codigo, requerido } from '../../utils/validaciones';
+import { validador, requerido } from '../../utils/validaciones';
 import { siNo } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
@@ -12,7 +12,6 @@ import FormModal from '../../components/ui/FormModal';
 import ConceptoJustificacionForm from './ConceptoJustificacionForm';
 
 const { emptyForm, mapToForm } = formModel({
-  ConceptoJustificacionCodigo: 'codigo',
   ConceptoJustificacionNombre: 'nombre',
   ConceptoJustificacionDescripcion: 'descripcion',
   ConceptoJustificacionRequiereDocumento: ['requiere_documento', true],
@@ -20,7 +19,6 @@ const { emptyForm, mapToForm } = formModel({
 });
 
 const validate = validador({
-  ConceptoJustificacionCodigo: [requerido, codigo],
   ConceptoJustificacionNombre: [requerido],
 });
 

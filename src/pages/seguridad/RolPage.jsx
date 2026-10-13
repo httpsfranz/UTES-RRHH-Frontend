@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { KeyRound, Plus, Shield } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
-import { validador, codigo, requerido } from '../../utils/validaciones';
+import { validador, requerido } from '../../utils/validaciones';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
@@ -13,13 +13,11 @@ import RolForm from './RolForm';
 import RolPermisosModal from './RolPermisosModal';
 
 const { emptyForm, mapToForm } = formModel({
-  RolCodigo: 'codigo',
   RolNombre: 'nombre',
   RolDescripcion: 'descripcion',
 });
 
 const validate = validador({
-  RolCodigo: [requerido, codigo],
   RolNombre: [requerido],
 });
 
@@ -27,11 +25,13 @@ const columns = [
   { key: 'codigo', header: 'Código' },
   { key: 'nombre', header: 'Nombre' },
   { key: 'descripcion', header: 'Descripción' },
+  { key: 'permisos', header: 'Permisos', render: (item) => String(item.permisos_total ?? 0) },
+  { key: 'usuarios', header: 'Usuarios', render: (item) => String(item.usuarios_total ?? 0) },
 ];
 
 const card = (item) => ({
   title: item.nombre,
-  meta: [item.descripcion],
+  meta: [item.descripcion, `${item.permisos_total ?? 0} permisos · ${item.usuarios_total ?? 0} usuarios`],
   footer: item.codigo,
   icon: Shield,
 });

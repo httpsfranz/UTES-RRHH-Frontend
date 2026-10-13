@@ -1,6 +1,6 @@
 import { Coins, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
-import { validador, codigo, requerido } from '../../utils/validaciones';
+import { validador, requerido } from '../../utils/validaciones';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
@@ -11,13 +11,11 @@ import FormModal from '../../components/ui/FormModal';
 import TipoCompensacionForm from './TipoCompensacionForm';
 
 const { emptyForm, mapToForm } = formModel({
-  TipoCompensacionCodigo: 'codigo',
   TipoCompensacionNombre: 'nombre',
   TipoCompensacionDescripcion: 'descripcion',
 });
 
 const validate = validador({
-  TipoCompensacionCodigo: [requerido, codigo],
   TipoCompensacionNombre: [requerido],
 });
 

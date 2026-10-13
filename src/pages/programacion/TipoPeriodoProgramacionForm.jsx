@@ -10,18 +10,6 @@ export default function TipoPeriodoProgramacionForm({ form, setForm, errors }) {
           form={form}
           setForm={setForm}
           errors={errors}
-          name="TipoPeriodoProgramacionCodigo"
-          label="Código"
-          icon={Hash}
-          required
-          maxLength={30}
-          filter="codigo"
-          placeholder="Ej. MENSUAL"
-        />
-        <Field
-          form={form}
-          setForm={setForm}
-          errors={errors}
           name="TipoPeriodoProgramacionNombre"
           label="Nombre"
           icon={Tag}

@@ -1,6 +1,6 @@
 import { ListChecks, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
-import { validador, codigo, requerido } from '../../utils/validaciones';
+import { validador, requerido } from '../../utils/validaciones';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
@@ -11,14 +11,12 @@ import FormModal from '../../components/ui/FormModal';
 import MotivoPapeletaForm from './MotivoPapeletaForm';
 
 const { emptyForm, mapToForm } = formModel({
-  MotivoPapeletaCodigo: 'codigo',
   TipoPapeletaId: 'tipo_papeleta_id',
   MotivoPapeletaNombre: 'nombre',
   MotivoPapeletaDescripcion: 'descripcion',
 });
 
 const validate = validador({
-  MotivoPapeletaCodigo: [requerido, codigo],
   TipoPapeletaId: [requerido],
   MotivoPapeletaNombre: [requerido],
 });

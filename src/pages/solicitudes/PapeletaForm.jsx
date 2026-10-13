@@ -3,6 +3,7 @@ import { useOpciones } from '../../hooks/useOpciones';
 import { etiquetaVinculo } from '../../utils/formato';
 import Field from '../../components/ui/Field';
 import Select from '../../components/ui/Select';
+import SelectorDeDocumento from '../../components/ui/SelectorDeDocumento';
 import SelectBuscable from '../../components/ui/SelectBuscable';
 import Textarea from '../../components/ui/Textarea';
 import Checkbox from '../../components/ui/Checkbox';
@@ -72,7 +73,7 @@ export default function PapeletaForm({ form, setForm, errors }) {
       />
       <Textarea form={form} setForm={setForm} errors={errors} name="PapeletaMotivo" label="Detalle del motivo" icon={FileText} maxLength={1000} />
       <FormGrid>
-        <Select form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Documento de sustento" icon={FileText} options={documentos} />
+        <SelectorDeDocumento form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Documento de sustento" icon={FileText} options={documentos} />
       </FormGrid>
       <HelpText>
         La papeleta nace pendiente y la autoriza el jefe desde el listado. La papeleta de comisión de servicios vale como máximo 3 horas
