@@ -21,7 +21,6 @@ const { emptyForm, mapToForm } = formModel({
   TipoPapeletaId: 'tipo_papeleta_id',
   MotivoPapeletaId: 'motivo_papeleta_id',
   DocumentoSustentoId: 'documento_sustento_id',
-  UsuarioRegistroId: 'usuario_registro_id',
   PapeletaNumero: 'numero',
   PapeletaFecha: 'fecha',
   PapeletaHoraSalida: 'hora_salida',

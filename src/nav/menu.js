@@ -102,6 +102,8 @@ export const menu = [
       { label: 'Programación por período', path: '/programacion/periodos' },
       { label: 'Trabajadores programados', path: '/programacion/trabajadores' },
       { label: 'Turnos programados', path: '/programacion/turnos-programados' },
+      { label: 'Calendario de programación', path: '/programacion/calendario' },
+      { label: 'Ausencias y vacaciones', path: '/programacion/calendario-ausencias' },
       { label: 'Cambios de turno', path: '/programacion/cambios-turno' },
       { label: 'Tipos de cambio de turno', path: '/programacion/tipos-cambio-turno' },
       { label: 'Tipos de período de programación', path: '/programacion/tipos-periodo' },

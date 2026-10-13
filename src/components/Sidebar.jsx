@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import { ChevronDown, ChevronsLeft, HeartPulse, House } from 'lucide-react';
-import { menu } from '../nav/menu';
+import { useAuth } from '../auth/useAuth';
+import { menuPara } from '../nav/acceso';
 import { getModuleMeta } from '../nav/moduleIcons';
 
 const WIDTH_TRANSITION = { type: 'spring', stiffness: 380, damping: 35, mass: 0.75 };
@@ -16,6 +17,8 @@ const ANCHO_RIEL = 72;
 // (se abre como cajon sobre el contenido). `onNavigate` cierra el cajon al elegir una pantalla.
 export default function Sidebar({ collapsed, onToggle, isMobile = false, onNavigate }) {
   const location = useLocation();
+  const auth = useAuth();
+  const menu = useMemo(() => menuPara(auth), [auth]);
   const [openGroup, setOpenGroup] = useState(null);
   const rail = collapsed && !isMobile;
 
@@ -26,7 +29,7 @@ export default function Sidebar({ collapsed, onToggle, isMobile = false, onNavig
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setOpenGroup(grupoActivo.label);
     }
-  }, [location.pathname]);
+  }, [location.pathname, menu]);
 
   function toggleGroup(label) {
     setOpenGroup((actual) => (actual === label ? null : label));

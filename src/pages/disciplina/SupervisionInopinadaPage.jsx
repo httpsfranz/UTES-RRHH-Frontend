@@ -15,7 +15,6 @@ import SupervisionInopinadaForm from './SupervisionInopinadaForm';
 const modelo = formModel({
   EessId: 'eess_id',
   VinculoLaboralId: 'vinculo_laboral_id',
-  UsuarioId: 'usuario_id',
   DocumentoSustentoId: 'documento_sustento_id',
   SupervisionInopinadaFechaHora: 'fecha_hora',
   SupervisionInopinadaResultado: 'resultado',
@@ -29,7 +28,6 @@ const mapToForm = (item) => ({ ...modelo.mapToForm(item), SupervisionInopinadaFe
 
 const validate = validador({
   EessId: [requerido],
-  UsuarioId: [requerido],
   SupervisionInopinadaFechaHora: [requerido, (valor) => fechaHoraNoFutura(valor)?.replace('La ocurrencia no puede registrarse', 'La supervisión no puede registrarse')],
   SupervisionInopinadaObservacion: [requeridoSi((form) => form.SupervisionInopinadaEstado === 'OBSERVADO', 'Indica las observaciones del acta de supervisión.')],
 });

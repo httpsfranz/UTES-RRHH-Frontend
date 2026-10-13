@@ -1,4 +1,4 @@
-import { CalendarClock, FileText, MessageSquareText, UserCog } from 'lucide-react';
+import { CalendarClock, FileText, MessageSquareText } from 'lucide-react';
 import { useOpciones } from '../../hooks/useOpciones';
 import { TIPOS_MARCACION, etiquetaDe } from '../../utils/opciones';
 import { formatoFechaHora } from '../../utils/formato';
@@ -21,7 +21,6 @@ const haceDosMeses = () => {
 export default function AjusteMarcacionForm({ form, setForm, errors }) {
   const marcaciones = useOpciones('/marcaciones', { params: { valida: 1, desde: haceDosMeses() }, actual: form.MarcacionId, etiqueta: etiquetaMarcacion });
   const documentos = useOpciones('/documentos-sustento', { params: {}, sinOpcion: 'Sin documento adjunto', etiqueta: (documento) => documento.nombre });
-  const usuarios = useOpciones('/usuarios', { actual: form.UsuarioId, etiqueta: (usuario) => usuario.nombre });
 
   return (
     <>
@@ -30,7 +29,6 @@ export default function AjusteMarcacionForm({ form, setForm, errors }) {
       <HelpText>Si la dejas vacía, al aprobar el ajuste la marcación queda invalidada (por ejemplo, una lectura duplicada).</HelpText>
       <Textarea form={form} setForm={setForm} errors={errors} name="AjusteMarcacionMotivo" label="Motivo del ajuste" icon={MessageSquareText} maxLength={1000} required />
       <Select form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Documento de sustento" icon={FileText} options={documentos.opciones} />
-      <Select form={form} setForm={setForm} errors={errors} name="UsuarioId" label="Quién solicita" icon={UserCog} options={usuarios.opciones} required />
       <HelpText>
         Un período de asistencia cerrado es inmutable: no admite ajustes. Al aprobarse, el ajuste corrige la marcación y avisa a quien lo
         solicitó; un ajuste aprobado ya no se anula, se corrige con otra solicitud.

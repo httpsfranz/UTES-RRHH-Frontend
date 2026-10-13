@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
 import BrandBackdrop from '../components/ui/BrandBackdrop';
+import LoadingState from '../components/ui/LoadingState';
 import { useMediaQuery } from '../hooks/useMediaQuery';
 
 export default function MainLayout() {
@@ -41,7 +42,9 @@ export default function MainLayout() {
           {/* z-index:-1 dentro de un contexto `isolate`: queda sobre el fondo del <main> y bajo el contenido. */}
           <BrandBackdrop />
           <div className="h-full overflow-y-auto">
-            <Outlet />
+            <Suspense fallback={<LoadingState message="Cargando…" />}>
+              <Outlet />
+            </Suspense>
           </div>
         </main>
       </div>

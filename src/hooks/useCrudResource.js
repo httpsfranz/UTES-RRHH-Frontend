@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { api } from '../api/client';
+import { invalidarOpciones } from '../api/cacheDeOpciones';
 import { mensajeDeError, traerTodo } from '../api/paginado';
 
 /**
@@ -58,6 +59,8 @@ const valorInicial = (emptyForm) => (typeof emptyForm === 'function' ? emptyForm
  *   searchParam     query param de busqueda (default 'buscar')
  *   limite          si se indica, NO se traen todas las paginas: solo las primeras `limite` filas
  *                   (auditoria, logs: pueden ser miles). `total` informa cuantas hay en realidad.
+ *   onCambio        funcion que se llama despues de guardar, desactivar o reactivar con exito (p. ej. para
+ *                   refrescar otra vista de los mismos datos, como el calendario de asistencia)
  *   buildConfirmMessage / *ErrorMessage   textos propios del modulo
  */
 export function useCrudResource({
@@ -69,6 +72,7 @@ export function useCrudResource({
   idKey = 'id',
   searchParam = 'buscar',
   limite,
+  onCambio,
   buildConfirmMessage = (item) => `¿Desactivar "${item.nombre}"?`,
   connectionErrorMessage = 'No se pudo conectar con el backend. ¿Está corriendo "php artisan serve"?',
   saveErrorMessage = 'No se pudo guardar. Revisa la conexión con el backend.',
@@ -162,7 +166,9 @@ export function useCrudResource({
         await api.post(endpoint, form);
       }
       setModalOpen(false);
+      invalidarOpciones(endpoint);
       await cargar();
+      onCambio?.();
     } catch (err) {
       if (err.response?.status === 422) {
         setErroresForm(err.response.data.errors ?? { general: [err.response.data.message ?? saveErrorMessage] });
@@ -179,7 +185,9 @@ export function useCrudResource({
     setError('');
     try {
       await api.delete(`${endpoint}/${item[idKey]}`);
+      invalidarOpciones(endpoint);
       await cargar();
+      onCambio?.();
     } catch (err) {
       setError(mensajeDeError(err) ?? deactivateErrorMessage);
     }
@@ -190,7 +198,9 @@ export function useCrudResource({
     setError('');
     try {
       await api.patch(`${endpoint}/${item[idKey]}`, { [estadoKey]: true });
+      invalidarOpciones(endpoint);
       await cargar();
+      onCambio?.();
     } catch (err) {
       setError(mensajeDeError(err) ?? reactivateErrorMessage);
     }

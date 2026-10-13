@@ -1,4 +1,4 @@
-import { FileSpreadsheet, FileText, Hash, Hospital, ListChecks, UserCog } from 'lucide-react';
+import { FileSpreadsheet, FileText, Hash, Hospital, ListChecks } from 'lucide-react';
 import { useOpciones } from '../../hooks/useOpciones';
 import { ESTADOS_CARGA } from '../../utils/opciones';
 import Field from '../../components/ui/Field';
@@ -8,7 +8,6 @@ import FormGrid from '../../components/ui/FormGrid';
 import HelpText from '../../components/ui/HelpText';
 
 export default function CargaAsistenciaManualForm({ form, setForm, errors, editando }) {
-  const { opciones: usuarios } = useOpciones('/usuarios', { actual: form.UsuarioId, etiqueta: (usuario) => usuario.nombre });
   const { opciones: establecimientos } = useOpciones('/establecimientos', { actual: form.EessId, sinOpcion: 'Toda la Red' });
   const { opciones: documentos } = useOpciones('/documentos-sustento', {
     params: {},
@@ -19,7 +18,6 @@ export default function CargaAsistenciaManualForm({ form, setForm, errors, edita
   return (
     <>
       <FormGrid>
-        <Select form={form} setForm={setForm} errors={errors} name="UsuarioId" label="Cargado por" icon={UserCog} options={usuarios} required />
         <Select form={form} setForm={setForm} errors={errors} name="EessId" label="Establecimiento" icon={Hospital} options={establecimientos} />
       </FormGrid>
       <FormGrid>

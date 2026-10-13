@@ -37,6 +37,9 @@ export const etiquetaTrabajador = (trabajador) =>
 // El navegador trabaja con "AAAA-MM-DDTHH:MM" (datetime-local); la API entrega y recibe "AAAA-MM-DD HH:MM[:SS]".
 export const aCampoFecha = (fechaHora) => (fechaHora ? fechaHora.slice(0, 16).replace(' ', 'T') : '');
 
+// Una fecha de JavaScript como "AAAA-MM-DD" (el valor de un input type="date"), en la hora local del navegador.
+export const fechaIso = (fecha) => `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}`;
+
 // Ahora mismo, en formato datetime-local.
 export function ahoraLocal() {
   const ahora = new Date();

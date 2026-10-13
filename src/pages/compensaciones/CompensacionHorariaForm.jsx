@@ -1,5 +1,6 @@
 import { CalendarDays, FileText, Hourglass, ListChecks, UserCog, UserRound } from 'lucide-react';
 import { useOpciones } from '../../hooks/useOpciones';
+import { useAuth } from '../../auth/useAuth';
 import { etiquetaVinculo } from '../../utils/formato';
 import Field from '../../components/ui/Field';
 import Select from '../../components/ui/Select';
@@ -12,7 +13,12 @@ import HelpText from '../../components/ui/HelpText';
 export default function CompensacionHorariaForm({ form, setForm, errors }) {
   const { opciones: vinculos } = useOpciones('/vinculos-laborales', { actual: form.VinculoLaboralId, etiqueta: etiquetaVinculo });
   const { opciones: tipos } = useOpciones('/tipos-compensacion', { actual: form.TipoCompensacionId });
-  const { opciones: usuarios } = useOpciones('/usuarios', { actual: form.CompensacionHorariaAutorizadoPor, sinOpcion: 'Aún sin autorizar', etiqueta: (usuario) => usuario.nombre });
+  // Quien autoriza es el jefe que registra (la lista de usuarios es solo del administrador): se ofrece el usuario de la sesion.
+  const { usuario } = useAuth();
+  const usuarios = [{ value: '', label: 'Aún sin autorizar' }, { value: usuario.id, label: 'Yo (usuario de la sesión)' }];
+  if (form.CompensacionHorariaAutorizadoPor && String(form.CompensacionHorariaAutorizadoPor) !== String(usuario.id)) {
+    usuarios.push({ value: form.CompensacionHorariaAutorizadoPor, label: `Usuario #${form.CompensacionHorariaAutorizadoPor}` });
+  }
 
   return (
     <>

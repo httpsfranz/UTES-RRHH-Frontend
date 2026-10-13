@@ -1,6 +1,6 @@
 import { FileSpreadsheet, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
-import { entero, requerido, requeridoSi, validador } from '../../utils/validaciones';
+import { entero, requeridoSi, validador } from '../../utils/validaciones';
 import { ESTADOS_CARGA, etiquetaDe } from '../../utils/opciones';
 import { formatoFechaHora } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
@@ -13,7 +13,6 @@ import FormModal from '../../components/ui/FormModal';
 import CargaAsistenciaManualForm from './CargaAsistenciaManualForm';
 
 const { emptyForm, mapToForm } = formModel({
-  UsuarioId: 'usuario_id',
   EessId: 'eess_id',
   DocumentoSustentoId: 'documento_sustento_id',
   CargaAsistenciaManualNombreArchivo: 'nombre_archivo',
@@ -23,7 +22,6 @@ const { emptyForm, mapToForm } = formModel({
 });
 
 const validate = validador({
-  UsuarioId: [requerido],
   CargaAsistenciaManualRegistros: [entero({ min: 0, max: 1000000 }), requeridoSi((form) => form.CargaAsistenciaManualEstado === 'PROCESADO', 'Indica cuántos registros se cargaron.')],
   CargaAsistenciaManualObservacion: [requeridoSi((form) => form.CargaAsistenciaManualEstado === 'OBSERVADO', 'Indica la observación de la carga.')],
 });

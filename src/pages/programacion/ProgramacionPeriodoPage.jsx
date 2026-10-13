@@ -17,7 +17,6 @@ import ProgramacionPeriodoForm from './ProgramacionPeriodoForm';
 const { emptyForm, mapToForm } = formModel({
   EessId: 'eess_id',
   TipoPeriodoProgramacionId: 'tipo_periodo_programacion_id',
-  UsuarioRegistroId: 'usuario_registro_id',
   ProgramacionPeriodoCodigo: 'codigo',
   ProgramacionPeriodoAnio: 'anio',
   ProgramacionPeriodoMes: 'mes',
@@ -59,7 +58,6 @@ export default function ProgramacionPeriodoPage() {
   const validate = validador({
     EessId: [requerido],
     TipoPeriodoProgramacionId: [requerido],
-    UsuarioRegistroId: [requerido],
     ProgramacionPeriodoAnio: [requerido, entero({ min: 2000, max: 2100 })],
     ProgramacionPeriodoMes: [requeridoSi((form) => ['MENSUAL', 'QUINCENAL', 'SEMANAL'].includes(codigoDe(form)), 'Indica el mes de la programación.')],
     ProgramacionPeriodoNumero: [requeridoSi((form) => ['QUINCENAL', 'SEMANAL'].includes(codigoDe(form)), 'Indica el número de quincena o semana.')],

@@ -1,4 +1,4 @@
-import { CalendarDays, FileText, ListChecks, MapPin, Stethoscope, UserCog, UserRound } from 'lucide-react';
+import { CalendarDays, FileText, ListChecks, MapPin, Stethoscope, UserRound } from 'lucide-react';
 import { useOpciones } from '../../hooks/useOpciones';
 import { etiquetaVinculo, formatoFecha } from '../../utils/formato';
 import { ESTADOS_CONSTATACION } from '../../utils/opciones';
@@ -21,7 +21,6 @@ export default function ConstatacionDomiciliariaForm({ form, setForm, errors }) 
     sinOpcion: 'Sin documento adjunto',
     etiqueta: (documento) => documento.nombre,
   });
-  const { opciones: usuarios } = useOpciones('/usuarios', { actual: form.UsuarioRegistroId, sinOpcion: 'Sin registrar', etiqueta: (usuario) => usuario.nombre });
 
   // Solo los descansos del trabajador elegido que siguen vigentes (ni rechazados ni anulados).
   const opcionesDescanso = [
@@ -38,7 +37,6 @@ export default function ConstatacionDomiciliariaForm({ form, setForm, errors }) 
       <Select form={form} setForm={setForm} errors={errors} name="DescansoMedicoId" label="Descanso médico que se verifica" icon={Stethoscope} options={opcionesDescanso} />
       <FormGrid>
         <Field form={form} setForm={setForm} errors={errors} name="ConstatacionDomiciliariaFecha" label="Fecha de la visita" icon={CalendarDays} type="date" required />
-        <Select form={form} setForm={setForm} errors={errors} name="UsuarioRegistroId" label="Registrada por" icon={UserCog} options={usuarios} />
       </FormGrid>
       <Field form={form} setForm={setForm} errors={errors} name="ConstatacionDomiciliariaDireccion" label="Dirección visitada" icon={MapPin} maxLength={300} />
       <Select form={form} setForm={setForm} errors={errors} name="ConstatacionDomiciliariaEstado" label="Resultado de la visita" icon={ListChecks} options={ESTADOS_CONSTATACION} required />

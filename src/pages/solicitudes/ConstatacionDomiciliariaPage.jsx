@@ -16,7 +16,6 @@ const { emptyForm, mapToForm } = formModel({
   VinculoLaboralId: 'vinculo_laboral_id',
   DescansoMedicoId: 'descanso_medico_id',
   DocumentoSustentoId: 'documento_sustento_id',
-  UsuarioRegistroId: 'usuario_registro_id',
   ConstatacionDomiciliariaFecha: 'fecha',
   ConstatacionDomiciliariaDireccion: 'direccion',
   ConstatacionDomiciliariaResultado: 'resultado',

@@ -1,4 +1,4 @@
-import { CalendarDays, Clock, FileText, Hash, ListChecks, Tag, UserCog, UserRound } from 'lucide-react';
+import { CalendarDays, Clock, FileText, Hash, ListChecks, Tag, UserRound } from 'lucide-react';
 import { useOpciones } from '../../hooks/useOpciones';
 import { etiquetaVinculo } from '../../utils/formato';
 import Field from '../../components/ui/Field';
@@ -18,7 +18,6 @@ export default function PapeletaForm({ form, setForm, errors }) {
     sinOpcion: 'Sin documento adjunto',
     etiqueta: (documento) => documento.nombre,
   });
-  const { opciones: usuarios } = useOpciones('/usuarios', { actual: form.UsuarioRegistroId, sinOpcion: 'Sin registrar', etiqueta: (usuario) => usuario.nombre });
 
   // Solo los motivos del tipo elegido (la base exige que el motivo pertenezca al tipo).
   const opcionesMotivo = [
@@ -74,7 +73,6 @@ export default function PapeletaForm({ form, setForm, errors }) {
       <Textarea form={form} setForm={setForm} errors={errors} name="PapeletaMotivo" label="Detalle del motivo" icon={FileText} maxLength={1000} />
       <FormGrid>
         <Select form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Documento de sustento" icon={FileText} options={documentos} />
-        <Select form={form} setForm={setForm} errors={errors} name="UsuarioRegistroId" label="Registrada por" icon={UserCog} options={usuarios} />
       </FormGrid>
       <HelpText>
         La papeleta nace pendiente y la autoriza el jefe desde el listado. La papeleta de comisión de servicios vale como máximo 3 horas

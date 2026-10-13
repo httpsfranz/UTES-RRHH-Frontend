@@ -59,6 +59,8 @@ export default function MarcacionPage() {
     mapToForm,
     validate,
     estadoKey: 'MarcacionEsValida',
+    // Decenas de miles de marcaciones: se traen las 300 mas recientes (el total real se muestra y la busqueda consulta al servidor).
+    limite: 300,
     buildConfirmMessage: (item) => `¿Invalidar la marcación de ${item.trabajador?.nombre_completo ?? ''} del ${formatoFechaHora(item.fecha_hora)}?`,
     deactivateErrorMessage: 'No se pudo invalidar la marcación.',
   });

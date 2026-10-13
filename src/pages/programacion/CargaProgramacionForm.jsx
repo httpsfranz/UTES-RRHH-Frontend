@@ -1,4 +1,4 @@
-import { CalendarDays, FileText, Hash, Hospital, ListChecks, UserCog } from 'lucide-react';
+import { CalendarDays, FileText, Hash, Hospital, ListChecks } from 'lucide-react';
 import { useOpciones } from '../../hooks/useOpciones';
 import { ESTADOS_CARGA_PROGRAMACION, MESES } from '../../utils/opciones';
 import Field from '../../components/ui/Field';
@@ -14,7 +14,6 @@ export default function CargaProgramacionForm({ form, setForm, errors, editando 
     params: {},
     etiqueta: (documento) => documento.nombre,
   });
-  const { opciones: usuarios } = useOpciones('/usuarios', { actual: form.UsuarioRegistroId, etiqueta: (usuario) => usuario.nombre });
   const programaciones = useOpciones('/programaciones-periodo', {
     params: {},
     actual: form.ProgramacionPeriodoId,
@@ -59,7 +58,6 @@ export default function CargaProgramacionForm({ form, setForm, errors, editando 
         <Field form={form} setForm={setForm} errors={errors} name="CargaProgramacionDocumentoNumero" label="N.º de oficio o memorando" icon={Hash} maxLength={60} />
       </FormGrid>
       <FormGrid>
-        <Select form={form} setForm={setForm} errors={errors} name="UsuarioRegistroId" label="Cargado por" icon={UserCog} options={usuarios} required />
         <Field form={form} setForm={setForm} errors={errors} name="CargaProgramacionCodigo" label="Código (automático)" icon={Hash} maxLength={50} filter="codigo" placeholder="PROG-AAAA-MM-NNN" />
       </FormGrid>
       <Select form={form} setForm={setForm} errors={errors} name="ProgramacionPeriodoId" label="Programación estructurada (opcional)" icon={CalendarDays} options={opcionesProgramacion} />

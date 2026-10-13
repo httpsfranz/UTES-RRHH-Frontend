@@ -17,7 +17,6 @@ import AjusteMarcacionForm from './AjusteMarcacionForm';
 
 const modelo = formModel({
   MarcacionId: 'marcacion_id',
-  UsuarioId: 'usuario_id',
   DocumentoSustentoId: 'documento_sustento_id',
   AjusteMarcacionFechaHoraNueva: 'fecha_hora_nueva',
   AjusteMarcacionMotivo: 'motivo',
@@ -46,7 +45,6 @@ const card = (item) => ({
 export default function AjusteMarcacionPage() {
   const validate = validador({
     MarcacionId: [requerido],
-    UsuarioId: [requerido],
     AjusteMarcacionMotivo: [requerido],
     AjusteMarcacionFechaHoraNueva: [(valor) => fechaHoraNoFutura(valor)?.replace('La ocurrencia', 'La marcación')],
   });

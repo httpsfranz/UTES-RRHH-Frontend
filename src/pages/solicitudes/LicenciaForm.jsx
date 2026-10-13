@@ -1,4 +1,4 @@
-import { CalendarDays, FileText, Hash, ListChecks, UserCog, UserRound } from 'lucide-react';
+import { CalendarDays, FileText, Hash, ListChecks, UserRound } from 'lucide-react';
 import { useOpciones } from '../../hooks/useOpciones';
 import { etiquetaVinculo } from '../../utils/formato';
 import Field from '../../components/ui/Field';
@@ -19,7 +19,6 @@ export default function LicenciaForm({ form, setForm, errors }) {
     sinOpcion: 'Sin documento adjunto',
     etiqueta: (documento) => documento.nombre,
   });
-  const { opciones: usuarios } = useOpciones('/usuarios', { actual: form.UsuarioRegistroId, sinOpcion: 'Sin registrar', etiqueta: (usuario) => usuario.nombre });
 
   const tipo = tipos.filas.find((fila) => String(fila.id) === String(form.TipoLicenciaId));
 
@@ -34,7 +33,6 @@ export default function LicenciaForm({ form, setForm, errors }) {
       <Field form={form} setForm={setForm} errors={errors} name="LicenciaNumeroResolucion" label="N.º de resolución" icon={Hash} maxLength={60} />
       <FormGrid>
         <Select form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Documento de sustento" icon={FileText} options={documentos} />
-        <Select form={form} setForm={setForm} errors={errors} name="UsuarioRegistroId" label="Registrada por" icon={UserCog} options={usuarios} />
       </FormGrid>
       <Textarea form={form} setForm={setForm} errors={errors} name="LicenciaMotivo" label="Motivo" icon={FileText} maxLength={1000} />
       <HelpText>

@@ -1,4 +1,4 @@
-import { CalendarClock, FileText, Hospital, ListChecks, UserCog, UserRound } from 'lucide-react';
+import { CalendarClock, FileText, Hospital, ListChecks, UserRound } from 'lucide-react';
 import { useOpciones } from '../../hooks/useOpciones';
 import { ESTADOS_SUPERVISION } from '../../utils/opciones';
 import { etiquetaVinculo } from '../../utils/formato';
@@ -12,7 +12,6 @@ import HelpText from '../../components/ui/HelpText';
 export default function SupervisionInopinadaForm({ form, setForm, errors, editando }) {
   const { opciones: establecimientos } = useOpciones('/establecimientos', { actual: form.EessId });
   const vinculos = useOpciones('/vinculos-laborales', { actual: form.VinculoLaboralId, etiqueta: etiquetaVinculo });
-  const { opciones: usuarios } = useOpciones('/usuarios', { actual: form.UsuarioId, etiqueta: (usuario) => usuario.nombre });
   const { opciones: documentos } = useOpciones('/documentos-sustento', {
     params: {},
     sinOpcion: 'Sin acta adjunta',
@@ -48,7 +47,6 @@ export default function SupervisionInopinadaForm({ form, setForm, errors, editan
       <SelectBuscable form={form} setForm={setForm} errors={errors} name="VinculoLaboralId" label="Persona supervisada" icon={UserRound} options={opcionesPersona} />
       <FormGrid>
         <Field form={form} setForm={setForm} errors={errors} name="SupervisionInopinadaFechaHora" label="Fecha y hora" icon={CalendarClock} type="datetime-local" required />
-        <Select form={form} setForm={setForm} errors={errors} name="UsuarioId" label="Supervisor" icon={UserCog} options={usuarios} required />
       </FormGrid>
       <Textarea form={form} setForm={setForm} errors={errors} name="SupervisionInopinadaResultado" label="Resultado" icon={FileText} maxLength={500} />
       {editando && (

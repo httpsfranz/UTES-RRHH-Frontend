@@ -20,7 +20,6 @@ const { emptyForm, mapToForm } = formModel({
   VinculoLaboralId: 'vinculo_laboral_id',
   TipoLicenciaId: 'tipo_licencia_id',
   DocumentoSustentoId: 'documento_sustento_id',
-  UsuarioRegistroId: 'usuario_registro_id',
   LicenciaNumeroResolucion: 'numero_resolucion',
   LicenciaFechaInicio: 'fecha_inicio',
   LicenciaFechaFin: 'fecha_fin',

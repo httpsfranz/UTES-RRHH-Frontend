@@ -24,7 +24,6 @@ const { emptyForm, mapToForm } = formModel({
   VinculoLaboralSolicitanteId: 'vinculo_laboral_solicitante_id',
   VinculoLaboralReemplazanteId: 'vinculo_laboral_reemplazante_id',
   DocumentoSustentoId: 'documento_sustento_id',
-  UsuarioRegistroId: 'usuario_registro_id',
   CambioTurnoMotivo: 'motivo',
   CambioTurnoObservacion: 'observacion',
 });
@@ -59,7 +58,6 @@ export default function CambioTurnoPage() {
     TipoCambioTurnoId: [requerido],
     TurnoProgramadoId: [requerido],
     VinculoLaboralSolicitanteId: [requerido],
-    UsuarioRegistroId: [requerido],
     VinculoLaboralReemplazanteId: [requeridoSi(llevaReemplazante, 'Este tipo de cambio exige un reemplazante (RIT, Art. 20).')],
     TurnoProgramadoContraparteId: [requeridoSi((form) => codigoDe(form) === 'PERMUTA', 'Indica el turno que se recibe a cambio.')],
     TurnoIdNuevo: [requeridoSi((form) => codigoDe(form) === 'REPROGRAMACION', 'Indica el turno al que se reprograma.')],

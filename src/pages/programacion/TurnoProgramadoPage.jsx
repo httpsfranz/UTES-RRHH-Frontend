@@ -78,6 +78,9 @@ export default function TurnoProgramadoPage() {
     emptyForm,
     mapToForm,
     validate,
+    // Miles de turnos programados: se trae una pagina de 300 (el total real se muestra y la busqueda consulta al servidor). El calendario
+    // de Asistencia diaria es la vista para recorrer los turnos de un establecimiento.
+    limite: 300,
     buildConfirmMessage: (item) => `¿Retirar el turno del ${formatoFecha(item.fecha)} de ${item.trabajador?.nombre_completo ?? ''}?`,
     deactivateErrorMessage: 'No se pudo retirar el turno.',
   });

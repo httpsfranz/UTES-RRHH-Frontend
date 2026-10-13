@@ -16,7 +16,6 @@ import CargaProgramacionForm from './CargaProgramacionForm';
 const { emptyForm, mapToForm } = formModel({
   EessId: 'eess_id',
   DocumentoSustentoId: 'documento_sustento_id',
-  UsuarioRegistroId: 'usuario_registro_id',
   TipoPeriodoProgramacionId: 'tipo_periodo_programacion_id',
   ProgramacionPeriodoId: 'programacion_periodo_id',
   CargaProgramacionCodigo: 'codigo',
@@ -55,7 +54,6 @@ export default function CargaProgramacionPage() {
   const validate = validador({
     EessId: [requerido],
     DocumentoSustentoId: [requerido],
-    UsuarioRegistroId: [requerido],
     CargaProgramacionCodigo: [codigo],
     CargaProgramacionAnio: [requerido, entero({ min: 2000, max: 2100 })],
     CargaProgramacionMes: [requerido],

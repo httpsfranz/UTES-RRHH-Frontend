@@ -20,7 +20,6 @@ const { emptyForm, mapToForm } = formModel({
   VinculoLaboralId: 'vinculo_laboral_id',
   ConceptoJustificacionId: 'concepto_justificacion_id',
   DocumentoSustentoId: 'documento_sustento_id',
-  UsuarioRegistroId: 'usuario_registro_id',
   JustificacionFaltaFechaInicio: 'fecha_inicio',
   JustificacionFaltaFechaFin: 'fecha_fin',
   JustificacionFaltaDocumentoNumero: 'documento_numero',
@@ -54,7 +53,6 @@ export default function JustificacionFaltaPage() {
   const validate = validador({
     VinculoLaboralId: [requerido],
     ConceptoJustificacionId: [requerido],
-    UsuarioRegistroId: [requerido],
     DocumentoSustentoId: [requeridoSi(exigeDocumento, 'Este concepto exige adjuntar el documento de sustento.')],
     JustificacionFaltaFechaInicio: [requerido, fecha],
     JustificacionFaltaFechaFin: [requerido, fecha, noAnteriorA('JustificacionFaltaFechaInicio', 'La fecha final no puede ser anterior a la inicial.')],

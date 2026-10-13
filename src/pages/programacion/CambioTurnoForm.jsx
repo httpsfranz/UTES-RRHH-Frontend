@@ -1,4 +1,4 @@
-import { ArrowLeftRight, CalendarClock, Clock, FileText, ListChecks, UserCog, UserRound, UsersRound } from 'lucide-react';
+import { ArrowLeftRight, CalendarClock, Clock, FileText, ListChecks, UserRound, UsersRound } from 'lucide-react';
 import { useOpciones } from '../../hooks/useOpciones';
 import { ahoraLocal, etiquetaVinculo, formatoFecha } from '../../utils/formato';
 import Select from '../../components/ui/Select';
@@ -22,7 +22,6 @@ export default function CambioTurnoForm({ form, setForm, errors }) {
   const vinculos = useOpciones('/vinculos-laborales', { actual: form.VinculoLaboralReemplazanteId, etiqueta: etiquetaVinculo });
   const catalogo = useOpciones('/turnos', { actual: form.TurnoIdNuevo, etiqueta: (turno) => `${turno.nombre} (${turno.hora_entrada} – ${turno.hora_salida})` });
   const documentos = useOpciones('/documentos-sustento', { params: {}, sinOpcion: 'Sin documento adjunto', etiqueta: (documento) => documento.nombre });
-  const usuarios = useOpciones('/usuarios', { actual: form.UsuarioRegistroId, etiqueta: (usuario) => usuario.nombre });
 
   const tipo = tipos.filas.find((fila) => String(fila.id) === String(form.TipoCambioTurnoId));
   const codigo = tipo?.codigo;
@@ -113,7 +112,6 @@ export default function CambioTurnoForm({ form, setForm, errors }) {
       )}
       <Textarea form={form} setForm={setForm} errors={errors} name="CambioTurnoMotivo" label="Motivo" icon={FileText} maxLength={1000} required={sinReemplazante} />
       <Select form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Documento que sustenta o autoriza" icon={FileText} options={documentos.opciones} required={sinReemplazante} />
-      <Select form={form} setForm={setForm} errors={errors} name="UsuarioRegistroId" label="Quién registra" icon={UserCog} options={usuarios.opciones} required />
       <Textarea form={form} setForm={setForm} errors={errors} name="CambioTurnoObservacion" label="Observación" icon={FileText} maxLength={1000} />
       <HelpText>
         RIT, Art. 16 y 20: es la única forma de modificar una programación ya publicada. Se pide con 48 horas de anticipación (con menos,

@@ -1,4 +1,9 @@
-import { createBrowserRouter } from 'react-router-dom';
+/* eslint-disable react-refresh/only-export-components -- archivo de configuracion del router: declara las paginas con carga diferida y exporta el router, no un componente. */
+import { lazy } from 'react';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
+import LoginPage from './pages/LoginPage';
+import RequierePermiso from './components/auth/RequierePermiso';
+import RequiereSesion from './components/auth/RequiereSesion';
 
 import MainLayout from './layouts/MainLayout';
 
@@ -7,165 +12,167 @@ import HomePage from './pages/HomePage';
 import PlaceholderPage from './pages/PlaceholderPage';
 
 // ASISTENCIA
-import MarcacionPage from './pages/asistencia/MarcacionPage';
+const MarcacionPage = lazy(() => import('./pages/asistencia/MarcacionPage'));
 
-import AsistenciaDiariaPage from './pages/asistencia/AsistenciaDiariaPage';
+const AsistenciaDiariaPage = lazy(() => import('./pages/asistencia/AsistenciaDiariaPage'));
 
-import JustificacionFaltaPage from './pages/asistencia/JustificacionFaltaPage';
+const JustificacionFaltaPage = lazy(() => import('./pages/asistencia/JustificacionFaltaPage'));
 
-import CargaAsistenciaManualPage from './pages/asistencia/CargaAsistenciaManualPage';
+const CargaAsistenciaManualPage = lazy(() => import('./pages/asistencia/CargaAsistenciaManualPage'));
 
-import ConceptoJustificacionPage from './pages/asistencia/ConceptoJustificacionPage';
+const ConceptoJustificacionPage = lazy(() => import('./pages/asistencia/ConceptoJustificacionPage'));
 
-import EstadoAsistenciaPage from './pages/asistencia/EstadoAsistenciaPage';
+const EstadoAsistenciaPage = lazy(() => import('./pages/asistencia/EstadoAsistenciaPage'));
 
-import AjusteMarcacionPage from './pages/asistencia/AjusteMarcacionPage';
+const AjusteMarcacionPage = lazy(() => import('./pages/asistencia/AjusteMarcacionPage'));
 
 // ORGANIZACIÓN
-import ResponsableEessPage from './pages/organizacion/ResponsableEessPage';
+const ResponsableEessPage = lazy(() => import('./pages/organizacion/ResponsableEessPage'));
 
-import MicroredPage from './pages/organizacion/MicroredPage';
+const MicroredPage = lazy(() => import('./pages/organizacion/MicroredPage'));
 
-import EstablecimientoSaludPage from './pages/organizacion/EstablecimientoSaludPage';
+const EstablecimientoSaludPage = lazy(() => import('./pages/organizacion/EstablecimientoSaludPage'));
 
 // BIOMETRÍA
-import PlantillaBiometricaPage from './pages/biometria/PlantillaBiometricaPage';
+const PlantillaBiometricaPage = lazy(() => import('./pages/biometria/PlantillaBiometricaPage'));
 
-import AutorizacionMetodoPage from './pages/biometria/AutorizacionMetodoPage';
+const AutorizacionMetodoPage = lazy(() => import('./pages/biometria/AutorizacionMetodoPage'));
 
-import ConsentimientoBiometricoPage from './pages/biometria/ConsentimientoBiometricoPage';
+const ConsentimientoBiometricoPage = lazy(() => import('./pages/biometria/ConsentimientoBiometricoPage'));
 
-import MetodoMarcacionPage from './pages/biometria/MetodoMarcacionPage';
+const MetodoMarcacionPage = lazy(() => import('./pages/biometria/MetodoMarcacionPage'));
 
-import DispositivoMarcacionPage from './pages/biometria/DispositivoMarcacionPage';
+const DispositivoMarcacionPage = lazy(() => import('./pages/biometria/DispositivoMarcacionPage'));
 
-import TipoEstablecimientoPage from './pages/organizacion/TipoEstablecimientoPage';
+const TipoEstablecimientoPage = lazy(() => import('./pages/organizacion/TipoEstablecimientoPage'));
 
-import TipoResponsabilidadPage from './pages/organizacion/TipoResponsabilidadPage';
+const TipoResponsabilidadPage = lazy(() => import('./pages/organizacion/TipoResponsabilidadPage'));
 
 // COMPENSACIONES
-import CompensacionHorariaPage from './pages/compensaciones/CompensacionHorariaPage';
+const CompensacionHorariaPage = lazy(() => import('./pages/compensaciones/CompensacionHorariaPage'));
 
-import ConceptoDescuentoPage from './pages/compensaciones/ConceptoDescuentoPage';
+const ConceptoDescuentoPage = lazy(() => import('./pages/compensaciones/ConceptoDescuentoPage'));
 
-import TipoCompensacionPage from './pages/compensaciones/TipoCompensacionPage';
+const TipoCompensacionPage = lazy(() => import('./pages/compensaciones/TipoCompensacionPage'));
 
-import LiquidacionDescuentoPage from './pages/compensaciones/LiquidacionDescuentoPage';
+const LiquidacionDescuentoPage = lazy(() => import('./pages/compensaciones/LiquidacionDescuentoPage'));
 
 // CONFIGURACIÓN
-import ParametroSistemaPage from './pages/configuracion/ParametroSistemaPage';
+const ParametroSistemaPage = lazy(() => import('./pages/configuracion/ParametroSistemaPage'));
 
-import TablaToleranciaPage from './pages/configuracion/TablaToleranciaPage';
+const TablaToleranciaPage = lazy(() => import('./pages/configuracion/TablaToleranciaPage'));
 
-import TramoToleranciaPage from './pages/configuracion/TramoToleranciaPage';
+const TramoToleranciaPage = lazy(() => import('./pages/configuracion/TramoToleranciaPage'));
 
-import TurnoPage from './pages/configuracion/TurnoPage';
+const TurnoPage = lazy(() => import('./pages/configuracion/TurnoPage'));
 
-import HorarioPage from './pages/configuracion/HorarioPage';
+const HorarioPage = lazy(() => import('./pages/configuracion/HorarioPage'));
 
-import ParametroJornadaPage from './pages/configuracion/ParametroJornadaPage';
+const ParametroJornadaPage = lazy(() => import('./pages/configuracion/ParametroJornadaPage'));
 
-import TipoJornadaPage from './pages/configuracion/TipoJornadaPage';
+const TipoJornadaPage = lazy(() => import('./pages/configuracion/TipoJornadaPage'));
 
 // CONSOLIDACIÓN
-import ConsolidadoAsistenciaPage from './pages/consolidacion/ConsolidadoAsistenciaPage';
+const ConsolidadoAsistenciaPage = lazy(() => import('./pages/consolidacion/ConsolidadoAsistenciaPage'));
 
-import PeriodoAsistenciaPage from './pages/consolidacion/PeriodoAsistenciaPage';
+const PeriodoAsistenciaPage = lazy(() => import('./pages/consolidacion/PeriodoAsistenciaPage'));
 
 // VACACIONES
-import PeriodoVacacionalPage from './pages/vacaciones/PeriodoVacacionalPage';
+const PeriodoVacacionalPage = lazy(() => import('./pages/vacaciones/PeriodoVacacionalPage'));
 
-import RolVacacionalPage from './pages/vacaciones/RolVacacionalPage';
+const RolVacacionalPage = lazy(() => import('./pages/vacaciones/RolVacacionalPage'));
 
-import GoceVacacionalPage from './pages/vacaciones/GoceVacacionalPage';
+const GoceVacacionalPage = lazy(() => import('./pages/vacaciones/GoceVacacionalPage'));
 
 // DISCIPLINA
-import ExpedientePadPage from './pages/disciplina/ExpedientePadPage';
+const ExpedientePadPage = lazy(() => import('./pages/disciplina/ExpedientePadPage'));
 
-import SupervisionInopinadaPage from './pages/disciplina/SupervisionInopinadaPage';
+const SupervisionInopinadaPage = lazy(() => import('./pages/disciplina/SupervisionInopinadaPage'));
 
-import TipoFaltaDisciplinariaPage from './pages/disciplina/TipoFaltaDisciplinariaPage';
+const TipoFaltaDisciplinariaPage = lazy(() => import('./pages/disciplina/TipoFaltaDisciplinariaPage'));
 
 // PERSONAL
-import AsignacionHorarioPage from './pages/personal/AsignacionHorarioPage';
+const AsignacionHorarioPage = lazy(() => import('./pages/personal/AsignacionHorarioPage'));
 
-import VinculoLaboralPage from './pages/personal/VinculoLaboralPage';
+const VinculoLaboralPage = lazy(() => import('./pages/personal/VinculoLaboralPage'));
 
-import ColegiaturaPage from './pages/personal/ColegiaturaPage';
+const ColegiaturaPage = lazy(() => import('./pages/personal/ColegiaturaPage'));
 
-import TrabajadorPage from './pages/personal/TrabajadorPage';
+const TrabajadorPage = lazy(() => import('./pages/personal/TrabajadorPage'));
 
-import CargoPage from './pages/personal/CargoPage';
+const CargoPage = lazy(() => import('./pages/personal/CargoPage'));
 
-import RegimenLaboralPage from './pages/personal/RegimenLaboralPage';
+const RegimenLaboralPage = lazy(() => import('./pages/personal/RegimenLaboralPage'));
 
-import TipoDocumentoIdentidadPage from './pages/personal/TipoDocumentoIdentidadPage';
+const TipoDocumentoIdentidadPage = lazy(() => import('./pages/personal/TipoDocumentoIdentidadPage'));
 
-import GrupoOcupacionalPage from './pages/personal/GrupoOcupacionalPage';
+const GrupoOcupacionalPage = lazy(() => import('./pages/personal/GrupoOcupacionalPage'));
 
-import ProfesionPage from './pages/personal/ProfesionPage';
+const ProfesionPage = lazy(() => import('./pages/personal/ProfesionPage'));
 
-import ColegiaturaTipoPage from './pages/personal/ColegiaturaTipoPage';
+const ColegiaturaTipoPage = lazy(() => import('./pages/personal/ColegiaturaTipoPage'));
 
-import CondicionLaboralPage from './pages/personal/CondicionLaboralPage';
+const CondicionLaboralPage = lazy(() => import('./pages/personal/CondicionLaboralPage'));
 
 // PROGRAMACIÓN
-import ProgramacionPeriodoPage from './pages/programacion/ProgramacionPeriodoPage';
+const ProgramacionPeriodoPage = lazy(() => import('./pages/programacion/ProgramacionPeriodoPage'));
 
-import CargaProgramacionPage from './pages/programacion/CargaProgramacionPage';
+const CargaProgramacionPage = lazy(() => import('./pages/programacion/CargaProgramacionPage'));
 
-import InformeGuardiaComunitariaPage from './pages/programacion/InformeGuardiaComunitariaPage';
+const InformeGuardiaComunitariaPage = lazy(() => import('./pages/programacion/InformeGuardiaComunitariaPage'));
 
-import TipoCambioTurnoPage from './pages/programacion/TipoCambioTurnoPage';
+const TipoCambioTurnoPage = lazy(() => import('./pages/programacion/TipoCambioTurnoPage'));
 
-import TipoPeriodoProgramacionPage from './pages/programacion/TipoPeriodoProgramacionPage';
+const TipoPeriodoProgramacionPage = lazy(() => import('./pages/programacion/TipoPeriodoProgramacionPage'));
 
-import ProgramacionTrabajadorPage from './pages/programacion/ProgramacionTrabajadorPage';
+const ProgramacionTrabajadorPage = lazy(() => import('./pages/programacion/ProgramacionTrabajadorPage'));
 
-import TurnoProgramadoPage from './pages/programacion/TurnoProgramadoPage';
+const TurnoProgramadoPage = lazy(() => import('./pages/programacion/TurnoProgramadoPage'));
+const CalendarioProgramacionPage = lazy(() => import('./pages/programacion/CalendarioProgramacionPage'));
+const CalendarioAusenciasPage = lazy(() => import('./pages/programacion/CalendarioAusenciasPage'));
 
-import CambioTurnoPage from './pages/programacion/CambioTurnoPage';
+const CambioTurnoPage = lazy(() => import('./pages/programacion/CambioTurnoPage'));
 
 // SEGURIDAD
-import AuditoriaPage from './pages/seguridad/AuditoriaPage';
+const AuditoriaPage = lazy(() => import('./pages/seguridad/AuditoriaPage'));
 
-import PermisoPage from './pages/seguridad/PermisoPage';
+const PermisoPage = lazy(() => import('./pages/seguridad/PermisoPage'));
 
-import RolPage from './pages/seguridad/RolPage';
+const RolPage = lazy(() => import('./pages/seguridad/RolPage'));
 
-import UsuarioPage from './pages/seguridad/UsuarioPage';
+const UsuarioPage = lazy(() => import('./pages/seguridad/UsuarioPage'));
 
-import UsuarioRolPage from './pages/seguridad/UsuarioRolPage';
+const UsuarioRolPage = lazy(() => import('./pages/seguridad/UsuarioRolPage'));
 
-import UsuarioAmbitoPage from './pages/seguridad/UsuarioAmbitoPage';
+const UsuarioAmbitoPage = lazy(() => import('./pages/seguridad/UsuarioAmbitoPage'));
 
-import SesionAccesoPage from './pages/seguridad/SesionAccesoPage';
+const SesionAccesoPage = lazy(() => import('./pages/seguridad/SesionAccesoPage'));
 
 // SOLICITUDES
-import PapeletaPage from './pages/solicitudes/PapeletaPage';
+const PapeletaPage = lazy(() => import('./pages/solicitudes/PapeletaPage'));
 
-import LicenciaPage from './pages/solicitudes/LicenciaPage';
+const LicenciaPage = lazy(() => import('./pages/solicitudes/LicenciaPage'));
 
-import DescansoMedicoPage from './pages/solicitudes/DescansoMedicoPage';
+const DescansoMedicoPage = lazy(() => import('./pages/solicitudes/DescansoMedicoPage'));
 
-import ConstatacionDomiciliariaPage from './pages/solicitudes/ConstatacionDomiciliariaPage';
+const ConstatacionDomiciliariaPage = lazy(() => import('./pages/solicitudes/ConstatacionDomiciliariaPage'));
 
-import TipoLicenciaPage from './pages/solicitudes/TipoLicenciaPage';
+const TipoLicenciaPage = lazy(() => import('./pages/solicitudes/TipoLicenciaPage'));
 
-import TipoPapeletaPage from './pages/solicitudes/TipoPapeletaPage';
+const TipoPapeletaPage = lazy(() => import('./pages/solicitudes/TipoPapeletaPage'));
 
-import MotivoPapeletaPage from './pages/solicitudes/MotivoPapeletaPage';
+const MotivoPapeletaPage = lazy(() => import('./pages/solicitudes/MotivoPapeletaPage'));
 
-import OcurrenciaPorteriaPage from './pages/solicitudes/OcurrenciaPorteriaPage';
+const OcurrenciaPorteriaPage = lazy(() => import('./pages/solicitudes/OcurrenciaPorteriaPage'));
 
 // SOPORTE
-import CalendarioNoLaborablePage from './pages/soporte/CalendarioNoLaborablePage';
+const CalendarioNoLaborablePage = lazy(() => import('./pages/soporte/CalendarioNoLaborablePage'));
 
-import DocumentoSustentoPage from './pages/soporte/DocumentoSustentoPage';
+const DocumentoSustentoPage = lazy(() => import('./pages/soporte/DocumentoSustentoPage'));
 
-import LogIntegracionPage from './pages/soporte/LogIntegracionPage';
+const LogIntegracionPage = lazy(() => import('./pages/soporte/LogIntegracionPage'));
 
-import NotificacionPage from './pages/soporte/NotificacionPage';
+const NotificacionPage = lazy(() => import('./pages/soporte/NotificacionPage'));
 
 import { menu } from './nav/menu';
 
@@ -247,6 +254,8 @@ const paginasReales = {
   '/programacion/tipos-periodo': TipoPeriodoProgramacionPage,
   '/programacion/trabajadores': ProgramacionTrabajadorPage,
   '/programacion/turnos-programados': TurnoProgramadoPage,
+  '/programacion/calendario': CalendarioProgramacionPage,
+  '/programacion/calendario-ausencias': CalendarioAusenciasPage,
   '/programacion/cambios-turno': CambioTurnoPage,
 
   // SEGURIDAD
@@ -285,10 +294,8 @@ const moduleRoutes = menu.flatMap((group) =>
 
     return {
       path: item.path.replace(/^\/+/, ''),
-      element: PaginaReal ? (
-        <PaginaReal />
-      ) : (
-        <PlaceholderPage title={item.label} />
+      element: (
+        <RequierePermiso path={item.path}>{PaginaReal ? <PaginaReal /> : <PlaceholderPage title={item.label} />}</RequierePermiso>
       ),
     };
   })
@@ -299,15 +306,22 @@ const moduleRoutes = menu.flatMap((group) =>
 // =========================================================
 
 export const router = createBrowserRouter([
+  { path: '/login', element: <LoginPage /> },
   {
-    path: '/',
-    element: <MainLayout />,
+    element: <RequiereSesion />,
     children: [
       {
-        index: true,
-        element: <HomePage />,
+        path: '/',
+        element: <MainLayout />,
+        children: [
+          {
+            index: true,
+            element: <HomePage />,
+          },
+          ...moduleRoutes,
+          { path: '*', element: <Navigate to="/" replace /> },
+        ],
       },
-      ...moduleRoutes,
     ],
   },
 ]);

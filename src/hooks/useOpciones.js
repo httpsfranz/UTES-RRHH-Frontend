@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api/client';
-import { traerTodo } from '../api/paginado';
+import { traerTodoConCache } from '../api/cacheDeOpciones';
 
 const etiquetaPorDefecto = (item) => (item.activo === false ? `${item.nombre} (inactivo)` : item.nombre);
 
@@ -27,7 +27,7 @@ export function useOpciones(endpoint, { etiqueta = etiquetaPorDefecto, params = 
 
   useEffect(() => {
     let vigente = true;
-    traerTodo(endpoint, params)
+    traerTodoConCache(endpoint, params)
       .then((datos) => vigente && setFilas(datos))
       .catch(() => vigente && setFallo(true))
       .finally(() => vigente && setCargando(false));
