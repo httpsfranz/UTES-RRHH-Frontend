@@ -2,13 +2,15 @@ import { CalendarDays, Clock, FileText, Hash, ListChecks, Tag, UserRound } from 
 import { useOpciones } from '../../hooks/useOpciones';
 import { etiquetaVinculo } from '../../utils/formato';
 import Field from '../../components/ui/Field';
+import NumeroAutomatico from '../../components/ui/NumeroAutomatico';
 import Select from '../../components/ui/Select';
 import SelectorDeDocumento from '../../components/ui/SelectorDeDocumento';
 import SelectBuscable from '../../components/ui/SelectBuscable';
-import Textarea from '../../components/ui/Textarea';
 import Checkbox from '../../components/ui/Checkbox';
 import FormGrid from '../../components/ui/FormGrid';
 import HelpText from '../../components/ui/HelpText';
+import TextoEstandar from '../../components/ui/TextoEstandar';
+import { TEXTOS } from '../../utils/textosEstandar';
 
 export default function PapeletaForm({ form, setForm, errors }) {
   const { opciones: vinculos } = useOpciones('/vinculos-laborales', { actual: form.VinculoLaboralId, etiqueta: etiquetaVinculo });
@@ -29,7 +31,16 @@ export default function PapeletaForm({ form, setForm, errors }) {
 
   return (
     <>
-      <SelectBuscable form={form} setForm={setForm} errors={errors} name="VinculoLaboralId" label="Trabajador (vínculo)" icon={UserRound} options={vinculos} required />
+      <SelectBuscable
+        form={form}
+        setForm={setForm}
+        errors={errors}
+        name="VinculoLaboralId"
+        label="Trabajador (vínculo)"
+        icon={UserRound}
+        options={vinculos}
+        required
+      />
       <FormGrid>
         <Select
           form={form}
@@ -51,7 +62,7 @@ export default function PapeletaForm({ form, setForm, errors }) {
       </FormGrid>
       <FormGrid>
         <Field form={form} setForm={setForm} errors={errors} name="PapeletaFecha" label="Fecha" icon={CalendarDays} type="date" required />
-        <Field form={form} setForm={setForm} errors={errors} name="PapeletaNumero" label="N.º de papeleta" icon={Hash} maxLength={50} placeholder="Ej. PS-0129" />
+        <NumeroAutomatico name="PapeletaNumero" label="N.º de papeleta" icon={Hash} valor={form.PapeletaNumero} />
       </FormGrid>
       <Checkbox form={form} setForm={setForm} errors={errors} name="PapeletaEsDiaCompleto" label="Permiso de día completo" />
       {!diaCompleto && (
@@ -71,13 +82,29 @@ export default function PapeletaForm({ form, setForm, errors }) {
         filter="digitos"
         placeholder="Automático (retorno − salida)"
       />
-      <Textarea form={form} setForm={setForm} errors={errors} name="PapeletaMotivo" label="Detalle del motivo" icon={FileText} maxLength={1000} />
+      <TextoEstandar
+        form={form}
+        setForm={setForm}
+        errors={errors}
+        name="PapeletaMotivo"
+        opciones={TEXTOS.motivoPapeleta}
+        label="Detalle del motivo"
+        maxLength={1000}
+      />
       <FormGrid>
-        <SelectorDeDocumento form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Documento de sustento" icon={FileText} options={documentos} />
+        <SelectorDeDocumento
+          form={form}
+          setForm={setForm}
+          errors={errors}
+          name="DocumentoSustentoId"
+          label="Documento de sustento"
+          icon={FileText}
+          options={documentos}
+        />
       </FormGrid>
       <HelpText>
-        La papeleta nace pendiente y la autoriza el jefe desde el listado. La papeleta de comisión de servicios vale como máximo 3 horas
-        (RIT, Art. 14). Los tipos que exigen sustento no se aprueban sin el documento.
+        La papeleta nace pendiente y la autoriza el jefe desde el listado. La papeleta de comisión de servicios vale como máximo 3 horas (RIT, Art.
+        14). Los tipos que exigen sustento no se aprueban sin el documento.
       </HelpText>
     </>
   );

@@ -50,9 +50,11 @@ export default function CargoPage() {
   return (
     <PageContainer>
       <PageHeader title="Cargos" subtitle="Personal · Cargo">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo cargo
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nuevo cargo
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />

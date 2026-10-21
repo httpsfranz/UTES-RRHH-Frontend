@@ -46,9 +46,11 @@ export default function TipoCambioTurnoPage() {
   return (
     <PageContainer>
       <PageHeader title="Tipos de cambio de turno" subtitle="Programación · Tipo de cambio de turno">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo tipo
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nuevo tipo
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />

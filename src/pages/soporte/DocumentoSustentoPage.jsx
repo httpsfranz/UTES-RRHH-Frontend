@@ -48,9 +48,11 @@ export default function DocumentoSustentoPage() {
   return (
     <PageContainer>
       <PageHeader title="Documentos de sustento" subtitle="Soporte · Documento de sustento">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Subir documento
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Subir documento
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />

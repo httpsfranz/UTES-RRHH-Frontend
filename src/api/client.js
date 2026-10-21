@@ -42,6 +42,25 @@ api.interceptors.request.use((config) => {
 // Si el backend dice que la sesion ya no vale (token vencido o cerrado en otro lado), se avisa para volver al login.
 // El login mismo responde 401 con "usuario o contrasena incorrectos": ese no cierra nada.
 export const EVENTO_SESION_VENCIDA = 'utes:sesion-vencida';
+export const CLAVE_AVISO = 'utes.aviso';
+
+/** Aviso pendiente para la pantalla de ingreso (p. ej. "tu sesion expiro por inactividad"). */
+export function leerAviso() {
+  try {
+    return sessionStorage.getItem(CLAVE_AVISO) ?? '';
+  } catch {
+    return '';
+  }
+}
+
+/** Ya mostrado: se descarta para que no vuelva a aparecer. */
+export function descartarAviso() {
+  try {
+    sessionStorage.removeItem(CLAVE_AVISO);
+  } catch {
+    // sin almacenamiento: no hay nada que descartar
+  }
+}
 
 api.interceptors.response.use(
   (respuesta) => {
@@ -52,6 +71,13 @@ api.interceptors.response.use(
     terminarActividad();
     const url = error.config?.url ?? '';
     if (error.response?.status === 401 && !url.includes('auth/login') && leerToken()) {
+      // El motivo (inactividad, sesion revocada, cuenta bloqueada...) se muestra en la pantalla de ingreso.
+      try {
+        const motivo = error.response.data?.message;
+        sessionStorage.setItem(CLAVE_AVISO, motivo && motivo !== 'Unauthenticated.' ? motivo : 'Tu sesión terminó (venció o fue cerrada). Ingresa de nuevo.');
+      } catch {
+        // sin almacenamiento: el login aparece sin aviso
+      }
       guardarToken(null);
       window.dispatchEvent(new Event(EVENTO_SESION_VENCIDA));
     }

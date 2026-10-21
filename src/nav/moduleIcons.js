@@ -28,6 +28,7 @@ import {
   Hospital,
   Hourglass,
   House,
+  Inbox,
   IdCard,
   KeyRound,
   Landmark,
@@ -89,6 +90,9 @@ export const TONES = {
 };
 
 const GROUP_TONE = {
+  'Día a día': 'green',
+  'Fin de mes': 'blue',
+  Administración: 'slate',
   Organización: 'blue',
   Personal: 'teal',
   Asistencia: 'green',
@@ -105,7 +109,19 @@ const GROUP_TONE = {
 };
 
 const PATH_ICONS = {
+  // Pantallas que agrupan varias (pestanas o catalogos)
+  '/solicitudes/registro': FilePlus2,
+  '/programacion/gestion': Repeat,
+  '/consolidacion/gestion': BarChart3,
+  '/disciplina/gestion': Gavel,
+  '/configuracion/panel': Settings,
+  '/vacaciones/gestion': Palmtree,
+  '/biometria/administracion': ScanFace,
+  '/configuracion/turnos-horarios': Clock,
+  '/configuracion/parametros': SlidersHorizontal,
+  '/configuracion/catalogos': LayoutGrid,
   // Organización
+  '/organizacion/red': Network,
   '/organizacion/microredes': Network,
   '/organizacion/establecimientos': Hospital,
   '/organizacion/tipos-establecimiento': Landmark,
@@ -151,6 +167,9 @@ const PATH_ICONS = {
   '/configuracion/tablas-tolerancia': ListChecks,
   '/configuracion/tramos-tolerancia': Percent,
   // Programación
+  '/programacion/mensual': CalendarDays,
+  '/solicitudes/bandeja': Inbox,
+  '/consolidacion/cierre': CalendarCheck,
   '/programacion/periodos': CalendarRange,
   '/programacion/trabajadores': Users,
   '/programacion/turnos-programados': CalendarClock,
@@ -180,6 +199,7 @@ const PATH_ICONS = {
   '/consolidacion/periodos-asistencia': CalendarCheck,
   '/consolidacion/consolidado': BarChart3,
   // Seguridad
+  '/seguridad/panel': ShieldCheck,
   '/seguridad/usuarios': UserRound,
   '/seguridad/roles': ShieldCheck,
   '/seguridad/usuarios-roles': UserCog,
@@ -237,4 +257,9 @@ export function getModuleMeta(pathname) {
 export function useModuleMeta() {
   const { pathname } = useLocation();
   return getModuleMeta(pathname);
+}
+
+/** Color de un area del menu (el mismo de su grupo en el sidebar). */
+export function tonoDeArea(area) {
+  return TONES[GROUP_TONE[area]] ?? TONES.slate;
 }

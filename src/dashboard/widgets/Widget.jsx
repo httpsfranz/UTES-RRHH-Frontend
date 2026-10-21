@@ -3,10 +3,13 @@ import GraficoDona from './GraficoDona';
 import GraficoLineas from './GraficoLineas';
 import WidgetKpis from './WidgetKpis';
 import WidgetLista from './WidgetLista';
+import WidgetTareas from './WidgetTareas';
 
 // Cada widget que manda el backend se dibuja segun su `tipo`; el panel no sabe de roles.
 export default function Widget({ widget, alAgrupar }) {
   switch (widget.tipo) {
+    case 'tareas':
+      return <WidgetTareas titulo={widget.titulo} items={widget.items} vacio={widget.vacio} />;
     case 'kpis':
       return <WidgetKpis items={widget.items} />;
     case 'dona':

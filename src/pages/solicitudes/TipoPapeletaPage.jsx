@@ -51,9 +51,11 @@ export default function TipoPapeletaPage() {
   return (
     <PageContainer>
       <PageHeader title="Tipos de papeleta" subtitle="Solicitudes · Tipo de papeleta">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo tipo
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nuevo tipo
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />

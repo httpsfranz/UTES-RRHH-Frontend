@@ -45,9 +45,11 @@ export default function RegimenLaboralPage() {
   return (
     <PageContainer>
       <PageHeader title="Regímenes laborales" subtitle="Personal · Régimen laboral">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo régimen
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nuevo régimen
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />

@@ -4,8 +4,9 @@ import { ahoraLocal, etiquetaVinculo, formatoFecha } from '../../utils/formato';
 import Select from '../../components/ui/Select';
 import SelectorDeDocumento from '../../components/ui/SelectorDeDocumento';
 import SelectBuscable from '../../components/ui/SelectBuscable';
-import Textarea from '../../components/ui/Textarea';
 import HelpText from '../../components/ui/HelpText';
+import TextoEstandar from '../../components/ui/TextoEstandar';
+import { TEXTOS } from '../../utils/textosEstandar';
 
 const etiquetaTurno = (item) =>
   `${formatoFecha(item.fecha)} · ${item.turno?.codigo ?? ''} ${item.hora_entrada ?? item.turno?.hora_entrada ?? ''}–${item.hora_salida ?? item.turno?.hora_salida ?? ''} · ${item.trabajador?.nombre_completo ?? ''}`;
@@ -21,8 +22,15 @@ export default function CambioTurnoForm({ form, setForm, errors }) {
     etiqueta: etiquetaTurno,
   });
   const vinculos = useOpciones('/vinculos-laborales', { actual: form.VinculoLaboralReemplazanteId, etiqueta: etiquetaVinculo });
-  const catalogo = useOpciones('/turnos', { actual: form.TurnoIdNuevo, etiqueta: (turno) => `${turno.nombre} (${turno.hora_entrada} – ${turno.hora_salida})` });
-  const documentos = useOpciones('/documentos-sustento', { params: {}, sinOpcion: 'Sin documento adjunto', etiqueta: (documento) => documento.nombre });
+  const catalogo = useOpciones('/turnos', {
+    actual: form.TurnoIdNuevo,
+    etiqueta: (turno) => `${turno.nombre} (${turno.hora_entrada} – ${turno.hora_salida})`,
+  });
+  const documentos = useOpciones('/documentos-sustento', {
+    params: {},
+    sinOpcion: 'Sin documento adjunto',
+    etiqueta: (documento) => documento.nombre,
+  });
 
   const tipo = tipos.filas.find((fila) => String(fila.id) === String(form.TipoCambioTurnoId));
   const codigo = tipo?.codigo;
@@ -30,7 +38,9 @@ export default function CambioTurnoForm({ form, setForm, errors }) {
   const llevaReemplazante = Boolean(tipo?.requiere_reemplazante);
   const sinReemplazante = Boolean(tipo) && !llevaReemplazante;
 
-  const opcionesTurno = turnos.filas.filter((fila) => cambiable(fila) || String(fila.id) === String(form.TurnoProgramadoId)).map((fila) => ({ value: fila.id, label: etiquetaTurno(fila) }));
+  const opcionesTurno = turnos.filas
+    .filter((fila) => cambiable(fila) || String(fila.id) === String(form.TurnoProgramadoId))
+    .map((fila) => ({ value: fila.id, label: etiquetaTurno(fila) }));
 
   const solicitantes = vinculos.opciones.filter((opcion) => String(opcion.value) === String(form.VinculoLaboralSolicitanteId));
 
@@ -63,15 +73,34 @@ export default function CambioTurnoForm({ form, setForm, errors }) {
           ? (turnos.filas.find((fila) => String(fila.id) === String(nuevo.TurnoProgramadoId))?.vinculo?.id ?? '')
           : nuevo.VinculoLaboralSolicitanteId,
         VinculoLaboralReemplazanteId: tipoElegido?.requiere_reemplazante && !cambioElTurno ? nuevo.VinculoLaboralReemplazanteId : '',
-        TurnoProgramadoContraparteId: tipoElegido?.codigo === 'PERMUTA' && !cambioElTurno && !cambioElReemplazante ? nuevo.TurnoProgramadoContraparteId : '',
+        TurnoProgramadoContraparteId:
+          tipoElegido?.codigo === 'PERMUTA' && !cambioElTurno && !cambioElReemplazante ? nuevo.TurnoProgramadoContraparteId : '',
         TurnoIdNuevo: tipoElegido?.codigo === 'REPROGRAMACION' ? nuevo.TurnoIdNuevo : '',
       };
     });
 
   return (
     <>
-      <Select form={form} setForm={elegir} errors={errors} name="TipoCambioTurnoId" label="Tipo de cambio" icon={ListChecks} options={tipos.opciones} required />
-      <SelectBuscable form={form} setForm={elegir} errors={errors} name="TurnoProgramadoId" label="Turno que se cambia" icon={Clock} options={opcionesTurno} required />
+      <Select
+        form={form}
+        setForm={elegir}
+        errors={errors}
+        name="TipoCambioTurnoId"
+        label="Tipo de cambio"
+        icon={ListChecks}
+        options={tipos.opciones}
+        required
+      />
+      <SelectBuscable
+        form={form}
+        setForm={elegir}
+        errors={errors}
+        name="TurnoProgramadoId"
+        label="Turno que se cambia"
+        icon={Clock}
+        options={opcionesTurno}
+        required
+      />
       <SelectBuscable
         form={form}
         setForm={setForm}
@@ -97,7 +126,16 @@ export default function CambioTurnoForm({ form, setForm, errors }) {
         />
       )}
       {codigo === 'PERMUTA' && (
-        <SelectBuscable form={form} setForm={elegir} errors={errors} name="TurnoProgramadoContraparteId" label="Turno que recibe a cambio" icon={ArrowLeftRight} options={deLaContraparte} required />
+        <SelectBuscable
+          form={form}
+          setForm={elegir}
+          errors={errors}
+          name="TurnoProgramadoContraparteId"
+          label="Turno que recibe a cambio"
+          icon={ArrowLeftRight}
+          options={deLaContraparte}
+          required
+        />
       )}
       {codigo === 'REPROGRAMACION' && (
         <Select
@@ -111,14 +149,40 @@ export default function CambioTurnoForm({ form, setForm, errors }) {
           required
         />
       )}
-      <Textarea form={form} setForm={setForm} errors={errors} name="CambioTurnoMotivo" label="Motivo" icon={FileText} maxLength={1000} required={sinReemplazante} />
-      <SelectorDeDocumento form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Documento que sustenta o autoriza" icon={FileText} options={documentos.opciones} required={sinReemplazante} />
-      <Textarea form={form} setForm={setForm} errors={errors} name="CambioTurnoObservacion" label="Observación" icon={FileText} maxLength={1000} />
+      <TextoEstandar
+        form={form}
+        setForm={setForm}
+        errors={errors}
+        name="CambioTurnoMotivo"
+        opciones={TEXTOS.motivoCambioTurno}
+        label="Motivo"
+        maxLength={1000}
+        required={sinReemplazante}
+      />
+      <SelectorDeDocumento
+        form={form}
+        setForm={setForm}
+        errors={errors}
+        name="DocumentoSustentoId"
+        label="Documento que sustenta o autoriza"
+        icon={FileText}
+        options={documentos.opciones}
+        required={sinReemplazante}
+      />
+      <TextoEstandar
+        form={form}
+        setForm={setForm}
+        errors={errors}
+        name="CambioTurnoObservacion"
+        opciones={TEXTOS.observacionCambioTurno}
+        label="Observación"
+        maxLength={1000}
+      />
       <HelpText>
-        RIT, Art. 16 y 20: es la única forma de modificar una programación ya publicada. Se pide con 48 horas de anticipación (con menos,
-        solo de manera excepcional y con el documento que lo sustenta); cada servidor acepta hasta 4 cambios al mes y una guardia cuenta como
-        dos; el cambio se materializa con un reemplazante, y sin él solo procede justificado y con la autorización escrita del jefe. Una
-        guardia solo se cambia entre servidores del mismo cargo y régimen (D.L. 276 o SERUMS).
+        RIT, Art. 16 y 20: es la única forma de modificar una programación ya publicada. Se pide con 48 horas de anticipación (con menos, solo de
+        manera excepcional y con el documento que lo sustenta); cada servidor acepta hasta 4 cambios al mes y una guardia cuenta como dos; el cambio
+        se materializa con un reemplazante, y sin él solo procede justificado y con la autorización escrita del jefe. Una guardia solo se cambia entre
+        servidores del mismo cargo y régimen (D.L. 276 o SERUMS).
       </HelpText>
     </>
   );

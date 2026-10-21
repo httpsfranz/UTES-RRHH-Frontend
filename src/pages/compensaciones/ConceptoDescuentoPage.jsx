@@ -44,9 +44,11 @@ export default function ConceptoDescuentoPage() {
   return (
     <PageContainer>
       <PageHeader title="Conceptos de descuento" subtitle="Compensaciones · Concepto de descuento">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo concepto
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nuevo concepto
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />

@@ -44,9 +44,11 @@ export default function MetodoMarcacionPage() {
   return (
     <PageContainer>
       <PageHeader title="Métodos de marcación" subtitle="Biometría · Método de marcación">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo método
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nuevo método
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />

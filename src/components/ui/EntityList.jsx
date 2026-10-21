@@ -12,6 +12,7 @@ import Pagination from './Pagination';
 import StatCard from './StatCard';
 import StatGrid from './StatGrid';
 import { useLista } from './listaContext';
+import { useEmbebido } from './embebido';
 
 // Con hasta LIMITE_TARJETAS registros la vista "Automática" muestra tarjetas; con mas, una tabla.
 // El usuario puede forzar cualquiera de las dos con el selector de vista (en la barra de filtros).
@@ -59,6 +60,7 @@ export default function EntityList({
   threshold = LIMITE_TARJETAS,
 }) {
   const lista = useLista();
+  const embebida = useEmbebido();
   const setMeta = lista?.setMeta;
   const estadoFiltro = lista?.estado ?? 'todos';
   const valores = lista?.valores;
@@ -107,7 +109,8 @@ export default function EntityList({
   const filtrados = useMemo(
     () =>
       items.filter((item) => {
-        if (estadoFiltro !== 'todos' && Boolean(isActive(item)) !== (estadoFiltro === 'activos')) return false;
+        // El filtro Vigente solo aplica a registros que tienen estado (los que no, como la auditoria, se muestran todos).
+        if (conEstado && estadoFiltro !== 'todos' && Boolean(isActive(item)) !== (estadoFiltro === 'activos')) return false;
         return defs.every((def) => {
           const elegido = valores?.[def.key];
           if (!elegido) return true;
@@ -117,7 +120,7 @@ export default function EntityList({
         });
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [items, estadoFiltro, defs, valores, columns],
+    [items, estadoFiltro, defs, valores, columns, conEstado],
   );
 
   const automatica = items.length > threshold ? 'tabla' : 'tarjetas';
@@ -190,6 +193,8 @@ export default function EntityList({
   ];
 
   const totalReal = Math.max(total ?? 0, items.length);
+  // Listados largos (auditoria, marcaciones) traen solo los mas recientes: los conteos de estado serian de una muestra.
+  const parcial = totalReal > items.length;
   const activos = conEstado ? items.filter((item) => isActive(item)).length : 0;
   const porcentaje = (parte) => (items.length ? Math.round((parte / items.length) * 100) : 0);
 
@@ -197,9 +202,10 @@ export default function EntityList({
     <>
       {/* Estadisticas derivadas de los registros cargados (nada inventado). `order-[-2]` las sube
           justo debajo de la cabecera aunque la Page declare primero el buscador. */}
+      {!embebida && (
       <StatGrid columns={3} className="order-[-2]">
         <StatCard label="Total de registros" value={totalReal} icon={Layers} tone={TONES.blue} />
-        {conEstado && (
+        {conEstado && !parcial && (
           <>
             <StatCard
               label="Activos"
@@ -218,6 +224,12 @@ export default function EntityList({
           </>
         )}
       </StatGrid>
+      )}
+      {parcial && (
+        <p className="text-xs text-slate-500">
+          Se muestran los {items.length.toLocaleString('es-PE')} registros más recientes de {totalReal.toLocaleString('es-PE')}. Usa la búsqueda o los filtros para encontrar los demás.
+        </p>
+      )}
 
       {/* Listado: ocupa el alto restante; sin scroll de pagina (el scroll interno es solo de respaldo). */}
       <section

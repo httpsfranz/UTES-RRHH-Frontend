@@ -9,14 +9,15 @@ import { mensajeDeError } from '../api/paginado';
  *   filtros  { eessId, anio, mes, buscar }  sin establecimiento no se consulta
  *   papel    'a4' | 'a3' (solo afecta al PDF)
  */
-export function useCalendarioAsistencia({ eessId, anio, mes, buscar, endpoint = '/asistencia-diaria/calendario' }) {
+export function useCalendarioAsistencia({ eessId, anio, mes, vista, fecha, buscar, endpoint = '/asistencia-diaria/calendario' }) {
   const [calendario, setCalendario] = useState(null);
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState('');
   const [exportando, setExportando] = useState(false);
   const ultimaConsulta = useRef(0);
 
-  const params = { eess_id: eessId, anio, mes, ...(buscar ? { buscar } : {}) };
+  // Con `vista` (dia | semana | mes) + `fecha` se pide ese rango; sin ella, el mes `anio`/`mes` (calendarios de programacion).
+  const params = { eess_id: eessId, ...(vista ? { vista, fecha } : { anio, mes }), ...(buscar ? { buscar } : {}) };
   const clave = JSON.stringify(params);
 
   const cargar = useCallback(async () => {
@@ -53,7 +54,7 @@ export function useCalendarioAsistencia({ eessId, anio, mes, buscar, endpoint = 
     setError('');
     try {
       const { data, headers } = await api.get(`${endpoint}/pdf`, { params: { ...params, papel }, responseType: 'blob' });
-      const respaldo = `Asistencia_${calendario?.eess?.codigo ?? eessId}_${anio}-${String(mes).padStart(2, '0')}.pdf`;
+      const respaldo = `Asistencia_${calendario?.eess?.codigo ?? eessId}_${vista ? fecha : `${anio}-${String(mes).padStart(2, '0')}`}.pdf`;
       const nombre = /filename="?([^";]+)"?/.exec(headers['content-disposition'] ?? '')?.[1] ?? respaldo;
       const url = URL.createObjectURL(data);
       const enlace = document.createElement('a');

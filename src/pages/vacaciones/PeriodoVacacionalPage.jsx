@@ -1,6 +1,6 @@
 import { Palmtree, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
-import { entero, fecha, noAnteriorA, requerido, validador } from '../../utils/validaciones';
+import { fecha, requerido, validador } from '../../utils/validaciones';
 import { ESTADOS_PERIODO_VACACIONAL, etiquetaDe } from '../../utils/opciones';
 import { formatoFecha } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
@@ -12,35 +12,19 @@ import EntityList from '../../components/ui/EntityList';
 import FormModal from '../../components/ui/FormModal';
 import PeriodoVacacionalForm from './PeriodoVacacionalForm';
 
+// Solo se digita desde cuando corre el record: el fin, el año y los dias los calcula el backend.
 const modelo = formModel({
   VinculoLaboralId: 'vinculo_laboral_id',
-  PeriodoVacacionalAnio: 'anio',
   PeriodoVacacionalFechaInicio: 'fecha_inicio',
-  PeriodoVacacionalFechaFin: 'fecha_fin',
-  PeriodoVacacionalDiasGanados: 'dias_ganados',
-  PeriodoVacacionalDiasDisponibles: 'dias_disponibles',
   PeriodoVacacionalEstado: ['estado', 'ABIERTO'],
 });
 
-const emptyForm = { ...modelo.emptyForm, PeriodoVacacionalDiasGanados: '30' };
-const mapToForm = (item) => ({
-  ...modelo.mapToForm(item),
-  PeriodoVacacionalDiasGanados: String(item.dias_ganados),
-  PeriodoVacacionalDiasDisponibles: String(item.dias_disponibles),
-});
-
-const decimal = (valor) => (/^\d+(\.\d{1,2})?$/.test(String(valor)) ? null : 'Debe ser un número con hasta 2 decimales.');
+const emptyForm = modelo.emptyForm;
+const mapToForm = modelo.mapToForm;
 
 const validate = validador({
   VinculoLaboralId: [requerido],
-  PeriodoVacacionalAnio: [requerido, entero({ min: 2000, max: 2100 })],
   PeriodoVacacionalFechaInicio: [requerido, fecha],
-  PeriodoVacacionalFechaFin: [requerido, fecha, noAnteriorA('PeriodoVacacionalFechaInicio', 'La fecha final no puede ser anterior a la inicial.')],
-  PeriodoVacacionalDiasGanados: [decimal, (valor) => (Number(valor) > 30 ? 'Los días ganados van de 0 a 30 por año completo de servicios (RIT, Art. 68).' : null)],
-  PeriodoVacacionalDiasDisponibles: [
-    decimal,
-    (valor, form) => (Number(valor) > Number(form.PeriodoVacacionalDiasGanados || 30) ? 'Los días disponibles no pueden superar los días ganados.' : null),
-  ],
 });
 
 const noCerrado = (item) => item.estado === 'ABIERTO';
@@ -75,10 +59,12 @@ export default function PeriodoVacacionalPage() {
 
   return (
     <PageContainer>
-      <PageHeader title="Períodos vacacionales" subtitle="Vacaciones · Período vacacional">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo período
-        </Button>
+      <PageHeader title="Récord vacacional" subtitle="Vacaciones · Récord vacacional">
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nuevo récord
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput

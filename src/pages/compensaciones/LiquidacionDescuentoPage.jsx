@@ -18,18 +18,21 @@ const aprobada = (item) => item.estado === 'APROBADO';
 const anulable = (item) => item.estado === 'GENERADO' || item.estado === 'APROBADO';
 const periodo = (item) => (item.consolidado?.mes ? `${etiquetaDe(MESES, String(item.consolidado.mes))} ${item.consolidado.anio}` : '—');
 
+// El sistema no guarda la remuneracion: las lineas nacen sin importe y las valoriza quien liquida (ver Lineas).
+const importe = (item) => (Number(item.importe_total) > 0 ? formatoSoles(item.importe_total) : 'Por valorizar');
+
 const columns = [
   { key: 'trabajador', header: 'Trabajador', render: (item) => item.trabajador?.nombre_completo ?? '—' },
   { key: 'periodo', header: 'Período', render: periodo },
   { key: 'descuentos', header: 'Descuentos', render: (item) => `${item.consolidado?.dias_falta ?? 0} falta(s), ${item.consolidado?.minutos_tardanza ?? 0} min` },
-  { key: 'importe', header: 'Importe total', render: (item) => formatoSoles(item.importe_total) },
+  { key: 'importe', header: 'Importe total', render: importe },
   { key: 'estado', header: 'Estado', render: (item) => etiquetaDe(ESTADOS_LIQUIDACION, item.estado) },
 ];
 
 const card = (item) => ({
   icon: BadgeDollarSign,
   title: item.trabajador?.nombre_completo ?? 'Liquidación de descuentos',
-  meta: [periodo(item), `${item.consolidado?.dias_falta ?? 0} falta(s), ${item.consolidado?.minutos_tardanza ?? 0} min de tardanza`, `${item.lineas ?? 0} línea(s) · ${formatoSoles(item.importe_total)}`],
+  meta: [periodo(item), `${item.consolidado?.dias_falta ?? 0} falta(s), ${item.consolidado?.minutos_tardanza ?? 0} min de tardanza`, `${item.lineas ?? 0} línea(s) · ${importe(item)}`],
   footer: etiquetaDe(ESTADOS_LIQUIDACION, item.estado),
 });
 
@@ -54,9 +57,11 @@ export default function LiquidacionDescuentoPage() {
   return (
     <PageContainer>
       <PageHeader title="Liquidaciones de descuento" subtitle="Compensaciones · Liquidaciones de descuento">
-        <Button onClick={() => setGenerando(true)} icon={Plus}>
-          Generar liquidación
-        </Button>
+        {acciones.puede('generar') && (
+          <Button onClick={() => setGenerando(true)} icon={Plus}>
+            Generar liquidación
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} placeholder="Buscar por trabajador o documento…" />
@@ -77,13 +82,13 @@ export default function LiquidacionDescuentoPage() {
           {
             icon: CircleCheck,
             label: 'Aprobar',
-            visible: generada,
+            visible: (item) => acciones.puede('aprobar') && generada(item),
             onClick: confirmar('aprobar', (item) => `¿Aprobar la liquidación de ${item.trabajador?.nombre_completo ?? ''}? Cada línea necesita su importe.`),
           },
           {
             icon: Send,
             label: 'Remitir a planilla',
-            visible: aprobada,
+            visible: (item) => acciones.puede('remitir') && aprobada(item),
             onClick: confirmar('remitir', (item) => `¿Remitir a la planilla única de pagos la liquidación de ${item.trabajador?.nombre_completo ?? ''}? Ya no se podrá anular.`),
           },
         ]}

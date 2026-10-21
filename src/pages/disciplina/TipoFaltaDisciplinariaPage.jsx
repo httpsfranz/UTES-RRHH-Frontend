@@ -49,9 +49,11 @@ export default function TipoFaltaDisciplinariaPage() {
   return (
     <PageContainer>
       <PageHeader title="Tipos de falta disciplinaria" subtitle="Disciplina · Tipo de falta disciplinaria">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo tipo de falta
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nuevo tipo de falta
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />

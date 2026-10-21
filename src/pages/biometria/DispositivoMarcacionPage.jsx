@@ -51,9 +51,11 @@ export default function DispositivoMarcacionPage() {
   return (
     <PageContainer>
       <PageHeader title="Dispositivos de marcación" subtitle="Biometría · Dispositivo de marcación">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo dispositivo
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nuevo dispositivo
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />

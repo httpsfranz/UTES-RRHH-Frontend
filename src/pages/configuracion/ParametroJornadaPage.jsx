@@ -57,9 +57,11 @@ export default function ParametroJornadaPage() {
   return (
     <PageContainer>
       <PageHeader title="Parámetros de jornada" subtitle="Configuración · Parámetro de jornada">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo parámetro
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nuevo parámetro
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />

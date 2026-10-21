@@ -89,9 +89,11 @@ export default function PapeletaPage() {
   return (
     <PageContainer>
       <PageHeader title="Papeletas" subtitle="Solicitudes · Papeleta">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nueva papeleta
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nueva papeleta
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput
@@ -113,8 +115,8 @@ export default function PapeletaPage() {
         columns={columns}
         card={card}
         acciones={[
-          { icon: CircleCheck, label: 'Aprobar', visible: pendiente, onClick: (item) => setResolucion({ item, accion: 'aprobar' }) },
-          { icon: CircleX, label: 'Rechazar', visible: pendiente, onClick: (item) => setResolucion({ item, accion: 'rechazar' }) },
+          { icon: CircleCheck, label: 'Aprobar', visible: (item) => acciones.puede('aprobar') && pendiente(item), onClick: (item) => setResolucion({ item, accion: 'aprobar' }) },
+          { icon: CircleX, label: 'Rechazar', visible: (item) => acciones.puede('rechazar') && pendiente(item), onClick: (item) => setResolucion({ item, accion: 'rechazar' }) },
         ]}
         etiquetas={{ activo: 'Vigente', inactivo: 'Anulada', desactivar: 'Anular' }}
         puedeEditar={pendiente}

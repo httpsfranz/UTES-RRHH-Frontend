@@ -7,7 +7,7 @@ const EASE_OUT = [0.16, 1, 0.3, 1];
 // Sigue usando position:absolute (no fixed): el contenedor se posiciona respecto
 // al <main> mas cercano con position:relative (ver MainLayout), nunca respecto a
 // toda la ventana. Por eso el desenfoque no puede tapar el sidebar ni el navbar.
-const ANCHOS = { md: 'max-w-lg', lg: 'max-w-3xl' };
+const ANCHOS = { md: 'max-w-lg', lg: 'max-w-3xl', xl: 'max-w-6xl' };
 
 export default function Modal({ open, onClose, title, children, size = 'md' }) {
   useEffect(() => {

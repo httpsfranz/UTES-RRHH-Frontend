@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { MessageSquareText } from 'lucide-react';
 import Modal from '../Modal';
 import Form from './Form';
 import FormActions from './FormActions';
-import Textarea from './Textarea';
 import HelpText from './HelpText';
+import TextoEstandar from './TextoEstandar';
+import { TEXTOS } from '../../utils/textosEstandar';
 
 /**
  * Aprobar o rechazar una solicitud. `accion` es 'aprobar' | 'rechazar' (null = cerrado); `item` es el registro.
@@ -44,13 +44,13 @@ export default function ResolucionModal({ item, accion, titulo, ayuda, resolver,
   return (
     <Modal open={Boolean(item && accion)} onClose={onClose} title={titulo}>
       <Form onSubmit={enviar} generalError={errores.general?.[0]}>
-        <Textarea
+        <TextoEstandar
           form={form}
           setForm={setForm}
           errors={errores}
           name="Motivo"
+          opciones={rechazo ? TEXTOS.rechazo : TEXTOS.observacionAprobacion}
           label={rechazo ? 'Motivo del rechazo' : 'Observación'}
-          icon={MessageSquareText}
           maxLength={500}
           required={rechazo}
         />

@@ -60,7 +60,7 @@ export default function PeriodoAsistenciaForm({ form, setForm, errors }) {
         name="PeriodoAsistenciaEstado"
         label="Estado"
         icon={LockKeyhole}
-        options={ESTADOS_PERIODO}
+        options={ESTADOS_PERIODO.filter((e) => e.value !== 'CERRADO')}
         required
       />
     </>

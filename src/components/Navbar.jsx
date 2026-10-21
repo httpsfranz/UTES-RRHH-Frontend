@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Bell, ChevronDown, LogOut, Menu, Search } from 'lucide-react';
+import { Bell, ChevronDown, KeyRound, LogOut, Menu } from 'lucide-react';
 import { useAuth } from '../auth/useAuth';
+import BuscadorDelMenu from './BuscadorDelMenu';
+import CampanaDeNotificaciones from './CampanaDeNotificaciones';
 
 // Barra superior: boton de menu (movil) a la izquierda; buscador, notificaciones y usuario a la derecha.
 // El usuario y su menu (cerrar sesion) salen de la sesion iniciada.
-export default function Navbar({ onMenu }) {
+export default function Navbar({ onMenu, onCambiarClave }) {
   const { usuario, roles, cerrarSesion } = useAuth();
   const [abierto, setAbierto] = useState(false);
   const contenedor = useRef(null);
@@ -35,19 +37,9 @@ export default function Navbar({ onMenu }) {
       </div>
 
       <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-        <div className="hidden w-64 items-center gap-2 rounded-xl border border-line bg-page/70 px-3.5 py-2 text-sm text-muted md:flex">
-          <Search size={16} />
-          <span>Buscar en el sistema…</span>
-        </div>
+        <BuscadorDelMenu />
 
-        <button
-          type="button"
-          className="relative rounded-xl p-2.5 text-muted transition-colors hover:bg-page hover:text-heading"
-          aria-label="Notificaciones"
-        >
-          <Bell size={19} />
-          <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-brand ring-2 ring-surface" />
-        </button>
+        <CampanaDeNotificaciones />
 
         <div className="mx-1 hidden h-8 w-px bg-line sm:block" />
 
@@ -69,6 +61,16 @@ export default function Navbar({ onMenu }) {
               <Link to="/soporte/notificaciones" onClick={() => setAbierto(false)} className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-heading transition-colors hover:bg-page">
                 <Bell size={15} /> Mis avisos
               </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  setAbierto(false);
+                  onCambiarClave();
+                }}
+                className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-heading transition-colors hover:bg-page"
+              >
+                <KeyRound size={15} /> Cambiar mi contraseña
+              </button>
               <button type="button" onClick={cerrarSesion} className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-rose-600 transition-colors hover:bg-rose-50">
                 <LogOut size={15} /> Cerrar sesión
               </button>

@@ -57,9 +57,11 @@ export default function HorarioPage() {
   return (
     <PageContainer>
       <PageHeader title="Horarios" subtitle="Configuración · Horario">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo horario
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nuevo horario
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />

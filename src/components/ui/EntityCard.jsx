@@ -1,4 +1,5 @@
 import { motion } from 'motion/react';
+import { CircleAlert } from 'lucide-react';
 import StatusBadge from './StatusBadge';
 import ActionButtons from './ActionButtons';
 import ModuleIcon from './ModuleIcon';
@@ -7,7 +8,7 @@ import { useModuleMeta } from '../../nav/moduleIcons';
 // La tarjeta de catalogo que se repite en (casi) todos los modulos de mantenimiento:
 // cuadrado de icono + badge de estado arriba, titulo + lineas de meta-info (el badge se omite si
 // `active` no viene: tablas sin Estado, que se eliminan con onDelete), y una franja inferior con el
-// dato "corto" (codigo/id) + acciones.
+// dato "corto" (codigo/id) + acciones. `aviso`: algo que falta completar (p. ej. "Falta horario"), como pastilla ambar.
 //
 // CUADRADO DE ICONO (nunca vacio). Orden de resolucion:
 //   1. `icon`     que declare la Page en su card()
@@ -27,6 +28,7 @@ export default function EntityCard({
   onToggle,
   onDelete,
   extras,
+  aviso,
   etiquetas = {},
 }) {
   const modulo = useModuleMeta();
@@ -58,6 +60,13 @@ export default function EntityCard({
             {line}
           </p>
         ))}
+
+        {aviso && (
+          <p className="mt-2 inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[11.5px] font-medium text-amber-700 ring-1 ring-amber-200">
+            <CircleAlert size={12} aria-hidden="true" />
+            {aviso}
+          </p>
+        )}
       </div>
 
       <div className="flex items-center justify-between gap-3 border-t border-line-soft bg-page/40 px-4 py-1.5">

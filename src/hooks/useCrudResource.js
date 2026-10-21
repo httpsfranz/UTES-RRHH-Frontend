@@ -2,7 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { api } from '../api/client';
 import { invalidarOpciones } from '../api/cacheDeOpciones';
 import { aFormData, tieneArchivo } from '../api/documentos';
-import { mensajeDeError, traerTodo } from '../api/paginado';
+import { mensajeDeError, traerHasta, traerTodo } from '../api/paginado';
+import { useAuth } from '../auth/useAuth';
+import { puedeEscribir } from '../nav/permisosDeApi';
+import { usePedirBaja } from '../components/ui/bajaContext';
 
 /**
  * Declara el formulario de un modulo una sola vez y deriva de ahi lo que el hook necesita.
@@ -34,7 +37,7 @@ export function formModel(spec) {
       entradas.map(({ campoForm, campoApi, valorPorDefecto }) => {
         const valor = item[campoApi];
         return [campoForm, typeof valorPorDefecto === 'boolean' ? Boolean(valor ?? valorPorDefecto) : (valor ?? valorPorDefecto)];
-      })
+      }),
     );
 
   return { emptyForm, mapToForm };
@@ -58,11 +61,16 @@ const valorInicial = (emptyForm) => (typeof emptyForm === 'function' ? emptyForm
  *   estadoKey       columna BIT de baja logica (MicroredEstado): habilita reactivar()
  *   idKey           clave del id en la respuesta (default 'id')
  *   searchParam     query param de busqueda (default 'buscar')
+ *   params          filtros fijos de la consulta (p. ej. { trabajador_id: 7 } en la ficha de un trabajador)
  *   limite          si se indica, NO se traen todas las paginas: solo las primeras `limite` filas
  *                   (auditoria, logs: pueden ser miles). `total` informa cuantas hay en realidad.
+ *   antesDeEnviar   form -> lo que se envia (p. ej. convertir opciones "Otro" o listas anidadas al formato del Request)
  *   onCambio        funcion que se llama despues de guardar, desactivar o reactivar con exito (p. ej. para
  *                   refrescar otra vista de los mismos datos, como el calendario de asistencia)
  *   buildConfirmMessage / *ErrorMessage   textos propios del modulo
+ *
+ * Si la sesion no tiene permiso para escribir en el recurso, `puedeEditar` es false y abrirCrear, abrirEditar, desactivar,
+ * reactivar y alternarEstado vienen en null: la pagina y el listado no muestran esos botones.
  */
 export function useCrudResource({
   endpoint,
@@ -72,14 +80,19 @@ export function useCrudResource({
   estadoKey,
   idKey = 'id',
   searchParam = 'buscar',
+  params: filtrosFijos,
   limite,
   onCambio,
+  antesDeEnviar,
   buildConfirmMessage = (item) => `¿Desactivar "${item.nombre}"?`,
   connectionErrorMessage = 'No se pudo conectar con el backend. ¿Está corriendo "php artisan serve"?',
   saveErrorMessage = 'No se pudo guardar. Revisa la conexión con el backend.',
   deactivateErrorMessage = 'No se pudo desactivar el registro.',
   reactivateErrorMessage = 'No se pudo reactivar el registro.',
 }) {
+  const auth = useAuth();
+  const puedeEditar = puedeEscribir(auth, endpoint);
+  const pedirBaja = usePedirBaja();
   const [items, setItems] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -101,13 +114,11 @@ export function useCrudResource({
     setLoading(true);
     setError('');
     try {
-      const params = filtro ? { [searchParam]: filtro } : {};
+      const params = { ...filtrosFijos, ...(filtro ? { [searchParam]: filtro } : {}) };
       let filas;
       let cantidad;
       if (limite) {
-        const { data } = await api.get(endpoint, { params: { ...params, por_pagina: limite } });
-        filas = data.data ?? [];
-        cantidad = data.meta?.total ?? filas.length;
+        ({ filas, total: cantidad } = await traerHasta(endpoint, params, limite));
       } else {
         // Lo ultimo que se registro aparece primero (los ids crecen con cada alta).
         filas = [...(await traerTodo(endpoint, params))].sort((x, y) => (Number(y[idKey]) || 0) - (Number(x[idKey]) || 0));
@@ -163,15 +174,16 @@ export function useCrudResource({
     setGuardando(true);
     try {
       // Un formulario con un archivo se envia como multipart (la edicion usa POST con _method=PATCH: PHP no lee multipart en PATCH).
-      const conArchivo = tieneArchivo(form);
+      const datos = antesDeEnviar ? antesDeEnviar(form) : form;
+      const conArchivo = tieneArchivo(datos);
       const multipart = { headers: { 'Content-Type': 'multipart/form-data' } };
       if (editando) {
-        if (conArchivo) await api.post(`${endpoint}/${editando[idKey]}`, aFormData(form, { _method: 'PATCH' }), multipart);
-        else await api.patch(`${endpoint}/${editando[idKey]}`, form);
+        if (conArchivo) await api.post(`${endpoint}/${editando[idKey]}`, aFormData(datos, { _method: 'PATCH' }), multipart);
+        else await api.patch(`${endpoint}/${editando[idKey]}`, datos);
       } else if (conArchivo) {
-        await api.post(endpoint, aFormData(form), multipart);
+        await api.post(endpoint, aFormData(datos), multipart);
       } else {
-        await api.post(endpoint, form);
+        await api.post(endpoint, datos);
       }
       setModalOpen(false);
       invalidarOpciones(endpoint);
@@ -179,7 +191,11 @@ export function useCrudResource({
       onCambio?.();
     } catch (err) {
       if (err.response?.status === 422) {
-        setErroresForm(err.response.data.errors ?? { general: [err.response.data.message ?? saveErrorMessage] });
+        setErroresForm(
+          err.response.data.errors ?? {
+            general: [err.response.data.message ?? saveErrorMessage],
+          },
+        );
       } else {
         setErroresForm({ general: [mensajeDeError(err) ?? saveErrorMessage] });
       }
@@ -189,10 +205,17 @@ export function useCrudResource({
   }
 
   async function desactivar(item) {
-    if (!window.confirm(buildConfirmMessage(item))) return;
+    // Toda baja pide su motivo (modal unico, ConfirmarBaja): viaja como MotivoBaja y queda en la auditoria.
+    const motivo = await pedirBaja({
+      mensaje: buildConfirmMessage(item),
+      endpoint,
+    });
+    if (motivo === null) return;
     setError('');
     try {
-      await api.delete(`${endpoint}/${item[idKey]}`);
+      await api.delete(`${endpoint}/${item[idKey]}`, {
+        data: motivo ? { MotivoBaja: motivo } : undefined,
+      });
       invalidarOpciones(endpoint);
       await cargar();
       onCambio?.();
@@ -234,12 +257,13 @@ export function useCrudResource({
     setForm,
     erroresForm,
     guardando,
-    abrirCrear,
-    abrirEditar,
+    puedeEditar,
+    abrirCrear: puedeEditar ? abrirCrear : null,
+    abrirEditar: puedeEditar ? abrirEditar : null,
     cerrarModal,
     guardar,
-    desactivar,
-    reactivar,
-    alternarEstado,
+    desactivar: puedeEditar ? desactivar : null,
+    reactivar: puedeEditar ? reactivar : null,
+    alternarEstado: puedeEditar ? alternarEstado : null,
   };
 }

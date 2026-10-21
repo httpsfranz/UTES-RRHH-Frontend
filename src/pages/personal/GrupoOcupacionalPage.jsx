@@ -44,9 +44,11 @@ export default function GrupoOcupacionalPage() {
   return (
     <PageContainer>
       <PageHeader title="Grupos ocupacionales" subtitle="Personal · Grupo ocupacional">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo grupo
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nuevo grupo
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />

@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Eye, EyeOff, Lock, LogIn, User } from 'lucide-react';
+import { descartarAviso, leerAviso } from '../../api/client';
 import Alert from '../ui/Alert';
 import Button from '../ui/Button';
 import Field from '../ui/Field';
@@ -9,7 +10,9 @@ import Field from '../ui/Field';
 export default function LoginForm({ onSubmit }) {
   const [form, setForm] = useState({ usuario: '', password: '' });
   const [errores, setErrores] = useState({});
-  const [mensaje, setMensaje] = useState('');
+  const [mensaje, setMensaje] = useState(leerAviso);
+  // El aviso (sesion vencida, revocada...) se muestra una vez: al montar se descarta del almacenamiento.
+  useEffect(() => descartarAviso(), []);
   const [enviando, setEnviando] = useState(false);
   const [verClave, setVerClave] = useState(false);
 

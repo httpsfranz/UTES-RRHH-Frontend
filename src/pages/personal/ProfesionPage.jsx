@@ -46,9 +46,11 @@ export default function ProfesionPage() {
   return (
     <PageContainer>
       <PageHeader title="Profesiones" subtitle="Personal · Profesión">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nueva profesión
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nueva profesión
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />

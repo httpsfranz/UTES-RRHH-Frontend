@@ -48,9 +48,11 @@ export default function PermisoPage() {
   return (
     <PageContainer>
       <PageHeader title="Permisos" subtitle="Seguridad · Permiso">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo permiso
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nuevo permiso
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />

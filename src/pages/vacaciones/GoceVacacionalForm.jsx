@@ -15,12 +15,21 @@ export default function GoceVacacionalForm({ form, setForm, errors }) {
   const roles = useOpciones('/roles-vacacionales', { params: { estado: 'PROGRAMADO' }, actual: form.RolVacacionalId, etiqueta: etiquetaRol });
   const documentos = useOpciones('/documentos-sustento', { params: {}, sinOpcion: 'Sin documento adjunto', etiqueta: (documento) => documento.nombre });
 
+  // Al elegir el descanso programado, sus fechas se proponen como las del goce (se pueden acortar si se fracciona).
+  const elegirRol = (actualizar) =>
+    setForm((f) => {
+      const nuevo = typeof actualizar === 'function' ? actualizar(f) : actualizar;
+      const rol = roles.filas.find((r) => String(r.id) === String(nuevo.RolVacacionalId));
+      if (!rol || String(nuevo.RolVacacionalId) === String(f.RolVacacionalId)) return nuevo;
+      return { ...nuevo, GoceVacacionalFechaInicio: rol.fecha_programada, GoceVacacionalFechaFin: rol.fecha_fin_programada };
+    });
+
   const dias = diasCalendario(form.GoceVacacionalFechaInicio, form.GoceVacacionalFechaFin);
   const fraccionado = dias !== null && dias < 7;
 
   return (
     <>
-      <SelectBuscable form={form} setForm={setForm} errors={errors} name="RolVacacionalId" label="Descanso programado" icon={Palmtree} options={roles.opciones} required />
+      <SelectBuscable form={form} setForm={elegirRol} errors={errors} name="RolVacacionalId" label="Descanso programado" icon={Palmtree} options={roles.opciones} required />
       <FormGrid>
         <Field form={form} setForm={setForm} errors={errors} name="GoceVacacionalFechaInicio" label="Inicio del goce" icon={CalendarDays} type="date" required />
         <Field form={form} setForm={setForm} errors={errors} name="GoceVacacionalFechaFin" label="Fin del goce" icon={CalendarDays} type="date" required />

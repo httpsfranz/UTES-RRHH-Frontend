@@ -85,10 +85,10 @@ export default function SearchInput({
       </label>
 
       {meta?.conEstado && (
-        <Filtro label="Estado" value={lista.estado} onChange={lista.setEstado}>
+        <Filtro label="Vigente" value={lista.estado} onChange={lista.setEstado}>
+          <option value="activos">Sí</option>
+          <option value="inactivos">No</option>
           <option value="todos">Todos</option>
-          <option value="activos">Activos</option>
-          <option value="inactivos">Inactivos</option>
         </Filtro>
       )}
 

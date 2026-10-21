@@ -2,12 +2,14 @@ import { CalendarDays, FileText, Hash, ListChecks, UserRound } from 'lucide-reac
 import { useOpciones } from '../../hooks/useOpciones';
 import { etiquetaVinculo } from '../../utils/formato';
 import Field from '../../components/ui/Field';
+import NumeroAutomatico from '../../components/ui/NumeroAutomatico';
 import Select from '../../components/ui/Select';
 import SelectorDeDocumento from '../../components/ui/SelectorDeDocumento';
 import SelectBuscable from '../../components/ui/SelectBuscable';
-import Textarea from '../../components/ui/Textarea';
 import FormGrid from '../../components/ui/FormGrid';
 import HelpText from '../../components/ui/HelpText';
+import TextoEstandar from '../../components/ui/TextoEstandar';
+import { TEXTOS } from '../../utils/textosEstandar';
 
 export default function LicenciaForm({ form, setForm, errors }) {
   const { opciones: vinculos } = useOpciones('/vinculos-laborales', { actual: form.VinculoLaboralId, etiqueta: etiquetaVinculo });
@@ -25,21 +27,55 @@ export default function LicenciaForm({ form, setForm, errors }) {
 
   return (
     <>
-      <SelectBuscable form={form} setForm={setForm} errors={errors} name="VinculoLaboralId" label="Trabajador (vínculo)" icon={UserRound} options={vinculos} required />
-      <Select form={form} setForm={setForm} errors={errors} name="TipoLicenciaId" label="Tipo de licencia" icon={ListChecks} options={tipos.opciones} required />
+      <SelectBuscable
+        form={form}
+        setForm={setForm}
+        errors={errors}
+        name="VinculoLaboralId"
+        label="Trabajador (vínculo)"
+        icon={UserRound}
+        options={vinculos}
+        required
+      />
+      <Select
+        form={form}
+        setForm={setForm}
+        errors={errors}
+        name="TipoLicenciaId"
+        label="Tipo de licencia"
+        icon={ListChecks}
+        options={tipos.opciones}
+        required
+      />
       <FormGrid>
         <Field form={form} setForm={setForm} errors={errors} name="LicenciaFechaInicio" label="Desde" icon={CalendarDays} type="date" required />
         <Field form={form} setForm={setForm} errors={errors} name="LicenciaFechaFin" label="Hasta" icon={CalendarDays} type="date" required />
       </FormGrid>
-      <Field form={form} setForm={setForm} errors={errors} name="LicenciaNumeroResolucion" label="N.º de resolución" icon={Hash} maxLength={60} />
+      <NumeroAutomatico name="LicenciaNumeroResolucion" label="N.º de resolución" icon={Hash} valor={form.LicenciaNumeroResolucion} />
       <FormGrid>
-        <SelectorDeDocumento form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Documento de sustento" icon={FileText} options={documentos} />
+        <SelectorDeDocumento
+          form={form}
+          setForm={setForm}
+          errors={errors}
+          name="DocumentoSustentoId"
+          label="Documento de sustento"
+          icon={FileText}
+          options={documentos}
+        />
       </FormGrid>
-      <Textarea form={form} setForm={setForm} errors={errors} name="LicenciaMotivo" label="Motivo" icon={FileText} maxLength={1000} />
+      <TextoEstandar
+        form={form}
+        setForm={setForm}
+        errors={errors}
+        name="LicenciaMotivo"
+        opciones={TEXTOS.motivoLicencia}
+        label="Motivo"
+        maxLength={1000}
+      />
       <HelpText>
         Los días se cuentan corridos, con sábados, domingos y feriados (RIT, Art. 55)
-        {tipo?.maximo_dias ? `; esta licencia admite hasta ${tipo.maximo_dias} días` : ''}. Si la licencia es de 30 días o más, el servidor entrega cargo
-        antes de usarla (Art. 56).
+        {tipo?.maximo_dias ? `; esta licencia admite hasta ${tipo.maximo_dias} días` : ''}. Si la licencia es de 30 días o más, el servidor entrega
+        cargo antes de usarla (Art. 56).
       </HelpText>
     </>
   );

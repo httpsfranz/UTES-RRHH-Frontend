@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { CalendarClock, Palmtree, Plus } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
 import { useAccionDeRegistro } from '../../hooks/useAccionDeRegistro';
-import { fecha, requerido, validador } from '../../utils/validaciones';
+import { fecha, noAnteriorA, requerido, validador } from '../../utils/validaciones';
 import { ESTADOS_ROL_VACACIONAL, etiquetaDe } from '../../utils/opciones';
-import { formatoFecha } from '../../utils/formato';
+import { diasCalendario, formatoFecha } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
@@ -18,7 +18,7 @@ import ReprogramarRolModal from './ReprogramarRolModal';
 const { emptyForm, mapToForm } = formModel({
   PeriodoVacacionalId: 'periodo_vacacional_id',
   RolVacacionalFechaProgramada: 'fecha_programada',
-  RolVacacionalDias: 'dias',
+  RolVacacionalFechaFinProgramada: 'fecha_fin_programada',
 });
 
 const programado = (item) => item.estado === 'PROGRAMADO';
@@ -43,7 +43,12 @@ export default function RolVacacionalPage() {
   const validate = validador({
     PeriodoVacacionalId: [requerido],
     RolVacacionalFechaProgramada: [requerido, fecha],
-    RolVacacionalDias: [requerido, (valor) => (/^\d+$/.test(String(valor)) && Number(valor) >= 1 && Number(valor) <= 30 ? null : 'El descanso va de 1 a 30 días calendario enteros.')],
+    RolVacacionalFechaFinProgramada: [
+      requerido,
+      fecha,
+      noAnteriorA('RolVacacionalFechaProgramada', 'El fin no puede ser anterior al inicio.'),
+      (valor, form) => ((diasCalendario(form.RolVacacionalFechaProgramada, valor) ?? 0) > 30 ? 'El descanso va de 1 a 30 días calendario.' : null),
+    ],
   });
 
   const crud = useCrudResource({
@@ -60,9 +65,11 @@ export default function RolVacacionalPage() {
   return (
     <PageContainer>
       <PageHeader title="Rol vacacional" subtitle="Vacaciones · Rol vacacional">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Programar descanso
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Programar descanso
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput
@@ -83,7 +90,7 @@ export default function RolVacacionalPage() {
         emptyMessage="No hay descansos programados todavía."
         columns={columns}
         card={card}
-        acciones={[{ icon: CalendarClock, label: 'Reprogramar', visible: programado, onClick: setReprogramando }]}
+        acciones={[{ icon: CalendarClock, label: 'Reprogramar', visible: (item) => acciones.puede('reprogramar') && programado(item), onClick: setReprogramando }]}
         etiquetas={{ activo: 'Vigente', inactivo: 'Anulado', desactivar: 'Anular' }}
         puedeEditar={programado}
         puedeAlternar={programado}

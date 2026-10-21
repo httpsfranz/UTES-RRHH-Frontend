@@ -75,9 +75,11 @@ export default function InformeGuardiaComunitariaPage() {
   return (
     <PageContainer>
       <PageHeader title="Informes de guardia comunitaria" subtitle="Programación · Informe de guardia comunitaria">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo informe
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nuevo informe
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput
@@ -99,8 +101,8 @@ export default function InformeGuardiaComunitariaPage() {
         columns={columns}
         card={card}
         acciones={[
-          { icon: CircleCheck, label: 'Aprobar', visible: pendiente, onClick: (item) => setResolucion({ item, accion: 'aprobar' }) },
-          { icon: CircleX, label: 'Rechazar', visible: pendiente, onClick: (item) => setResolucion({ item, accion: 'rechazar' }) },
+          { icon: CircleCheck, label: 'Aprobar', visible: (item) => acciones.puede('aprobar') && pendiente(item), onClick: (item) => setResolucion({ item, accion: 'aprobar' }) },
+          { icon: CircleX, label: 'Rechazar', visible: (item) => acciones.puede('rechazar') && pendiente(item), onClick: (item) => setResolucion({ item, accion: 'rechazar' }) },
         ]}
         etiquetas={{ activo: 'Vigente', inactivo: 'Anulado', desactivar: 'Anular' }}
         puedeEditar={pendiente}

@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { api } from '../api/client';
 import { mensajeDeError } from '../api/paginado';
+import { useAuth } from '../auth/useAuth';
+import { puedeAccion, puedeEscribir } from '../nav/permisosDeApi';
 
 /**
  * Acciones sobre un registro que no son crear/editar/eliminar: aprobar una justificacion, marcar una notificacion
@@ -11,9 +13,12 @@ import { mensajeDeError } from '../api/paginado';
  *   acciones.ejecutar(item, { metodo: 'patch', cuerpo: { NotificacionLeida: true } }) // PATCH /notificaciones/ID
  *   `enModal: true` cuando la llamada sale de un modal que ya muestra el error.
  *
+ * `puede(accion)` dice si la sesion tiene permiso para esa accion (sin accion: editar el recurso), para no mostrar el boton.
  * `ejecutar` devuelve { ok, datos, errores }: `errores` es el formato de los 422 de Laravel ({ campo: [mensaje] }).
  */
 export function useAccionDeRegistro(endpoint, { alTerminar, idKey = 'id' } = {}) {
+  const auth = useAuth();
+  const puede = (accion) => (accion ? puedeAccion(auth, endpoint, accion) : puedeEscribir(auth, endpoint));
   const [error, setError] = useState('');
   const [ejecutando, setEjecutando] = useState(false);
 
@@ -36,5 +41,5 @@ export function useAccionDeRegistro(endpoint, { alTerminar, idKey = 'id' } = {})
     }
   }
 
-  return { ejecutar, ejecutando, error, limpiarError: () => setError('') };
+  return { ejecutar, puede, ejecutando, error, limpiarError: () => setError('') };
 }

@@ -65,9 +65,11 @@ export default function TurnoPage() {
   return (
     <PageContainer>
       <PageHeader title="Turnos" subtitle="Configuración · Turno">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo turno
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nuevo turno
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />

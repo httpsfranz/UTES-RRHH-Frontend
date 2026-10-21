@@ -71,6 +71,9 @@ export default function AuthProvider({ children }) {
     cerrarLocal();
   }, [cerrarLocal]);
 
+  // Tras cambiar la contrasena el backend devuelve el perfil actualizado (sin la obligacion de cambiarla).
+  const actualizarPerfil = useCallback((datos) => setPerfil((actual) => ({ ...actual, ...datos })), []);
+
   const valor = useMemo(() => {
     const permisos = new Set(perfil.permisos);
     return {
@@ -80,8 +83,9 @@ export default function AuthProvider({ children }) {
       tiene: (permiso) => permisos.has(permiso),
       iniciarSesion,
       cerrarSesion,
+      actualizarPerfil,
     };
-  }, [perfil, cargando, iniciarSesion, cerrarSesion]);
+  }, [perfil, cargando, iniciarSesion, cerrarSesion, actualizarPerfil]);
 
   return <AuthContext.Provider value={valor}>{children}</AuthContext.Provider>;
 }

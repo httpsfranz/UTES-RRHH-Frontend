@@ -75,9 +75,11 @@ export default function ExpedientePadPage() {
   return (
     <PageContainer>
       <PageHeader title="Expedientes PAD" subtitle="Disciplina · Expediente PAD">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo expediente
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nuevo expediente
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput

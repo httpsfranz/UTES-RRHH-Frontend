@@ -1,7 +1,7 @@
 import { Plus, UserCog } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
 import { fecha, noAnteriorA, requerido, validador } from '../../utils/validaciones';
-import { formatoFecha } from '../../utils/formato';
+import { formatoFecha, formatoFechaHora } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
@@ -31,12 +31,14 @@ const columns = [
   { key: 'usuario', header: 'Usuario', render: (item) => (item.usuario?.trabajador ? `${item.usuario.nombre} — ${item.usuario.trabajador}` : (item.usuario?.nombre ?? '—')) },
   { key: 'rol', header: 'Rol', render: (item) => item.rol?.nombre ?? '—' },
   { key: 'vigencia', header: 'Vigencia', render: vigencia },
+  { key: 'asignado', header: 'Asignado por', render: (item) => (item.asignado_por ? `${item.asignado_por} · ${formatoFechaHora(item.fecha_asignacion)}` : '—') },
+  { key: 'revocado', header: 'Revocado por', render: (item) => (item.revocado_por ? `${item.revocado_por} · ${formatoFechaHora(item.fecha_revocacion)}` : '—') },
 ];
 
 const card = (item) => ({
   icon: UserCog,
   title: item.usuario?.nombre ?? 'Rol de usuario',
-  meta: [item.rol?.nombre, vigencia(item)],
+  meta: [item.rol?.nombre, vigencia(item), item.asignado_por && `Asignado por ${item.asignado_por}`, item.revocado_por && `Revocado por ${item.revocado_por}`],
   footer: item.rol?.codigo,
 });
 
@@ -53,9 +55,11 @@ export default function UsuarioRolPage() {
   return (
     <PageContainer>
       <PageHeader title="Roles de usuario" subtitle="Seguridad · Rol de usuario">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Asignar rol
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Asignar rol
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput

@@ -2,6 +2,7 @@ import { CircleAlert } from 'lucide-react';
 
 // variant="banner": aviso de pagina (p.ej. "no se pudo conectar con el backend").
 // variant="text": error general dentro de un formulario, sin caja ni borde.
+// variant="aviso": algo pendiente de completar (ambar), no un error.
 export default function Alert({ variant = 'banner', children }) {
   if (!children) return null;
 
@@ -12,7 +13,9 @@ export default function Alert({ variant = 'banner', children }) {
   return (
     <div
       role="alert"
-      className="flex items-start gap-3 rounded-2xl border border-rose-200/70 bg-rose-50 px-4 py-3 text-sm text-rose-700"
+      className={`flex items-start gap-3 rounded-2xl border px-4 py-3 text-sm ${
+        variant === 'aviso' ? 'border-amber-200 bg-amber-50 text-amber-800' : 'border-rose-200/70 bg-rose-50 text-rose-700'
+      }`}
     >
       <CircleAlert size={18} className="mt-px shrink-0" />
       <div>{children}</div>

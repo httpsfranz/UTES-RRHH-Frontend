@@ -46,9 +46,11 @@ export default function TipoPeriodoProgramacionPage() {
   return (
     <PageContainer>
       <PageHeader title="Tipos de período de programación" subtitle="Programación · Tipo de período">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo tipo de período
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nuevo tipo de período
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />

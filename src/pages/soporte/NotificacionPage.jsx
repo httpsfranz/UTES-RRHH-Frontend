@@ -1,8 +1,8 @@
-import { Bell, MailCheck, Plus } from 'lucide-react';
+import { Bell, Plus, RotateCw } from 'lucide-react';
 import { formModel, useCrudResource } from '../../hooks/useCrudResource';
 import { useAccionDeRegistro } from '../../hooks/useAccionDeRegistro';
 import { requerido, validador } from '../../utils/validaciones';
-import { formatoFechaHora, siNo } from '../../utils/formato';
+import { formatoFechaHora } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
@@ -36,13 +36,18 @@ const columns = [
   { key: 'usuario', header: 'Destinatario', render: (item) => item.usuario?.nombre ?? '—' },
   { key: 'tipo', header: 'Tipo' },
   { key: 'titulo', header: 'Título' },
-  { key: 'leida', header: 'Leída', render: (item) => siNo(item.leida) },
+  { key: 'leida', header: 'Leída', render: (item) => (item.leida ? `Sí${item.fecha_lectura ? ` · ${formatoFechaHora(item.fecha_lectura)}` : ''}` : 'No') },
+  { key: 'correo', header: 'Correo', render: (item) => CORREO[item.correo_estado] ?? item.correo_estado },
+  { key: 'intentos', header: 'Intentos', render: (item) => (item.correo_estado === 'NO_APLICA' ? '—' : String(item.correo_intentos)) },
 ];
+
+// Estado de la entrega por correo (reintentos automaticos cada minuto, hasta 3).
+const CORREO = { NO_APLICA: 'Solo bandeja', PENDIENTE: 'Pendiente', ENVIADO: 'Enviado', FALLIDO: 'Falló' };
 
 const card = (item) => ({
   icon: Bell,
   title: item.titulo,
-  meta: [item.mensaje, item.usuario && `Para ${item.usuario.nombre}`, formatoFechaHora(item.fecha)],
+  meta: [item.mensaje, item.usuario && `Para ${item.usuario.nombre}`, formatoFechaHora(item.fecha), `Correo: ${CORREO[item.correo_estado] ?? item.correo_estado}${item.correo_error ? ` (${item.correo_error})` : ''}`],
   footer: item.leida ? 'Leída' : 'Sin leer',
 });
 
@@ -59,10 +64,12 @@ export default function NotificacionPage() {
 
   return (
     <PageContainer>
-      <PageHeader title="Notificaciones" subtitle="Soporte · Notificación">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nueva notificación
-        </Button>
+      <PageHeader title="Historial de notificaciones" subtitle="Soporte · Notificación">
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Enviar aviso
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput
@@ -84,14 +91,8 @@ export default function NotificacionPage() {
         columns={columns}
         card={card}
         acciones={[
-          {
-            icon: MailCheck,
-            label: 'Marcar como leída',
-            visible: (item) => !item.leida,
-            onClick: (item) => acciones.ejecutar(item, { metodo: 'patch', cuerpo: { NotificacionLeida: true } }),
-          },
+          { icon: RotateCw, label: "Reintentar correo", visible: (item) => item.correo_estado === "FALLIDO", onClick: (item) => acciones.ejecutar(item, { accion: "reintentar" }) },
         ]}
-        onEdit={crud.abrirEditar}
         onDelete={crud.desactivar}
       />
 

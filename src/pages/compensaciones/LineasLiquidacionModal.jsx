@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FileText, ListChecks, Plus, Wallet } from 'lucide-react';
+import { ListChecks, Plus, Wallet } from 'lucide-react';
 import { useDetalleDeRegistro } from '../../hooks/useDetalleDeRegistro';
 import { useOpciones } from '../../hooks/useOpciones';
 import { decimal, requerido, validador } from '../../utils/validaciones';
@@ -10,7 +10,6 @@ import FormActions from '../../components/ui/FormActions';
 import FormGrid from '../../components/ui/FormGrid';
 import Field from '../../components/ui/Field';
 import Select from '../../components/ui/Select';
-import Textarea from '../../components/ui/Textarea';
 import Table from '../../components/ui/Table';
 import ActionButtons from '../../components/ui/ActionButtons';
 import Button from '../../components/ui/Button';
@@ -18,6 +17,8 @@ import Alert from '../../components/ui/Alert';
 import HelpText from '../../components/ui/HelpText';
 import LoadingState from '../../components/ui/LoadingState';
 import EmptyState from '../../components/ui/EmptyState';
+import TextoEstandar from '../../components/ui/TextoEstandar';
+import { TEXTOS } from '../../utils/textosEstandar';
 
 const vacio = { ConceptoDescuentoId: '', DetalleLiquidacionCantidad: '0', DetalleLiquidacionImporte: '0', DetalleLiquidacionObservacion: '' };
 
@@ -65,7 +66,8 @@ export default function LineasLiquidacionModal({ liquidacion, onClose, alCambiar
     );
   }
 
-  const setForm = (actualizar) => setEdicion((actual) => ({ ...actual, form: typeof actualizar === 'function' ? actualizar(actual.form) : actualizar }));
+  const setForm = (actualizar) =>
+    setEdicion((actual) => ({ ...actual, form: typeof actualizar === 'function' ? actualizar(actual.form) : actualizar }));
 
   async function guardar(event) {
     event.preventDefault();
@@ -91,22 +93,68 @@ export default function LineasLiquidacionModal({ liquidacion, onClose, alCambiar
     { key: 'cantidad', header: 'Cantidad', render: (fila) => String(fila.cantidad) },
     { key: 'importe', header: 'Importe', render: (fila) => formatoSoles(fila.importe) },
     { key: 'observacion', header: 'Observación', render: (fila) => fila.observacion ?? '—' },
-    ...(editable ? [{ key: 'acciones', header: '', render: (fila) => <ActionButtons onEdit={() => abrirFormulario(fila)} onDelete={() => quitar(fila)} /> }] : []),
+    ...(editable
+      ? [{ key: 'acciones', header: '', render: (fila) => <ActionButtons onEdit={() => abrirFormulario(fila)} onDelete={() => quitar(fila)} /> }]
+      : []),
   ];
 
   return (
-    <Modal open={Boolean(liquidacion)} onClose={cerrar} title={liquidacion ? `Líneas de la liquidación de ${liquidacion.trabajador?.nombre_completo ?? ''}` : ''} size="lg">
+    <Modal
+      open={Boolean(liquidacion)}
+      onClose={cerrar}
+      title={liquidacion ? `Líneas de la liquidación de ${liquidacion.trabajador?.nombre_completo ?? ''}` : ''}
+      size="lg"
+    >
       {edicion ? (
         <Form onSubmit={guardar} generalError={errores.general?.[0]}>
-          <Select form={edicion.form} setForm={setForm} errors={errores} name="ConceptoDescuentoId" label="Concepto de descuento" icon={ListChecks} options={conceptos.opciones} required />
+          <Select
+            form={edicion.form}
+            setForm={setForm}
+            errors={errores}
+            name="ConceptoDescuentoId"
+            label="Concepto de descuento"
+            icon={ListChecks}
+            options={conceptos.opciones}
+            required
+          />
           <FormGrid>
-            <Field form={edicion.form} setForm={setForm} errors={errores} name="DetalleLiquidacionCantidad" label="Cantidad (días u horas)" icon={ListChecks} required maxLength={11} filter="decimal" inputMode="decimal" />
-            <Field form={edicion.form} setForm={setForm} errors={errores} name="DetalleLiquidacionImporte" label="Importe a descontar (S/)" icon={Wallet} required maxLength={13} filter="decimal" inputMode="decimal" />
+            <Field
+              form={edicion.form}
+              setForm={setForm}
+              errors={errores}
+              name="DetalleLiquidacionCantidad"
+              label="Cantidad (días u horas)"
+              icon={ListChecks}
+              required
+              maxLength={11}
+              filter="decimal"
+              inputMode="decimal"
+            />
+            <Field
+              form={edicion.form}
+              setForm={setForm}
+              errors={errores}
+              name="DetalleLiquidacionImporte"
+              label="Importe a descontar (S/)"
+              icon={Wallet}
+              required
+              maxLength={13}
+              filter="decimal"
+              inputMode="decimal"
+            />
           </FormGrid>
-          <Textarea form={edicion.form} setForm={setForm} errors={errores} name="DetalleLiquidacionObservacion" label="Observación" icon={FileText} maxLength={500} />
+          <TextoEstandar
+            form={edicion.form}
+            setForm={setForm}
+            errors={errores}
+            name="DetalleLiquidacionObservacion"
+            opciones={TEXTOS.observacionLineaLiquidacion}
+            label="Observación"
+            maxLength={500}
+          />
           <HelpText>
-            RIT, Art. 25: valor del día = ingreso total / 30; valor de la hora = valor del día / jornada diaria (6 u 8 horas); valor del minuto = valor de
-            la hora / 60. El sistema no guarda la remuneración: el importe se completa con el dato de la planilla.
+            RIT, Art. 25: valor del día = ingreso total / 30; valor de la hora = valor del día / jornada diaria (6 u 8 horas); valor del minuto =
+            valor de la hora / 60. El sistema no guarda la remuneración: el importe se completa con el dato de la planilla.
           </HelpText>
           <FormActions onCancel={() => setEdicion(null)} submitting={guardando} />
         </Form>

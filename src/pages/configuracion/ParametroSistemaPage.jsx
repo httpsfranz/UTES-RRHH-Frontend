@@ -45,9 +45,11 @@ export default function ParametroSistemaPage() {
   return (
     <PageContainer>
       <PageHeader title="Parámetros del sistema" subtitle="Configuración · Parámetro del sistema">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo parámetro
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nuevo parámetro
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />

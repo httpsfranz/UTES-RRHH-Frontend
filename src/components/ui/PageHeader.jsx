@@ -1,5 +1,6 @@
 import ModuleIcon from './ModuleIcon';
 import PageBreadcrumb from './PageBreadcrumb';
+import { useEmbebido } from './embebido';
 import { useModuleMeta } from '../../nav/moduleIcons';
 
 // Los subtitulos de los modulos CRUD tienen la forma "Modulo · Entidad" (duplicaria el breadcrumb);
@@ -13,22 +14,28 @@ function descripcion(subtitle, title, groupLabel) {
 
 // [icono del modulo] + titulo + descripcion, y la accion principal (children) a la derecha.
 // El icono sale del registro central (nav/moduleIcons.js) segun la ruta; `icon` permite forzarlo.
+// Embebida (en un modal o pestana): solo las acciones, sin migas de pan ni titulo (ya lo muestra el contenedor).
 export default function PageHeader({ title, subtitle, icon, children }) {
   const meta = useModuleMeta();
+  const embebida = useEmbebido();
+
+  if (embebida) {
+    return children ? <div className="order-[-3] flex flex-wrap items-center justify-end gap-2">{children}</div> : null;
+  }
 
   return (
     <div className="order-[-3] space-y-4">
-    <PageBreadcrumb />
-    <header className="flex flex-wrap items-center justify-between gap-4">
-      <div className="flex min-w-0 items-center gap-4">
-        <ModuleIcon icon={icon ?? meta.icon} tone={meta.tone} size="lg" solid />
-        <div className="min-w-0">
-          <h1 className="text-2xl font-semibold leading-tight tracking-tight text-heading">{title}</h1>
-          <p className="mt-0.5 text-sm text-muted">{descripcion(subtitle, title, meta.groupLabel)}</p>
+      <PageBreadcrumb />
+      <header className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex min-w-0 items-center gap-4">
+          <ModuleIcon icon={icon ?? meta.icon} tone={meta.tone} size="lg" solid />
+          <div className="min-w-0">
+            <h1 className="text-2xl font-semibold leading-tight tracking-tight text-heading">{title}</h1>
+            <p className="mt-0.5 text-sm text-muted">{descripcion(subtitle, title, meta.groupLabel)}</p>
+          </div>
         </div>
-      </div>
-      {children && <div className="flex shrink-0 items-center gap-2">{children}</div>}
-    </header>
+        {children && <div className="flex shrink-0 items-center gap-2">{children}</div>}
+      </header>
     </div>
   );
 }

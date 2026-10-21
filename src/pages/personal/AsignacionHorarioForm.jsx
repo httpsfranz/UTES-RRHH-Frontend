@@ -1,4 +1,4 @@
-import { CalendarClock, CalendarDays, FileText, UserRound } from 'lucide-react';
+import { CalendarClock, CalendarDays, UserRound } from 'lucide-react';
 import { useOpciones } from '../../hooks/useOpciones';
 import { etiquetaVinculo } from '../../utils/formato';
 import Field from '../../components/ui/Field';
@@ -6,8 +6,11 @@ import Select from '../../components/ui/Select';
 import SelectBuscable from '../../components/ui/SelectBuscable';
 import FormGrid from '../../components/ui/FormGrid';
 import HelpText from '../../components/ui/HelpText';
+import TextoEstandar from '../../components/ui/TextoEstandar';
+import { TEXTOS } from '../../utils/textosEstandar';
 
-export default function AsignacionHorarioForm({ form, setForm, errors }) {
+// `sinVinculo`: el vinculo ya esta decidido (asistente de alta, ficha del trabajador) y no se pregunta.
+export default function AsignacionHorarioForm({ form, setForm, errors, sinVinculo }) {
   const vinculos = useOpciones('/vinculos-laborales', { actual: form.VinculoLaboralId, etiqueta: etiquetaVinculo });
   const horarios = useOpciones('/horarios', {
     actual: form.HorarioId,
@@ -22,16 +25,44 @@ export default function AsignacionHorarioForm({ form, setForm, errors }) {
 
   return (
     <>
-      <SelectBuscable form={form} setForm={setForm} errors={errors} name="VinculoLaboralId" label="Trabajador (vínculo)" icon={UserRound} options={vinculos.opciones} required />
-      <Select form={form} setForm={setForm} errors={errors} name="HorarioId" label="Horario" icon={CalendarClock} options={opcionesHorario} required />
+      {!sinVinculo && (
+        <SelectBuscable form={form} setForm={setForm} errors={errors} name="VinculoLaboralId" label="Trabajador (vínculo)" icon={UserRound} options={vinculos.opciones} required />
+      )}
+      <Select
+        form={form}
+        setForm={setForm}
+        errors={errors}
+        name="HorarioId"
+        label="Horario"
+        icon={CalendarClock}
+        options={opcionesHorario}
+        required
+      />
       <FormGrid>
-        <Field form={form} setForm={setForm} errors={errors} name="AsignacionHorarioFechaInicio" label="Vigente desde" icon={CalendarDays} type="date" required />
+        <Field
+          form={form}
+          setForm={setForm}
+          errors={errors}
+          name="AsignacionHorarioFechaInicio"
+          label="Vigente desde"
+          icon={CalendarDays}
+          type="date"
+          required
+        />
         <Field form={form} setForm={setForm} errors={errors} name="AsignacionHorarioFechaFin" label="Vigente hasta" icon={CalendarDays} type="date" />
       </FormGrid>
-      <Field form={form} setForm={setForm} errors={errors} name="AsignacionHorarioObservacion" label="Observación" icon={FileText} maxLength={500} />
+      <TextoEstandar
+        form={form}
+        setForm={setForm}
+        errors={errors}
+        name="AsignacionHorarioObservacion"
+        opciones={TEXTOS.observacionAsignacion}
+        label="Observación"
+        maxLength={500}
+      />
       <HelpText>
-        Un trabajador tiene un solo horario vigente. Para cambiarlo, cierra la asignación actual con su fecha de fin y crea la nueva a
-        continuación: así se conserva el historial.
+        Un trabajador tiene un solo horario vigente. Para cambiarlo, cierra la asignación actual con su fecha de fin y crea la nueva a continuación:
+        así se conserva el historial.
       </HelpText>
     </>
   );

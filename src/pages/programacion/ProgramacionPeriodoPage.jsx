@@ -69,9 +69,11 @@ export default function ProgramacionPeriodoPage() {
   return (
     <PageContainer>
       <PageHeader title="Programación por período" subtitle="Programación · Programación por período">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nueva programación
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nueva programación
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput
@@ -96,10 +98,10 @@ export default function ProgramacionPeriodoPage() {
           {
             icon: Send,
             label: 'Publicar',
-            visible: borrador,
+            visible: (item) => acciones.puede('publicar') && borrador(item),
             onClick: confirmar('publicar', (item) => `¿Publicar la programación de ${item.eess?.nombre ?? ''}? Una vez publicada ya no se podrá modificar.`),
           },
-          { icon: Lock, label: 'Cerrar', visible: publicada, onClick: confirmar('cerrar', () => '¿Cerrar la programación?') },
+          { icon: Lock, label: 'Cerrar', visible: (item) => acciones.puede('cerrar') && publicada(item), onClick: confirmar('cerrar', () => '¿Cerrar la programación?') },
         ]}
         etiquetas={{ activo: 'Vigente', inactivo: 'Anulada', desactivar: 'Anular' }}
         puedeEditar={borrador}

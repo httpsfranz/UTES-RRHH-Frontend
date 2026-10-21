@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { CircleCheck, CircleX, FileCheck, Plus } from 'lucide-react';
-import { formModel, useCrudResource } from '../../hooks/useCrudResource';
+import { useCrudResource } from '../../hooks/useCrudResource';
 import { useAccionDeRegistro } from '../../hooks/useAccionDeRegistro';
 import { useOpciones } from '../../hooks/useOpciones';
-import { fecha, noAnteriorA, requerido, requeridoSi, validador } from '../../utils/validaciones';
 import { ESTADOS_SOLICITUD, etiquetaDe } from '../../utils/opciones';
 import { formatoFecha } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
@@ -15,16 +14,8 @@ import EntityList from '../../components/ui/EntityList';
 import FormModal from '../../components/ui/FormModal';
 import ResolucionModal from '../../components/ui/ResolucionModal';
 import JustificacionFaltaForm from './JustificacionFaltaForm';
+import { emptyForm, mapToForm, validarJustificacion } from './justificacionFaltaModelo';
 
-const { emptyForm, mapToForm } = formModel({
-  VinculoLaboralId: 'vinculo_laboral_id',
-  ConceptoJustificacionId: 'concepto_justificacion_id',
-  DocumentoSustentoId: 'documento_sustento_id',
-  JustificacionFaltaFechaInicio: 'fecha_inicio',
-  JustificacionFaltaFechaFin: 'fecha_fin',
-  JustificacionFaltaDocumentoNumero: 'documento_numero',
-  JustificacionFaltaObservacion: 'observacion',
-});
 
 const rango = (item) => (item.fecha_inicio === item.fecha_fin ? formatoFecha(item.fecha_inicio) : `${formatoFecha(item.fecha_inicio)} – ${formatoFecha(item.fecha_fin)}`);
 const pendiente = (item) => item.estado === 'PENDIENTE';
@@ -46,18 +37,8 @@ const card = (item) => ({
 });
 
 export default function JustificacionFaltaPage() {
-  // Obligatorio solo si el concepto elegido exige documento: la validacion de usuario necesita el catalogo.
   const conceptos = useOpciones('/conceptos-justificacion');
-  const exigeDocumento = (form) =>
-    Boolean(conceptos.filas.find((fila) => String(fila.id) === String(form.ConceptoJustificacionId))?.requiere_documento);
-
-  const validate = validador({
-    VinculoLaboralId: [requerido],
-    ConceptoJustificacionId: [requerido],
-    DocumentoSustentoId: [requeridoSi(exigeDocumento, 'Este concepto exige adjuntar el documento de sustento.')],
-    JustificacionFaltaFechaInicio: [requerido, fecha],
-    JustificacionFaltaFechaFin: [requerido, fecha, noAnteriorA('JustificacionFaltaFechaInicio', 'La fecha final no puede ser anterior a la inicial.')],
-  });
+  const validate = validarJustificacion(conceptos.filas);
 
   const crud = useCrudResource({
     endpoint: '/justificaciones-falta',
@@ -74,9 +55,11 @@ export default function JustificacionFaltaPage() {
   return (
     <PageContainer>
       <PageHeader title="Justificación de faltas" subtitle="Asistencia · Justificación de faltas">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nueva justificación
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nueva justificación
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput
@@ -98,8 +81,8 @@ export default function JustificacionFaltaPage() {
         columns={columns}
         card={card}
         acciones={[
-          { icon: CircleCheck, label: 'Aprobar', visible: pendiente, onClick: (item) => setResolucion({ item, accion: 'aprobar' }) },
-          { icon: CircleX, label: 'Rechazar', visible: pendiente, onClick: (item) => setResolucion({ item, accion: 'rechazar' }) },
+          { icon: CircleCheck, label: 'Aprobar', visible: (item) => acciones.puede('aprobar') && pendiente(item), onClick: (item) => setResolucion({ item, accion: 'aprobar' }) },
+          { icon: CircleX, label: 'Rechazar', visible: (item) => acciones.puede('rechazar') && pendiente(item), onClick: (item) => setResolucion({ item, accion: 'rechazar' }) },
         ]}
         etiquetas={{ activo: 'Vigente', inactivo: 'Anulada', desactivar: 'Anular' }}
         puedeEditar={pendiente}

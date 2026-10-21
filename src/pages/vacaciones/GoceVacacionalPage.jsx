@@ -70,9 +70,11 @@ export default function GoceVacacionalPage() {
   return (
     <PageContainer>
       <PageHeader title="Goce vacacional" subtitle="Vacaciones · Goce vacacional">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Solicitar goce
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Solicitar goce
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput
@@ -94,8 +96,8 @@ export default function GoceVacacionalPage() {
         columns={columns}
         card={card}
         acciones={[
-          { icon: CircleCheck, label: 'Aprobar', visible: pendiente, onClick: (item) => setResolviendo({ item, accion: 'aprobar' }) },
-          { icon: CircleX, label: 'Rechazar', visible: pendiente, onClick: (item) => setResolviendo({ item, accion: 'rechazar' }) },
+          { icon: CircleCheck, label: 'Aprobar', visible: (item) => acciones.puede('aprobar') && pendiente(item), onClick: (item) => setResolviendo({ item, accion: 'aprobar' }) },
+          { icon: CircleX, label: 'Rechazar', visible: (item) => acciones.puede('rechazar') && pendiente(item), onClick: (item) => setResolviendo({ item, accion: 'rechazar' }) },
         ]}
         etiquetas={{ activo: 'Vigente', inactivo: 'Anulado', desactivar: 'Anular' }}
         puedeEditar={pendiente}

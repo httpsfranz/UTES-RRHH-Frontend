@@ -81,9 +81,11 @@ export default function LicenciaPage() {
   return (
     <PageContainer>
       <PageHeader title="Licencias" subtitle="Solicitudes · Licencia">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nueva licencia
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nueva licencia
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput
@@ -105,8 +107,8 @@ export default function LicenciaPage() {
         columns={columns}
         card={card}
         acciones={[
-          { icon: CircleCheck, label: 'Aprobar', visible: pendiente, onClick: (item) => setResolucion({ item, accion: 'aprobar' }) },
-          { icon: CircleX, label: 'Rechazar', visible: pendiente, onClick: (item) => setResolucion({ item, accion: 'rechazar' }) },
+          { icon: CircleCheck, label: 'Aprobar', visible: (item) => acciones.puede('aprobar') && pendiente(item), onClick: (item) => setResolucion({ item, accion: 'aprobar' }) },
+          { icon: CircleX, label: 'Rechazar', visible: (item) => acciones.puede('rechazar') && pendiente(item), onClick: (item) => setResolucion({ item, accion: 'rechazar' }) },
         ]}
         etiquetas={{ activo: 'Vigente', inactivo: 'Anulada', desactivar: 'Anular' }}
         puedeEditar={pendiente}

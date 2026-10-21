@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { CircleCheck, CircleX, PenLine, Plus } from 'lucide-react';
-import { formModel, useCrudResource } from '../../hooks/useCrudResource';
+import { useCrudResource } from '../../hooks/useCrudResource';
 import { useAccionDeRegistro } from '../../hooks/useAccionDeRegistro';
-import { fechaHoraNoFutura, requerido, validador } from '../../utils/validaciones';
 import { ESTADOS_SOLICITUD, etiquetaDe } from '../../utils/opciones';
-import { aCampoFecha, formatoFechaHora } from '../../utils/formato';
+import { formatoFechaHora } from '../../utils/formato';
 import PageContainer from '../../components/ui/PageContainer';
 import PageHeader from '../../components/ui/PageHeader';
 import Button from '../../components/ui/Button';
@@ -14,16 +13,8 @@ import EntityList from '../../components/ui/EntityList';
 import FormModal from '../../components/ui/FormModal';
 import ResolucionModal from '../../components/ui/ResolucionModal';
 import AjusteMarcacionForm from './AjusteMarcacionForm';
+import { emptyForm, mapToForm, validarAjuste as validate } from './ajusteMarcacionModelo';
 
-const modelo = formModel({
-  MarcacionId: 'marcacion_id',
-  DocumentoSustentoId: 'documento_sustento_id',
-  AjusteMarcacionFechaHoraNueva: 'fecha_hora_nueva',
-  AjusteMarcacionMotivo: 'motivo',
-});
-
-const { emptyForm } = modelo;
-const mapToForm = (item) => ({ ...modelo.mapToForm(item), AjusteMarcacionFechaHoraNueva: aCampoFecha(item.fecha_hora_nueva) });
 
 const pendiente = (item) => item.estado === 'PENDIENTE';
 const correccion = (item) => (item.fecha_hora_nueva ? `${formatoFechaHora(item.fecha_hora_anterior)} → ${formatoFechaHora(item.fecha_hora_nueva)}` : `${formatoFechaHora(item.fecha_hora_anterior)} → se invalida`);
@@ -43,12 +34,6 @@ const card = (item) => ({
 });
 
 export default function AjusteMarcacionPage() {
-  const validate = validador({
-    MarcacionId: [requerido],
-    AjusteMarcacionMotivo: [requerido],
-    AjusteMarcacionFechaHoraNueva: [(valor) => fechaHoraNoFutura(valor)?.replace('La ocurrencia', 'La marcación')],
-  });
-
   const crud = useCrudResource({
     endpoint: '/ajustes-marcacion',
     emptyForm,
@@ -63,9 +48,11 @@ export default function AjusteMarcacionPage() {
   return (
     <PageContainer>
       <PageHeader title="Ajustes de marcación" subtitle="Asistencia · Ajustes de marcación">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Solicitar ajuste
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Solicitar ajuste
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput
@@ -87,8 +74,8 @@ export default function AjusteMarcacionPage() {
         columns={columns}
         card={card}
         acciones={[
-          { icon: CircleCheck, label: 'Aprobar', visible: pendiente, onClick: (item) => setResolviendo({ item, accion: 'aprobar' }) },
-          { icon: CircleX, label: 'Rechazar', visible: pendiente, onClick: (item) => setResolviendo({ item, accion: 'rechazar' }) },
+          { icon: CircleCheck, label: 'Aprobar', visible: (item) => acciones.puede('aprobar') && pendiente(item), onClick: (item) => setResolviendo({ item, accion: 'aprobar' }) },
+          { icon: CircleX, label: 'Rechazar', visible: (item) => acciones.puede('rechazar') && pendiente(item), onClick: (item) => setResolviendo({ item, accion: 'rechazar' }) },
         ]}
         etiquetas={{ activo: 'Vigente', inactivo: 'Anulada', desactivar: 'Anular' }}
         puedeEditar={pendiente}

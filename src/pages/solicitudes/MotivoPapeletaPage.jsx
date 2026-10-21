@@ -47,9 +47,11 @@ export default function MotivoPapeletaPage() {
   return (
     <PageContainer>
       <PageHeader title="Motivos de papeleta" subtitle="Solicitudes · Motivo de papeleta">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo motivo
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nuevo motivo
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />

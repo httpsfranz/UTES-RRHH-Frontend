@@ -69,9 +69,11 @@ export default function DescansoMedicoPage() {
   return (
     <PageContainer>
       <PageHeader title="Descansos médicos" subtitle="Solicitudes · Descanso médico">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo descanso médico
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nuevo descanso médico
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput
@@ -93,8 +95,8 @@ export default function DescansoMedicoPage() {
         columns={columns}
         card={card}
         acciones={[
-          { icon: CircleCheck, label: 'Aprobar', visible: pendiente, onClick: (item) => setResolucion({ item, accion: 'aprobar' }) },
-          { icon: CircleX, label: 'Rechazar', visible: pendiente, onClick: (item) => setResolucion({ item, accion: 'rechazar' }) },
+          { icon: CircleCheck, label: 'Aprobar', visible: (item) => acciones.puede('aprobar') && pendiente(item), onClick: (item) => setResolucion({ item, accion: 'aprobar' }) },
+          { icon: CircleX, label: 'Rechazar', visible: (item) => acciones.puede('rechazar') && pendiente(item), onClick: (item) => setResolucion({ item, accion: 'rechazar' }) },
         ]}
         etiquetas={{ activo: 'Vigente', inactivo: 'Anulado', desactivar: 'Anular' }}
         puedeEditar={pendiente}

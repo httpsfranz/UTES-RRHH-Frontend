@@ -63,9 +63,11 @@ export default function ConstatacionDomiciliariaPage() {
   return (
     <PageContainer>
       <PageHeader title="Constatación domiciliaria" subtitle="Solicitudes · Constatación domiciliaria">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nueva constatación
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nueva constatación
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput

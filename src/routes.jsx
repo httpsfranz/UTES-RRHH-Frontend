@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components -- archivo de configuracion del router: declara las paginas con carga diferida y exporta el router, no un componente. */
 import { lazy } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
@@ -11,277 +10,37 @@ import HomePage from './pages/HomePage';
 
 import PlaceholderPage from './pages/PlaceholderPage';
 
-// ASISTENCIA
-const MarcacionPage = lazy(() => import('./pages/asistencia/MarcacionPage'));
-
-const AsistenciaDiariaPage = lazy(() => import('./pages/asistencia/AsistenciaDiariaPage'));
-
-const JustificacionFaltaPage = lazy(() => import('./pages/asistencia/JustificacionFaltaPage'));
-
-const CargaAsistenciaManualPage = lazy(() => import('./pages/asistencia/CargaAsistenciaManualPage'));
-
-const ConceptoJustificacionPage = lazy(() => import('./pages/asistencia/ConceptoJustificacionPage'));
-
-const EstadoAsistenciaPage = lazy(() => import('./pages/asistencia/EstadoAsistenciaPage'));
-
-const AjusteMarcacionPage = lazy(() => import('./pages/asistencia/AjusteMarcacionPage'));
-
-// ORGANIZACIÓN
-const ResponsableEessPage = lazy(() => import('./pages/organizacion/ResponsableEessPage'));
-
-const MicroredPage = lazy(() => import('./pages/organizacion/MicroredPage'));
-
-const EstablecimientoSaludPage = lazy(() => import('./pages/organizacion/EstablecimientoSaludPage'));
-
-// BIOMETRÍA
-const PlantillaBiometricaPage = lazy(() => import('./pages/biometria/PlantillaBiometricaPage'));
-
-const AutorizacionMetodoPage = lazy(() => import('./pages/biometria/AutorizacionMetodoPage'));
-
-const ConsentimientoBiometricoPage = lazy(() => import('./pages/biometria/ConsentimientoBiometricoPage'));
-
-const MetodoMarcacionPage = lazy(() => import('./pages/biometria/MetodoMarcacionPage'));
-
-const DispositivoMarcacionPage = lazy(() => import('./pages/biometria/DispositivoMarcacionPage'));
-
-const TipoEstablecimientoPage = lazy(() => import('./pages/organizacion/TipoEstablecimientoPage'));
-
-const TipoResponsabilidadPage = lazy(() => import('./pages/organizacion/TipoResponsabilidadPage'));
-
-// COMPENSACIONES
-const CompensacionHorariaPage = lazy(() => import('./pages/compensaciones/CompensacionHorariaPage'));
-
-const ConceptoDescuentoPage = lazy(() => import('./pages/compensaciones/ConceptoDescuentoPage'));
-
-const TipoCompensacionPage = lazy(() => import('./pages/compensaciones/TipoCompensacionPage'));
-
-const LiquidacionDescuentoPage = lazy(() => import('./pages/compensaciones/LiquidacionDescuentoPage'));
-
-// CONFIGURACIÓN
-const ParametroSistemaPage = lazy(() => import('./pages/configuracion/ParametroSistemaPage'));
-
-const TablaToleranciaPage = lazy(() => import('./pages/configuracion/TablaToleranciaPage'));
-
-const TramoToleranciaPage = lazy(() => import('./pages/configuracion/TramoToleranciaPage'));
-
-const TurnoPage = lazy(() => import('./pages/configuracion/TurnoPage'));
-
-const HorarioPage = lazy(() => import('./pages/configuracion/HorarioPage'));
-
-const ParametroJornadaPage = lazy(() => import('./pages/configuracion/ParametroJornadaPage'));
-
-const TipoJornadaPage = lazy(() => import('./pages/configuracion/TipoJornadaPage'));
-
-// CONSOLIDACIÓN
-const ConsolidadoAsistenciaPage = lazy(() => import('./pages/consolidacion/ConsolidadoAsistenciaPage'));
-
-const PeriodoAsistenciaPage = lazy(() => import('./pages/consolidacion/PeriodoAsistenciaPage'));
-
-// VACACIONES
-const PeriodoVacacionalPage = lazy(() => import('./pages/vacaciones/PeriodoVacacionalPage'));
-
-const RolVacacionalPage = lazy(() => import('./pages/vacaciones/RolVacacionalPage'));
-
-const GoceVacacionalPage = lazy(() => import('./pages/vacaciones/GoceVacacionalPage'));
-
-// DISCIPLINA
-const ExpedientePadPage = lazy(() => import('./pages/disciplina/ExpedientePadPage'));
-
-const SupervisionInopinadaPage = lazy(() => import('./pages/disciplina/SupervisionInopinadaPage'));
-
-const TipoFaltaDisciplinariaPage = lazy(() => import('./pages/disciplina/TipoFaltaDisciplinariaPage'));
-
-// PERSONAL
-const AsignacionHorarioPage = lazy(() => import('./pages/personal/AsignacionHorarioPage'));
-
-const VinculoLaboralPage = lazy(() => import('./pages/personal/VinculoLaboralPage'));
-
-const ColegiaturaPage = lazy(() => import('./pages/personal/ColegiaturaPage'));
-
-const TrabajadorPage = lazy(() => import('./pages/personal/TrabajadorPage'));
-
-const CargoPage = lazy(() => import('./pages/personal/CargoPage'));
-
-const RegimenLaboralPage = lazy(() => import('./pages/personal/RegimenLaboralPage'));
-
-const TipoDocumentoIdentidadPage = lazy(() => import('./pages/personal/TipoDocumentoIdentidadPage'));
-
-const GrupoOcupacionalPage = lazy(() => import('./pages/personal/GrupoOcupacionalPage'));
-
-const ProfesionPage = lazy(() => import('./pages/personal/ProfesionPage'));
-
-const ColegiaturaTipoPage = lazy(() => import('./pages/personal/ColegiaturaTipoPage'));
-
-const CondicionLaboralPage = lazy(() => import('./pages/personal/CondicionLaboralPage'));
-
-// PROGRAMACIÓN
-const ProgramacionPeriodoPage = lazy(() => import('./pages/programacion/ProgramacionPeriodoPage'));
-
-const CargaProgramacionPage = lazy(() => import('./pages/programacion/CargaProgramacionPage'));
-
-const InformeGuardiaComunitariaPage = lazy(() => import('./pages/programacion/InformeGuardiaComunitariaPage'));
-
-const TipoCambioTurnoPage = lazy(() => import('./pages/programacion/TipoCambioTurnoPage'));
-
-const TipoPeriodoProgramacionPage = lazy(() => import('./pages/programacion/TipoPeriodoProgramacionPage'));
-
-const ProgramacionTrabajadorPage = lazy(() => import('./pages/programacion/ProgramacionTrabajadorPage'));
-
-const TurnoProgramadoPage = lazy(() => import('./pages/programacion/TurnoProgramadoPage'));
-const CalendarioProgramacionPage = lazy(() => import('./pages/programacion/CalendarioProgramacionPage'));
-const CalendarioAusenciasPage = lazy(() => import('./pages/programacion/CalendarioAusenciasPage'));
-
-const CambioTurnoPage = lazy(() => import('./pages/programacion/CambioTurnoPage'));
-
-// SEGURIDAD
-const AuditoriaPage = lazy(() => import('./pages/seguridad/AuditoriaPage'));
-
-const PermisoPage = lazy(() => import('./pages/seguridad/PermisoPage'));
-
-const RolPage = lazy(() => import('./pages/seguridad/RolPage'));
-
-const UsuarioPage = lazy(() => import('./pages/seguridad/UsuarioPage'));
-
-const UsuarioRolPage = lazy(() => import('./pages/seguridad/UsuarioRolPage'));
-
-const UsuarioAmbitoPage = lazy(() => import('./pages/seguridad/UsuarioAmbitoPage'));
-
-const SesionAccesoPage = lazy(() => import('./pages/seguridad/SesionAccesoPage'));
-
-// SOLICITUDES
-const PapeletaPage = lazy(() => import('./pages/solicitudes/PapeletaPage'));
-
-const LicenciaPage = lazy(() => import('./pages/solicitudes/LicenciaPage'));
-
-const DescansoMedicoPage = lazy(() => import('./pages/solicitudes/DescansoMedicoPage'));
-
-const ConstatacionDomiciliariaPage = lazy(() => import('./pages/solicitudes/ConstatacionDomiciliariaPage'));
-
-const TipoLicenciaPage = lazy(() => import('./pages/solicitudes/TipoLicenciaPage'));
-
-const TipoPapeletaPage = lazy(() => import('./pages/solicitudes/TipoPapeletaPage'));
-
-const MotivoPapeletaPage = lazy(() => import('./pages/solicitudes/MotivoPapeletaPage'));
-
-const OcurrenciaPorteriaPage = lazy(() => import('./pages/solicitudes/OcurrenciaPorteriaPage'));
-
-// SOPORTE
-const CalendarioNoLaborablePage = lazy(() => import('./pages/soporte/CalendarioNoLaborablePage'));
-
-const DocumentoSustentoPage = lazy(() => import('./pages/soporte/DocumentoSustentoPage'));
-
-const LogIntegracionPage = lazy(() => import('./pages/soporte/LogIntegracionPage'));
-
-const NotificacionPage = lazy(() => import('./pages/soporte/NotificacionPage'));
-
 import { menu } from './nav/menu';
 
 // =========================================================
-// PÁGINAS REALES
+// PÁGINAS REALES (una por entrada del menu; lo demas se abre como pestana o tarjeta dentro de ellas)
 // =========================================================
 
 const paginasReales = {
-  // ASISTENCIA
-  '/asistencia/marcaciones': MarcacionPage,
-  '/asistencia/asistencia-diaria': AsistenciaDiariaPage,
-  '/asistencia/justificacion-faltas': JustificacionFaltaPage,
-  '/asistencia/carga-manual': CargaAsistenciaManualPage,
-  '/asistencia/conceptos-justificacion': ConceptoJustificacionPage,
-  '/asistencia/estados': EstadoAsistenciaPage,
-  '/asistencia/ajustes': AjusteMarcacionPage,
-
-  // BIOMETRÍA
-  '/biometria/metodos': MetodoMarcacionPage,
-  '/biometria/dispositivos': DispositivoMarcacionPage,
-  '/biometria/plantillas': PlantillaBiometricaPage,
-  '/biometria/autorizaciones': AutorizacionMetodoPage,
-  '/biometria/consentimientos': ConsentimientoBiometricoPage,
-
-  // ORGANIZACIÓN
-  '/organizacion/microredes': MicroredPage,
-  '/organizacion/responsables': ResponsableEessPage,
-  '/organizacion/establecimientos': EstablecimientoSaludPage,
-  '/organizacion/tipos-establecimiento': TipoEstablecimientoPage,
-  '/organizacion/tipos-responsabilidad': TipoResponsabilidadPage,
-
-  // COMPENSACIONES
-  '/compensaciones/conceptos-descuento': ConceptoDescuentoPage,
-  '/compensaciones/compensacion-horaria': CompensacionHorariaPage,
-  '/compensaciones/tipos-compensacion': TipoCompensacionPage,
-  '/compensaciones/liquidaciones': LiquidacionDescuentoPage,
-
-  // CONFIGURACIÓN
-  '/configuracion/parametros-sistema': ParametroSistemaPage,
-  '/configuracion/tablas-tolerancia': TablaToleranciaPage,
-  '/configuracion/tramos-tolerancia': TramoToleranciaPage,
-  '/configuracion/turnos': TurnoPage,
-  '/configuracion/horarios': HorarioPage,
-  '/configuracion/parametros-jornada': ParametroJornadaPage,
-  '/configuracion/tipos-jornada': TipoJornadaPage,
-
-  // CONSOLIDACIÓN
-  '/consolidacion/periodos-asistencia': PeriodoAsistenciaPage,
-  '/consolidacion/consolidado': ConsolidadoAsistenciaPage,
-
-  // VACACIONES
-  '/vacaciones/periodos': PeriodoVacacionalPage,
-  '/vacaciones/rol': RolVacacionalPage,
-  '/vacaciones/goce': GoceVacacionalPage,
-
-  // DISCIPLINA
-  '/disciplina/expedientes-pad': ExpedientePadPage,
-  '/disciplina/supervisiones': SupervisionInopinadaPage,
-  '/disciplina/tipos-falta': TipoFaltaDisciplinariaPage,
-
-  // PERSONAL
-  '/personal/trabajadores': TrabajadorPage,
-  '/personal/vinculos-laborales': VinculoLaboralPage,
-  '/personal/asignacion-horario': AsignacionHorarioPage,
-  '/personal/colegiaturas': ColegiaturaPage,
-  '/personal/cargos': CargoPage,
-  '/personal/regimen-laboral': RegimenLaboralPage,
-  '/personal/tipos-documento-identidad': TipoDocumentoIdentidadPage,
-  '/personal/grupos-ocupacionales': GrupoOcupacionalPage,
-  '/personal/profesiones': ProfesionPage,
-  '/personal/tipos-colegiatura': ColegiaturaTipoPage,
-  '/personal/condicion-laboral': CondicionLaboralPage,
+  // DÍA A DÍA
+  '/asistencia/asistencia-diaria': lazy(() => import('./pages/asistencia/AsistenciaDiariaPage')),
+  '/solicitudes/bandeja': lazy(() => import('./pages/solicitudes/BandejaDeSolicitudesPage')),
+  '/solicitudes/registro': lazy(() => import('./pages/solicitudes/RegistroDeSolicitudesPage')),
+  '/solicitudes/ocurrencias-porteria': lazy(() => import('./pages/solicitudes/OcurrenciaPorteriaPage')),
 
   // PROGRAMACIÓN
-  '/programacion/periodos': ProgramacionPeriodoPage,
-  '/programacion/carga': CargaProgramacionPage,
-  '/programacion/guardia-comunitaria': InformeGuardiaComunitariaPage,
-  '/programacion/tipos-cambio-turno': TipoCambioTurnoPage,
-  '/programacion/tipos-periodo': TipoPeriodoProgramacionPage,
-  '/programacion/trabajadores': ProgramacionTrabajadorPage,
-  '/programacion/turnos-programados': TurnoProgramadoPage,
-  '/programacion/calendario': CalendarioProgramacionPage,
-  '/programacion/calendario-ausencias': CalendarioAusenciasPage,
-  '/programacion/cambios-turno': CambioTurnoPage,
+  '/programacion/mensual': lazy(() => import('./pages/programacion/ProgramacionMensualPage')),
+  '/programacion/gestion': lazy(() => import('./pages/programacion/CambiosYAusenciasPage')),
 
-  // SEGURIDAD
-  '/seguridad/auditoria': AuditoriaPage,
-  '/seguridad/permisos': PermisoPage,
-  '/seguridad/roles': RolPage,
-  '/seguridad/usuarios': UsuarioPage,
-  '/seguridad/usuarios-roles': UsuarioRolPage,
-  '/seguridad/usuarios-ambitos': UsuarioAmbitoPage,
-  '/seguridad/sesiones': SesionAccesoPage,
+  // PERSONAL
+  '/personal/trabajadores': lazy(() => import('./pages/personal/TrabajadorPage')),
+  '/vacaciones/gestion': lazy(() => import('./pages/vacaciones/VacacionesPage')),
 
-  // SOLICITUDES
-  '/solicitudes/papeletas': PapeletaPage,
-  '/solicitudes/licencias': LicenciaPage,
-  '/solicitudes/descansos-medicos': DescansoMedicoPage,
-  '/solicitudes/constatacion-domiciliaria': ConstatacionDomiciliariaPage,
-  '/solicitudes/tipos-licencia': TipoLicenciaPage,
-  '/solicitudes/tipos-papeleta': TipoPapeletaPage,
-  '/solicitudes/motivos-papeleta': MotivoPapeletaPage,
-  '/solicitudes/ocurrencias-porteria': OcurrenciaPorteriaPage,
+  // FIN DE MES
+  '/consolidacion/cierre': lazy(() => import('./pages/consolidacion/CierreDelMesPage')),
+  '/consolidacion/gestion': lazy(() => import('./pages/consolidacion/ConsolidadoYDescuentosPage')),
+  '/disciplina/gestion': lazy(() => import('./pages/disciplina/DisciplinaPage')),
 
-  // SOPORTE
-  '/soporte/calendario-no-laborable': CalendarioNoLaborablePage,
-  '/soporte/documentos-sustento': DocumentoSustentoPage,
-  '/soporte/logs-integracion': LogIntegracionPage,
-  '/soporte/notificaciones': NotificacionPage,
+  // ADMINISTRACIÓN
+  '/organizacion/red': lazy(() => import('./pages/organizacion/OrganizacionPage')),
+  '/configuracion/panel': lazy(() => import('./pages/configuracion/CatalogosPage')),
+  '/seguridad/panel': lazy(() => import('./pages/seguridad/SeguridadPage')),
+  '/soporte/notificaciones': lazy(() => import('./pages/soporte/NotificacionesPage')),
 };
 
 // =========================================================
@@ -301,6 +60,49 @@ const moduleRoutes = menu.flatMap((group) =>
   })
 );
 
+// Rutas de pantallas que ahora son una pestana o una tarjeta de otra: siguen funcionando (enlaces de notificaciones
+// guardadas, marcadores) y abren directamente esa pestana o tarjeta.
+const RUTAS_ANTERIORES = {
+  '/asistencia/justificacion-faltas': '/solicitudes/registro?pestana=justificaciones',
+  '/asistencia/ajustes': '/solicitudes/registro?pestana=ajustes',
+  '/solicitudes/papeletas': '/solicitudes/registro?pestana=papeletas',
+  '/solicitudes/licencias': '/solicitudes/registro?pestana=licencias',
+  '/solicitudes/descansos-medicos': '/solicitudes/registro?pestana=descansos',
+  '/solicitudes/constatacion-domiciliaria': '/solicitudes/registro?pestana=constataciones',
+  '/programacion/periodos': '/programacion/gestion?pestana=programaciones',
+  '/programacion/cambios-turno': '/programacion/gestion?pestana=cambios',
+  '/programacion/calendario-ausencias': '/programacion/gestion?pestana=ausencias',
+  '/programacion/guardia-comunitaria': '/programacion/gestion?pestana=guardias',
+  '/programacion/trabajadores': '/programacion/mensual',
+  '/programacion/turnos-programados': '/programacion/mensual',
+  '/programacion/calendario': '/programacion/mensual',
+  '/personal/vinculos-laborales': '/personal/trabajadores',
+  '/personal/asignacion-horario': '/personal/trabajadores',
+  '/consolidacion/consolidado': '/consolidacion/gestion?pestana=consolidado',
+  '/consolidacion/periodos-asistencia': '/consolidacion/gestion?pestana=periodos',
+  '/compensaciones/liquidaciones': '/consolidacion/gestion?pestana=liquidaciones',
+  '/compensaciones/compensacion-horaria': '/consolidacion/gestion?pestana=compensaciones',
+  '/disciplina/expedientes-pad': '/disciplina/gestion?pestana=pad',
+  '/disciplina/supervisiones': '/disciplina/gestion?pestana=supervisiones',
+  '/organizacion/establecimientos': '/organizacion/red',
+  '/organizacion/microredes': '/organizacion/red',
+  '/organizacion/responsables': '/organizacion/red',
+  '/configuracion/catalogos': '/configuracion/panel',
+  '/configuracion/turnos-horarios': '/configuracion/panel?abrir=turnos',
+  '/configuracion/parametros': '/configuracion/panel?abrir=parametros',
+  '/biometria/administracion': '/configuracion/panel?abrir=biometria',
+  '/soporte/calendario-no-laborable': '/configuracion/panel?abrir=calendario',
+  '/soporte/documentos-sustento': '/configuracion/panel?abrir=documentos',
+  '/soporte/logs-integracion': '/configuracion/panel?abrir=logs',
+  '/seguridad/usuarios': '/seguridad/panel?abrir=usuarios',
+  '/seguridad/roles': '/seguridad/panel?abrir=roles',
+  '/seguridad/usuarios-roles': '/seguridad/panel?abrir=roles-de-usuario',
+  '/seguridad/usuarios-ambitos': '/seguridad/panel?abrir=ambitos',
+  '/seguridad/sesiones': '/seguridad/panel?abrir=sesiones',
+  '/seguridad/auditoria': '/seguridad/panel?abrir=auditoria',
+};
+const redirecciones = Object.entries(RUTAS_ANTERIORES).map(([desde, hacia]) => ({ path: desde.slice(1), element: <Navigate to={hacia} replace /> }));
+
 // =========================================================
 // ROUTER PRINCIPAL
 // =========================================================
@@ -319,6 +121,7 @@ export const router = createBrowserRouter([
             element: <HomePage />,
           },
           ...moduleRoutes,
+          ...redirecciones,
           { path: '*', element: <Navigate to="/" replace /> },
         ],
       },

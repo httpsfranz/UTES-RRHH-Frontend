@@ -33,6 +33,20 @@ export function traerTodo(endpoint, params = {}) {
   return promesa;
 }
 
+/**
+ * Trae solo las primeras `limite` filas de un listado (auditoria, marcaciones: pueden ser miles), pidiendo a la vez las
+ * paginas que hagan falta. Devuelve { filas, total }: `total` es cuantas hay en realidad, para avisar si no se ven todas.
+ */
+export async function traerHasta(endpoint, params, limite) {
+  const porPagina = Math.min(limite, POR_PAGINA);
+  const pedir = (pagina) => api.get(endpoint, { params: { ...params, por_pagina: porPagina, page: pagina } }).then(({ data }) => data);
+  const primera = await pedir(1);
+  const paginas = Math.min(primera.meta?.last_page ?? 1, Math.ceil(limite / porPagina));
+  const restantes = paginas > 1 ? await Promise.all(Array.from({ length: paginas - 1 }, (_, i) => pedir(i + 2))) : [];
+  const filas = [primera, ...restantes].flatMap((pagina) => pagina.data ?? []);
+  return { filas, total: primera.meta?.total ?? filas.length };
+}
+
 /** Mensaje de error de una respuesta HTTP de la API (o null si no hubo respuesta: sin conexion). */
 export function mensajeDeError(err) {
   return err?.response?.data?.message ?? null;

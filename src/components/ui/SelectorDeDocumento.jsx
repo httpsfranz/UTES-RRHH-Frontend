@@ -42,7 +42,11 @@ export default function SelectorDeDocumento({ options, ...props }) {
           <Upload size={13} /> {subiendo ? 'Subiendo…' : 'Subir un archivo nuevo'}
         </button>
         {elegido && (
-          <button type="button" onClick={() => abrirDocumento(elegido).catch(() => setError('No se pudo abrir el documento.'))} className="inline-flex items-center gap-1 font-medium text-slate-600 transition-colors hover:text-heading">
+          <button
+            type="button"
+            onClick={() => abrirDocumento(elegido, { nombre: [...options, ...subidos].find((o) => String(o.value) === String(elegido))?.label }).catch(() => setError('No se pudo abrir el documento.'))}
+            className="inline-flex items-center gap-1 font-medium text-slate-600 transition-colors hover:text-heading"
+          >
             <Eye size={13} /> Ver documento
           </button>
         )}

@@ -293,3 +293,11 @@ export const PARAMETROS_CON_OPCIONES = {
   ZONA_HORARIA: aOpciones(['America/Lima', 'America/Bogota', 'America/Guayaquil', 'America/Santiago']),
   FORMATO_FECHA: aOpciones(['dd/MM/yyyy', 'yyyy-MM-dd', 'MM/dd/yyyy']),
 };
+
+// A quienes llega un tipo de notificacion (Soporte.TipoNotificacion.TipoNotificacionAlcance).
+export const ALCANCES_NOTIFICACION = [
+  { value: 'INTERESADO', label: 'Solo el interesado' },
+  { value: 'EESS', label: 'Roles del establecimiento' },
+  { value: 'MICRORED', label: 'Roles de la microred' },
+  { value: 'RED', label: 'Roles de toda la Red' },
+];

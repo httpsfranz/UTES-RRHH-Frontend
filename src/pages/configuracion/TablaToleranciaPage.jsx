@@ -44,9 +44,11 @@ export default function TablaToleranciaPage() {
   return (
     <PageContainer>
       <PageHeader title="Tablas de tolerancia" subtitle="Configuración · Tabla de tolerancia">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nueva tabla
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nueva tabla
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />

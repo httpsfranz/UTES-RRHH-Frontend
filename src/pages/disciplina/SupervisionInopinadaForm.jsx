@@ -6,9 +6,10 @@ import Field from '../../components/ui/Field';
 import Select from '../../components/ui/Select';
 import SelectorDeDocumento from '../../components/ui/SelectorDeDocumento';
 import SelectBuscable from '../../components/ui/SelectBuscable';
-import Textarea from '../../components/ui/Textarea';
 import FormGrid from '../../components/ui/FormGrid';
 import HelpText from '../../components/ui/HelpText';
+import TextoEstandar from '../../components/ui/TextoEstandar';
+import { TEXTOS } from '../../utils/textosEstandar';
 
 export default function SupervisionInopinadaForm({ form, setForm, errors, editando }) {
   const { opciones: establecimientos } = useOpciones('/establecimientos', { actual: form.EessId });
@@ -45,28 +46,70 @@ export default function SupervisionInopinadaForm({ form, setForm, errors, editan
         options={establecimientos}
         required
       />
-      <SelectBuscable form={form} setForm={setForm} errors={errors} name="VinculoLaboralId" label="Persona supervisada" icon={UserRound} options={opcionesPersona} />
+      <SelectBuscable
+        form={form}
+        setForm={setForm}
+        errors={errors}
+        name="VinculoLaboralId"
+        label="Persona supervisada"
+        icon={UserRound}
+        options={opcionesPersona}
+      />
       <FormGrid>
-        <Field form={form} setForm={setForm} errors={errors} name="SupervisionInopinadaFechaHora" label="Fecha y hora" icon={CalendarClock} type="datetime-local" required />
+        <Field
+          form={form}
+          setForm={setForm}
+          errors={errors}
+          name="SupervisionInopinadaFechaHora"
+          label="Fecha y hora"
+          icon={CalendarClock}
+          type="datetime-local"
+          required
+        />
       </FormGrid>
-      <Textarea form={form} setForm={setForm} errors={errors} name="SupervisionInopinadaResultado" label="Resultado" icon={FileText} maxLength={500} />
+      <TextoEstandar
+        form={form}
+        setForm={setForm}
+        errors={errors}
+        name="SupervisionInopinadaResultado"
+        opciones={TEXTOS.resultadoSupervision}
+        label="Resultado"
+        maxLength={500}
+      />
       {editando && (
-        <Select form={form} setForm={setForm} errors={errors} name="SupervisionInopinadaEstado" label="Estado" icon={ListChecks} options={ESTADOS_SUPERVISION.filter((e) => e.value !== 'ANULADO')} required />
+        <Select
+          form={form}
+          setForm={setForm}
+          errors={errors}
+          name="SupervisionInopinadaEstado"
+          label="Estado"
+          icon={ListChecks}
+          options={ESTADOS_SUPERVISION.filter((e) => e.value !== 'ANULADO')}
+          required
+        />
       )}
-      <Textarea
+      <TextoEstandar
         form={form}
         setForm={setForm}
         errors={errors}
         name="SupervisionInopinadaObservacion"
+        opciones={TEXTOS.observacionSupervision}
         label="Observaciones del acta"
-        icon={FileText}
         maxLength={1000}
         required={form.SupervisionInopinadaEstado === 'OBSERVADO'}
       />
-      <SelectorDeDocumento form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Acta de supervisión" icon={FileText} options={documentos} />
+      <SelectorDeDocumento
+        form={form}
+        setForm={setForm}
+        errors={errors}
+        name="DocumentoSustentoId"
+        label="Acta de supervisión"
+        icon={FileText}
+        options={documentos}
+      />
       <HelpText>
-        Las supervisiones inopinadas verifican la asistencia y permanencia del personal (RIT, Art. 24 y 29). Si hay observaciones, el jefe
-        del establecimiento envía su informe detallado en un plazo de 3 días.
+        Las supervisiones inopinadas verifican la asistencia y permanencia del personal (RIT, Art. 24 y 29). Si hay observaciones, el jefe del
+        establecimiento envía su informe detallado en un plazo de 3 días.
       </HelpText>
     </>
   );

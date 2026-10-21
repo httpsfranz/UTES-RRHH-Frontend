@@ -38,13 +38,13 @@ export default function PanelDeInicio() {
         <div className={`space-y-4 transition-opacity duration-200 ${cargando ? 'opacity-60' : ''}`}>
           <FiltrosDeInicio datos={datos} filtros={filtros} cambiar={cambiar} />
           {datos.widgets
-            .filter((widget) => widget.tipo === 'kpis')
+            .filter((widget) => widget.tipo === 'tareas' || widget.tipo === 'kpis')
             .map((widget) => (
               <Widget key={widget.id} widget={widget} />
             ))}
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
             {datos.widgets
-              .filter((widget) => widget.tipo !== 'kpis')
+              .filter((widget) => widget.tipo !== 'tareas' && widget.tipo !== 'kpis')
               .map((widget) => (
                 <div key={widget.id} className={`min-w-0 ${ANCHOS[widget.ancho] ?? ANCHOS[1]}`}>
                   <Widget widget={widget} alAgrupar={(agrupar) => cambiar({ agrupar })} />

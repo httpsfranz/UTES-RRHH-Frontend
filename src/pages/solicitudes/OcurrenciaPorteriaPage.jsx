@@ -65,9 +65,11 @@ export default function OcurrenciaPorteriaPage() {
   return (
     <PageContainer>
       <PageHeader title="Ocurrencias de portería" subtitle="Solicitudes · Ocurrencia de portería">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nueva ocurrencia
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nueva ocurrencia
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput

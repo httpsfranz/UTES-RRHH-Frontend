@@ -56,9 +56,11 @@ export default function TramoToleranciaPage() {
   return (
     <PageContainer>
       <PageHeader title="Tramos de tolerancia" subtitle="Configuración · Tramo de tolerancia">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo tramo
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nuevo tramo
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />

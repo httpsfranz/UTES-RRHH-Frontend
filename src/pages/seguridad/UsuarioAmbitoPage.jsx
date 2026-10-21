@@ -47,9 +47,11 @@ export default function UsuarioAmbitoPage() {
   return (
     <PageContainer>
       <PageHeader title="Ámbitos de usuario" subtitle="Seguridad · Ámbito de usuario">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Asignar ámbito
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Asignar ámbito
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput

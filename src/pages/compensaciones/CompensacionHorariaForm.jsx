@@ -1,51 +1,73 @@
-import { CalendarDays, FileText, Hourglass, ListChecks, UserCog, UserRound } from 'lucide-react';
+import { CalendarDays, UserRound } from 'lucide-react';
 import { useOpciones } from '../../hooks/useOpciones';
-import { useAuth } from '../../auth/useAuth';
-import { etiquetaVinculo } from '../../utils/formato';
+import { etiquetaVinculo, fechaIso, formatoFecha } from '../../utils/formato';
 import Field from '../../components/ui/Field';
-import Select from '../../components/ui/Select';
 import SelectBuscable from '../../components/ui/SelectBuscable';
-import Textarea from '../../components/ui/Textarea';
 import Checkbox from '../../components/ui/Checkbox';
-import FormGrid from '../../components/ui/FormGrid';
 import HelpText from '../../components/ui/HelpText';
+import TextoEstandar from '../../components/ui/TextoEstandar';
+import { TEXTOS } from '../../utils/textosEstandar';
 
-export default function CompensacionHorariaForm({ form, setForm, errors }) {
+/** Ultimo dia del mes siguiente al trabajo: hasta cuando se puede compensar (RIT, Art. 17). */
+const limite = (fecha) => {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha ?? '')) return null;
+  const [anio, mes] = fecha.split('-').map(Number);
+  return fechaIso(new Date(anio, mes + 1, 0));
+};
+
+/**
+ * Autorizacion PREVIA del trabajo fuera de la jornada (RIT, Art. 17): el jefe indica quien y que dia. No se escriben
+ * horas: salen de la marca de salida cuando el dia ocurre. Tampoco el "compensar hasta": es el fin del mes siguiente.
+ */
+export default function CompensacionHorariaForm({ form, setForm, errors, editando }) {
   const { opciones: vinculos } = useOpciones('/vinculos-laborales', { actual: form.VinculoLaboralId, etiqueta: etiquetaVinculo });
-  const { opciones: tipos } = useOpciones('/tipos-compensacion', { actual: form.TipoCompensacionId });
-  // Quien autoriza es el jefe que registra (la lista de usuarios es solo del administrador): se ofrece el usuario de la sesion.
-  const { usuario } = useAuth();
-  const usuarios = [{ value: '', label: 'Aún sin autorizar' }, { value: usuario.id, label: 'Yo (usuario de la sesión)' }];
-  if (form.CompensacionHorariaAutorizadoPor && String(form.CompensacionHorariaAutorizadoPor) !== String(usuario.id)) {
-    usuarios.push({ value: form.CompensacionHorariaAutorizadoPor, label: `Usuario #${form.CompensacionHorariaAutorizadoPor}` });
-  }
+  const pasado = form.CompensacionHorariaFechaTrabajo && form.CompensacionHorariaFechaTrabajo < fechaIso(new Date());
+  const hasta = limite(form.CompensacionHorariaFechaTrabajo);
 
   return (
     <>
-      <SelectBuscable form={form} setForm={setForm} errors={errors} name="VinculoLaboralId" label="Trabajador (vínculo)" icon={UserRound} options={vinculos} required />
-      <Select form={form} setForm={setForm} errors={errors} name="TipoCompensacionId" label="Origen de las horas" icon={ListChecks} options={tipos} required />
-      <FormGrid>
-        <Field
+      <SelectBuscable
+        form={form}
+        setForm={setForm}
+        errors={errors}
+        name="VinculoLaboralId"
+        label="Trabajador (vínculo)"
+        icon={UserRound}
+        options={vinculos}
+        required
+        disabled={editando}
+      />
+      <Field
+        form={form}
+        setForm={setForm}
+        errors={errors}
+        name="CompensacionHorariaFechaTrabajo"
+        label="Día del trabajo fuera de jornada"
+        icon={CalendarDays}
+        type="date"
+        required
+      />
+      {pasado && !editando && (
+        <Checkbox
           form={form}
           setForm={setForm}
           errors={errors}
-          name="CompensacionHorariaHorasGeneradas"
-          label="Horas generadas"
-          icon={Hourglass}
-          required
-          maxLength={5}
-          filter="decimal"
-          inputMode="decimal"
-          placeholder="Ej. 2 o 1.5"
+          name="CompensacionHorariaAutorizadoPreviamente"
+          label="El trabajo se autorizó antes, por correo o documento (RIT, Art. 17)"
         />
-        <Field form={form} setForm={setForm} errors={errors} name="CompensacionHorariaFechaLimite" label="Compensar hasta" icon={CalendarDays} type="date" />
-      </FormGrid>
-      <Select form={form} setForm={setForm} errors={errors} name="CompensacionHorariaAutorizadoPor" label="Jefe que autorizó" icon={UserCog} options={usuarios} />
-      <Checkbox form={form} setForm={setForm} errors={errors} name="CompensacionHorariaAutorizadoPreviamente" label="El trabajo fue autorizado previamente por el jefe inmediato" />
-      <Textarea form={form} setForm={setForm} errors={errors} name="CompensacionHorariaObservacion" label="Observación" icon={FileText} maxLength={500} />
+      )}
+      <TextoEstandar
+        form={form}
+        setForm={setForm}
+        errors={errors}
+        name="CompensacionHorariaObservacion"
+        opciones={TEXTOS.motivoTrabajoAdicional}
+        label="Motivo del trabajo adicional"
+        maxLength={500}
+      />
       <HelpText>
-        RIT, Art. 17: el trabajo fuera de la jornada es excepcional y voluntario, requiere autorización previa del jefe, es de una hora
-        como mínimo y se compensa como máximo hasta el mes siguiente. Sin autorización previa no procede la compensación.
+        Las horas se calculan solas con la marca de salida frente al fin de su turno (o todo el día si no tenía turno), y solo cuentan desde una hora
+        (Art. 17).{hasta ? ` Se podrán compensar hasta el ${formatoFecha(hasta)}.` : ''} Después, el responsable las valida.
       </HelpText>
     </>
   );

@@ -4,7 +4,8 @@ import { ListaContext } from './listaContext';
 const META_INICIAL = { conEstado: false, soloTabla: true, defs: [] };
 
 export default function ListaProvider({ children }) {
-  const [estado, setEstado] = useState('todos'); // 'todos' | 'activos' | 'inactivos'
+  // Por defecto solo lo vigente: lo deshabilitado se ve eligiendo "Vigente: No" (o "Todos").
+  const [estado, setEstado] = useState('activos'); // 'todos' | 'activos' | 'inactivos'
   const [vista, setVista] = useState('auto'); // 'auto' | 'tarjetas' | 'tabla'
   const [valores, setValores] = useState({}); // filtros derivados de columnas: { [key]: valor }
   const [meta, setMeta] = useState(META_INICIAL);

@@ -79,9 +79,11 @@ export default function CambioTurnoPage() {
   return (
     <PageContainer>
       <PageHeader title="Cambios de turno" subtitle="Programación · Cambios de turno">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Solicitar cambio
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Solicitar cambio
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput
@@ -103,8 +105,8 @@ export default function CambioTurnoPage() {
         columns={columns}
         card={card}
         acciones={[
-          { icon: CircleCheck, label: 'Aprobar', visible: pendiente, onClick: (item) => setResolviendo({ item, accion: 'aprobar' }) },
-          { icon: CircleX, label: 'Rechazar', visible: pendiente, onClick: (item) => setResolviendo({ item, accion: 'rechazar' }) },
+          { icon: CircleCheck, label: 'Aprobar', visible: (item) => acciones.puede('aprobar') && pendiente(item), onClick: (item) => setResolviendo({ item, accion: 'aprobar' }) },
+          { icon: CircleX, label: 'Rechazar', visible: (item) => acciones.puede('rechazar') && pendiente(item), onClick: (item) => setResolviendo({ item, accion: 'rechazar' }) },
         ]}
         etiquetas={{ activo: 'Vigente', inactivo: 'Anulada', desactivar: 'Anular' }}
         puedeEditar={pendiente}

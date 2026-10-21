@@ -47,9 +47,12 @@ export function ahoraLocal() {
   return `${ahora.getFullYear()}-${dosDigitos(ahora.getMonth() + 1)}-${dosDigitos(ahora.getDate())}T${dosDigitos(ahora.getHours())}:${dosDigitos(ahora.getMinutes())}`;
 }
 
-// "Quispe Huamán, María Elena · Enfermero(a) · C.S. La Esperanza": como se elige un vinculo laboral en un select.
+// "Quispe Huamán, María Elena · DNI 46000001 · Enfermero(a) · C.S. La Esperanza": como se elige un vinculo laboral en un
+// select (con el DNI, para poder buscarlo tambien por documento).
 export const etiquetaVinculo = (vinculo) =>
-  [vinculo.trabajador?.nombre_completo, vinculo.cargo?.nombre, vinculo.eess?.nombre].filter(Boolean).join(' · ') +
+  [vinculo.trabajador?.nombre_completo, vinculo.trabajador?.numero_documento && `DNI ${vinculo.trabajador.numero_documento}`, vinculo.cargo?.nombre, vinculo.eess?.nombre]
+    .filter(Boolean)
+    .join(' · ') +
   (vinculo.vigente === false ? ' (no vigente)' : '');
 
 // Ultimo dia de un descanso de `dias` dias calendario desde `inicio` (AAAA-MM-DD), sin pasar por la zona horaria.

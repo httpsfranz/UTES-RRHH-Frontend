@@ -48,9 +48,11 @@ export default function ConceptoJustificacionPage() {
   return (
     <PageContainer>
       <PageHeader title="Conceptos de justificación" subtitle="Asistencia · Concepto de justificación">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo concepto
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nuevo concepto
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />

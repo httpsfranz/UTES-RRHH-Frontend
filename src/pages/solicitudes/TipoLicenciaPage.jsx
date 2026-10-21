@@ -50,9 +50,11 @@ export default function TipoLicenciaPage() {
   return (
     <PageContainer>
       <PageHeader title="Tipos de licencia" subtitle="Solicitudes · Tipo de licencia">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nuevo tipo
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nuevo tipo
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />

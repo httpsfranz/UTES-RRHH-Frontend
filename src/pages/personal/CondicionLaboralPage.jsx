@@ -48,9 +48,11 @@ export default function CondicionLaboralPage() {
   return (
     <PageContainer>
       <PageHeader title="Condiciones laborales" subtitle="Personal · Condición laboral">
-        <Button onClick={crud.abrirCrear} icon={Plus}>
-          Nueva condición
-        </Button>
+        {crud.abrirCrear && (
+          <Button onClick={crud.abrirCrear} icon={Plus}>
+            Nueva condición
+          </Button>
+        )}
       </PageHeader>
 
       <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} />
