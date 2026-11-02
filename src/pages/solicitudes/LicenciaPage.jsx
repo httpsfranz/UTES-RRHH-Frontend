@@ -24,6 +24,7 @@ const { emptyForm, mapToForm } = formModel({
   LicenciaFechaInicio: 'fecha_inicio',
   LicenciaFechaFin: 'fecha_fin',
   LicenciaMotivo: 'motivo',
+  LicenciaCasoEspecial: 'caso_especial',
 });
 
 const dias = (item) => Math.round((Date.parse(item.fecha_fin) - Date.parse(item.fecha_inicio)) / 86400000) + 1;

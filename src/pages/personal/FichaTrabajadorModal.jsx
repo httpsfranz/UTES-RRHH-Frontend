@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Briefcase, CalendarClock, KeyRound, Pencil, Plus, UserRound } from 'lucide-react';
+import { Briefcase, CalendarClock, FileDown, KeyRound, Pencil, Plus, UserRound } from 'lucide-react';
+import { descargarArchivo } from '../../api/descargas';
 import { useAuth } from '../../auth/useAuth';
 import { useCrudResource } from '../../hooks/useCrudResource';
 import { useConsulta } from '../../hooks/useConsulta';
@@ -37,6 +38,7 @@ const PESTANAS = [
 export default function FichaTrabajadorModal({ trabajador, onClose, onEditar, onCambio }) {
   const auth = useAuth();
   const [pestana, setPestana] = useState('datos');
+  const [errorDocumento, setErrorDocumento] = useState('');
   // La cuenta de acceso solo la ve quien administra la seguridad.
   const veCuenta = auth.tiene('SEGURIDAD_VER');
   const condiciones = useOpciones('/condiciones-laborales');
@@ -65,6 +67,12 @@ export default function FichaTrabajadorModal({ trabajador, onClose, onEditar, on
   const usuario = cuenta.datos?.data?.[0] ?? null;
   const vigentes = vinculos.items.filter((v) => v.vigente);
 
+  // RIT, Art. 131: constancia a quien sigue laborando, certificado de trabajo a quien ceso.
+  async function bajarDocumento(v) {
+    const tipo = v.vigente ? 'constancia' : 'certificado';
+    setErrorDocumento((await descargarArchivo(`/vinculos-laborales/${v.id}/documento`, { tipo }, `${tipo}.pdf`)) ?? '');
+  }
+
   function nuevoHorario() {
     horarios.abrirCrear();
     const v = vigentes[0] ?? vinculos.items[0];
@@ -76,7 +84,7 @@ export default function FichaTrabajadorModal({ trabajador, onClose, onEditar, on
       <Modal open onClose={onClose} title={trabajador.nombre_completo} size="lg">
         <div className="space-y-4">
           <Segmentado opciones={veCuenta ? PESTANAS : PESTANAS.filter((p) => p.value !== 'cuenta')} value={pestana} onChange={setPestana} etiqueta="Secciones de la ficha" />
-          <Alert>{vinculos.error || horarios.error}</Alert>
+          <Alert>{vinculos.error || horarios.error || errorDocumento}</Alert>
 
           {pestana === 'datos' && (
             <DatosDeRegistro
@@ -110,6 +118,11 @@ export default function FichaTrabajadorModal({ trabajador, onClose, onEditar, on
                 titulo: `${v.cargo?.nombre ?? 'Vínculo'} · ${v.eess?.nombre ?? ''}`,
                 detalle: [v.condicion?.nombre, vigencia(v), v.vigente ? 'vigente' : 'no vigente', v.motivo_cese && `cese: ${v.motivo_cese}`].filter(Boolean).join(' · '),
                 activo: v.activo,
+                extra: (
+                  <Button variant="secondary" icon={FileDown} onClick={() => bajarDocumento(v)}>
+                    {v.vigente ? 'Constancia' : 'Certificado'}
+                  </Button>
+                ),
                 onEdit: vinculos.abrirEditar ? () => vinculos.abrirEditar(v) : undefined,
                 onToggle: vinculos.alternarEstado ? () => vinculos.alternarEstado(v) : undefined,
               }))}

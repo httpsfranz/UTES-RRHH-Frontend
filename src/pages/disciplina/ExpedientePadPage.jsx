@@ -21,6 +21,7 @@ const { emptyForm, mapToForm } = formModel({
   ExpedientePadFechaFin: 'fecha_fin',
   ExpedientePadDescripcion: 'descripcion',
   ExpedientePadSancion: 'sancion',
+  ExpedientePadMedidaCautelar: ['medida_cautelar', false],
   ExpedientePadEstado: ['estado', 'INICIADO'],
 });
 
@@ -43,6 +44,9 @@ const validate = validador({
   ExpedientePadSancion: [requeridoSi((form) => form.ExpedientePadEstado === 'RESUELTO', 'Indica la sanción con la que se resuelve el expediente.'), sancion],
 });
 
+// RIT Art. 103: quien instruye, sanciona y oficializa depende de la sancion.
+const autoridades = ({ autoridades: a }) => (a ? `${a.instructor} / ${a.sancionador} / ${a.oficializa}` : '—');
+
 const enCurso = (item) => item.estado === 'INICIADO' || item.estado === 'EN_PROCESO';
 
 const columns = [
@@ -52,13 +56,15 @@ const columns = [
   { key: 'falta', header: 'Falta', render: (item) => item.tipo_falta?.nombre ?? '—' },
   { key: 'inicio', header: 'Inicio', render: (item) => formatoFecha(item.fecha_inicio) },
   { key: 'sancion', header: 'Sanción', render: (item) => item.sancion ?? '—' },
+  { key: 'autoridades', header: 'Instruye / sanciona / oficializa', render: autoridades },
+  { key: 'cautelar', header: 'Medida cautelar', render: (item) => (item.medida_cautelar ? 'Sí' : 'No') },
   { key: 'estado', header: 'Etapa', render: (item) => etiquetaDe(ESTADOS_PAD, item.estado) },
 ];
 
 const card = (item) => ({
   icon: Gavel,
   title: item.trabajador?.nombre_completo ?? 'Expediente PAD',
-  meta: [item.tipo_falta?.nombre, `Inicio ${formatoFecha(item.fecha_inicio)}`, item.sancion && `Sanción: ${item.sancion}`, item.descripcion],
+  meta: [item.tipo_falta?.nombre, `Inicio ${formatoFecha(item.fecha_inicio)}`, item.sancion && `Sanción: ${item.sancion}`, autoridades(item), item.descripcion],
   footer: `${item.numero ?? 'Sin número'} · ${etiquetaDe(ESTADOS_PAD, item.estado)}`,
 });
 

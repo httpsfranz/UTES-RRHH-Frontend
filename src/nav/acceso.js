@@ -13,6 +13,7 @@ const PERMISO_DE_PANTALLA = {
   '/programacion/mensual': 'PROGRAMACION_VER',
   '/programacion/gestion': 'PROGRAMACION_VER',
   '/personal/trabajadores': 'PERSONAL_VER',
+  '/personal/legajo': 'PERSONAL_VER',
   '/vacaciones/gestion': 'SOLICITUDES_VER',
   '/consolidacion/cierre': 'REPORTES_VER',
   '/consolidacion/gestion': 'REPORTES_VER',

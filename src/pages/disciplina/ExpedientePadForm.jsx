@@ -2,6 +2,7 @@ import { CalendarDays, FileText, Gavel, Hash, ListChecks, UserRound } from 'luci
 import { useOpciones } from '../../hooks/useOpciones';
 import { conValorActual, ESTADOS_PAD, SANCIONES_PAD, SIGUIENTES_PAD } from '../../utils/opciones';
 import { etiquetaVinculo } from '../../utils/formato';
+import Checkbox from '../../components/ui/Checkbox';
 import Field from '../../components/ui/Field';
 import NumeroAutomatico from '../../components/ui/NumeroAutomatico';
 import Select from '../../components/ui/Select';
@@ -89,6 +90,7 @@ export default function ExpedientePadForm({ form, setForm, errors, estadoActual 
       {etapas && (
         <Select form={form} setForm={setForm} errors={errors} name="ExpedientePadEstado" label="Etapa" icon={ListChecks} options={etapas} required />
       )}
+      <Checkbox form={form} setForm={setForm} errors={errors} name="ExpedientePadMedidaCautelar" label="Con medida cautelar" />
       {(resolviendo || form.ExpedientePadSancion) && (
         <Select
           form={form}

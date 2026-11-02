@@ -1,4 +1,8 @@
-import { Clock } from 'lucide-react';
+import { useState } from 'react';
+import { Clock, Upload } from 'lucide-react';
+import { useAuth } from '../../auth/useAuth';
+import Button from '../../components/ui/Button';
+import ImportarMarcacionesModal from './ImportarMarcacionesModal';
 import { useCrudResource } from '../../hooks/useCrudResource';
 import { TIPOS_MARCACION, etiquetaDe } from '../../utils/opciones';
 import { formatoFechaHora } from '../../utils/formato';
@@ -29,6 +33,8 @@ const card = (item) => ({
  * y no se editan: un error de marcacion se corrige con una solicitud en "Ajustes de marcación" (con aprobacion).
  */
 export default function MarcacionPage() {
+  const auth = useAuth();
+  const [importando, setImportando] = useState(false);
   const crud = useCrudResource({
     endpoint: '/marcaciones',
     emptyForm: {},
@@ -38,7 +44,14 @@ export default function MarcacionPage() {
 
   return (
     <PageContainer>
-      <PageHeader title="Historial de marcaciones" subtitle="Consulta de las marcas registradas (facial o manual)." />
+      <PageHeader title="Historial de marcaciones" subtitle="Consulta de las marcas registradas (facial o manual).">
+        {auth.tiene('ASISTENCIA_EDITAR') && (
+          <Button variant="secondary" icon={Upload} onClick={() => setImportando(true)}>
+            Importar del reloj
+          </Button>
+        )}
+      </PageHeader>
+      <ImportarMarcacionesModal open={importando} onClose={() => setImportando(false)} onImportado={() => crud.cargar()} />
 
       <SearchInput value={crud.buscar} onChange={crud.setBuscar} onSubmit={() => crud.cargar()} placeholder="Buscar por trabajador, documento u observación…" />
 

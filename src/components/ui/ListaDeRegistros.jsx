@@ -25,6 +25,7 @@ export default function ListaDeRegistros({ titulo, filas, vacio, accion }) {
                 <p className="truncate text-xs text-muted">{fila.detalle}</p>
               </div>
               {fila.activo === false && <StatusBadge active={false} />}
+              {fila.extra}
               <ActionButtons active={fila.activo} onEdit={fila.onEdit} onToggle={fila.onToggle} />
             </li>
           ))}

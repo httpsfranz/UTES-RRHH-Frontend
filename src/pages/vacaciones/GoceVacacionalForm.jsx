@@ -1,6 +1,7 @@
 import { CalendarDays, FileText, Palmtree } from 'lucide-react';
 import { useOpciones } from '../../hooks/useOpciones';
 import { diasCalendario, formatoFecha } from '../../utils/formato';
+import Checkbox from '../../components/ui/Checkbox';
 import Field from '../../components/ui/Field';
 import SelectorDeDocumento from '../../components/ui/SelectorDeDocumento';
 import SelectBuscable from '../../components/ui/SelectBuscable';
@@ -34,6 +35,7 @@ export default function GoceVacacionalForm({ form, setForm, errors }) {
         <Field form={form} setForm={setForm} errors={errors} name="GoceVacacionalFechaInicio" label="Inicio del goce" icon={CalendarDays} type="date" required />
         <Field form={form} setForm={setForm} errors={errors} name="GoceVacacionalFechaFin" label="Fin del goce" icon={CalendarDays} type="date" required />
       </FormGrid>
+      <Checkbox form={form} setForm={setForm} errors={errors} name="GoceVacacionalEsAdelanto" label="Adelanto de vacaciones (RIT, Art. 75)" />
       <SelectorDeDocumento form={form} setForm={setForm} errors={errors} name="DocumentoSustentoId" label="Documento de sustento" icon={FileText} options={documentos.opciones} required={fraccionado} />
       <HelpText>
         {dias ? `Son ${dias} día${dias === 1 ? '' : 's'} calendario${fraccionado ? ': un goce menor de 7 días es un fraccionamiento y se solicita por escrito, con el documento que lo sustenta. ' : '. '}` : ''}

@@ -74,12 +74,12 @@ export function useProgramacionMensual({ eessId, anio, mes }) {
     }
   }
 
-  async function publicar() {
+  async function publicar(motivoTardio) {
     if (!grilla?.programacion) return false;
     setTrabajando(true);
     setError('');
     try {
-      await api.post(`/programaciones-periodo/${grilla.programacion.id}/publicar`);
+      await api.post(`/programaciones-periodo/${grilla.programacion.id}/publicar`, motivoTardio ? { MotivoTardio: motivoTardio } : {});
       await cargar();
       return true;
     } catch (err) {
@@ -90,5 +90,20 @@ export function useProgramacionMensual({ eessId, anio, mes }) {
     }
   }
 
-  return { grilla, cargando, error, setError, ocupada, trabajando, pintar, copiar, publicar, recargar: cargar };
+  async function reprogramar(motivo) {
+    setTrabajando(true);
+    setError('');
+    try {
+      await api.post(`/programaciones-periodo/${grilla.programacion.id}/reprogramar`, { Motivo: motivo });
+      await cargar();
+      return true;
+    } catch (err) {
+      setError(mensaje(err, 'No se pudo reprogramar.'));
+      return false;
+    } finally {
+      setTrabajando(false);
+    }
+  }
+
+  return { grilla, cargando, error, setError, ocupada, trabajando, pintar, copiar, publicar, reprogramar, recargar: cargar };
 }

@@ -1,7 +1,8 @@
-import { CalendarDays, UserRound } from 'lucide-react';
+import { CalendarDays, ListChecks, UserRound } from 'lucide-react';
 import { useOpciones } from '../../hooks/useOpciones';
 import { etiquetaVinculo, fechaIso, formatoFecha } from '../../utils/formato';
 import Field from '../../components/ui/Field';
+import Select from '../../components/ui/Select';
 import SelectBuscable from '../../components/ui/SelectBuscable';
 import Checkbox from '../../components/ui/Checkbox';
 import HelpText from '../../components/ui/HelpText';
@@ -21,6 +22,7 @@ const limite = (fecha) => {
  */
 export default function CompensacionHorariaForm({ form, setForm, errors, editando }) {
   const { opciones: vinculos } = useOpciones('/vinculos-laborales', { actual: form.VinculoLaboralId, etiqueta: etiquetaVinculo });
+  const { opciones: tipos } = useOpciones('/tipos-compensacion', { actual: form.TipoCompensacionId, sinOpcion: 'Sobretiempo (por defecto)' });
   const pasado = form.CompensacionHorariaFechaTrabajo && form.CompensacionHorariaFechaTrabajo < fechaIso(new Date());
   const hasta = limite(form.CompensacionHorariaFechaTrabajo);
 
@@ -37,6 +39,7 @@ export default function CompensacionHorariaForm({ form, setForm, errors, editand
         required
         disabled={editando}
       />
+      <Select form={form} setForm={setForm} errors={errors} name="TipoCompensacionId" label="Tipo de compensación" icon={ListChecks} options={tipos} />
       <Field
         form={form}
         setForm={setForm}

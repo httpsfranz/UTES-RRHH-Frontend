@@ -11,6 +11,26 @@ import HelpText from '../../components/ui/HelpText';
 import TextoEstandar from '../../components/ui/TextoEstandar';
 import { TEXTOS } from '../../utils/textosEstandar';
 
+// Topes mayores por caso especial (RIT, Art. 34, 35 y 37).
+const CASOS_ESPECIALES = {
+  MATERNIDAD: [
+    { value: '', label: 'Sin caso especial (98 días)' },
+    { value: 'PARTO_MULTIPLE', label: 'Parto múltiple (128 días)' },
+    { value: 'NINO_CON_DISCAPACIDAD', label: 'Niño con discapacidad (128 días)' },
+  ],
+  PATERNIDAD: [
+    { value: '', label: 'Parto natural o cesárea (10 días)' },
+    { value: 'PREMATURO', label: 'Nacimiento prematuro (20 días)' },
+    { value: 'PARTO_MULTIPLE', label: 'Parto múltiple (20 días)' },
+    { value: 'ENFERMEDAD_CONGENITA', label: 'Enfermedad congénita terminal o discapacidad severa (30 días)' },
+    { value: 'COMPLICACION_MADRE', label: 'Complicación grave de la madre (30 días)' },
+  ],
+  FALLECIMIENTO: [
+    { value: '', label: 'En el lugar de trabajo' },
+    { value: 'OTRO_LUGAR', label: 'En otro lugar (3 días más)' },
+  ],
+};
+
 export default function LicenciaForm({ form, setForm, errors }) {
   const { opciones: vinculos } = useOpciones('/vinculos-laborales', { actual: form.VinculoLaboralId, etiqueta: etiquetaVinculo });
   const tipos = useOpciones('/tipos-licencia', {
@@ -24,6 +44,7 @@ export default function LicenciaForm({ form, setForm, errors }) {
   });
 
   const tipo = tipos.filas.find((fila) => String(fila.id) === String(form.TipoLicenciaId));
+  const casos = tipo ? CASOS_ESPECIALES[tipo.codigo] : null;
 
   return (
     <>
@@ -47,6 +68,7 @@ export default function LicenciaForm({ form, setForm, errors }) {
         options={tipos.opciones}
         required
       />
+      {casos && <Select form={form} setForm={setForm} errors={errors} name="LicenciaCasoEspecial" label="Caso" icon={ListChecks} options={casos} />}
       <FormGrid>
         <Field form={form} setForm={setForm} errors={errors} name="LicenciaFechaInicio" label="Desde" icon={CalendarDays} type="date" required />
         <Field form={form} setForm={setForm} errors={errors} name="LicenciaFechaFin" label="Hasta" icon={CalendarDays} type="date" required />

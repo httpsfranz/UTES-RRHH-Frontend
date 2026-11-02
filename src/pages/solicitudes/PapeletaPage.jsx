@@ -29,6 +29,11 @@ const { emptyForm, mapToForm } = formModel({
   PapeletaMinutosUtilizados: 'minutos_utilizados',
   PapeletaMotivo: 'motivo',
   PapeletaObservacion: 'observacion',
+  PapeletaEsUrgente: ['es_urgente', false],
+  PapeletaPartoMultiple: ['parto_multiple', false],
+  PapeletaFechaNacimientoHijo: 'fecha_nacimiento_hijo',
+  PapeletaUnidadDestino: 'unidad_destino',
+  PapeletaConformeDestino: 'conforme_destino',
 });
 
 const horario = (item) => (item.es_dia_completo ? 'Día completo' : `${item.hora_salida ?? '—'} – ${item.hora_retorno ?? 'sin retorno'}`);

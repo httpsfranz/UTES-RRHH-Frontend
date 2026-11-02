@@ -16,9 +16,10 @@ import ResolucionModal from '../../components/ui/ResolucionModal';
 import CompensacionHorariaForm from './CompensacionHorariaForm';
 import DevolverHorasModal from './DevolverHorasModal';
 
-// Solo se digita QUIEN, QUE DIA y el motivo: las horas, el tipo (sobretiempo), quien autoriza y el limite los pone el sistema.
+// Se digita QUIEN, QUE DIA, el motivo y, si no es sobretiempo, el tipo: las horas, quien autoriza y el limite los pone el sistema.
 const { emptyForm, mapToForm } = formModel({
   VinculoLaboralId: 'vinculo_laboral_id',
+  TipoCompensacionId: 'tipo_compensacion_id',
   CompensacionHorariaFechaTrabajo: 'fecha_trabajo',
   CompensacionHorariaAutorizadoPreviamente: ['autorizado_previamente', false],
   CompensacionHorariaObservacion: 'observacion',

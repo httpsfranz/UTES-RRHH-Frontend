@@ -29,6 +29,7 @@ const paginasReales = {
 
   // PERSONAL
   '/personal/trabajadores': lazy(() => import('./pages/personal/TrabajadorPage')),
+  '/personal/legajo': lazy(() => import('./pages/personal/LegajoYMovimientosPage')),
   '/vacaciones/gestion': lazy(() => import('./pages/vacaciones/VacacionesPage')),
 
   // FIN DE MES

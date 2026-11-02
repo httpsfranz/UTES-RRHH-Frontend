@@ -20,6 +20,7 @@ const { emptyForm, mapToForm } = formModel({
   GoceVacacionalFechaInicio: 'fecha_inicio',
   GoceVacacionalFechaFin: 'fecha_fin',
   DocumentoSustentoId: 'documento_sustento_id',
+  GoceVacacionalEsAdelanto: ['es_adelanto', false],
 });
 
 const pendiente = (item) => item.estado === 'PENDIENTE';

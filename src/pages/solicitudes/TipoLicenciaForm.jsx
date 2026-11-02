@@ -1,4 +1,5 @@
 import { FileText, Hash, Scale, Tag } from 'lucide-react';
+import Select from '../../components/ui/Select';
 import Field from '../../components/ui/Field';
 import Checkbox from '../../components/ui/Checkbox';
 import FormGrid from '../../components/ui/FormGrid';
@@ -49,7 +50,14 @@ export default function TipoLicenciaForm({ form, setForm, errors }) {
           maxLength={200}
         />
       </FormGrid>
+      <FormGrid>
+        <Field form={form} setForm={setForm} errors={errors} name="TipoLicenciaMaximoDiasCas" label="Máximo de días (CAS)" type="number" />
+        <Field form={form} setForm={setForm} errors={errors} name="TipoLicenciaMaximoDiasAnio" label="Máximo de días al año" type="number" />
+      </FormGrid>
+      <Select form={form} setForm={setForm} errors={errors} name="TipoLicenciaSexo" label="Solo para" options={[{ value: '', label: 'Cualquier persona' }, { value: 'F', label: 'Mujeres' }, { value: 'M', label: 'Hombres' }]} />
       <Checkbox form={form} setForm={setForm} errors={errors} name="TipoLicenciaConGoce" label="Con goce de haber" />
+      <Checkbox form={form} setForm={setForm} errors={errors} name="TipoLicenciaACuentaVacaciones" label="Se descuenta de las vacaciones" />
+      <Checkbox form={form} setForm={setForm} errors={errors} name="TipoLicenciaExigeAnticipacion" label="Exige anticipación" />
     </>
   );
 }

@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Building2, CopyPlus, FileSpreadsheet, Send } from 'lucide-react';
+import { Building2, CopyPlus, FileDown, FileSpreadsheet, Send } from 'lucide-react';
+import { descargarArchivo } from '../../api/descargas';
 import { useAuth } from '../../auth/useAuth';
 import { useAlcanceDeEess } from '../../hooks/useAlcanceDeEess';
 import { useOpciones } from '../../hooks/useOpciones';
@@ -117,12 +118,30 @@ export default function ProgramacionMensualPage() {
 
   async function publicar() {
     if (!window.confirm(`¿Publicar la programación de ${grilla.periodo.etiqueta}? Después solo se modifica con cambios de turno (RIT, Art. 16).`)) return;
-    if (await prog.publicar()) setAviso(`Programación de ${grilla.periodo.etiqueta} publicada: ya rige para el control de asistencia.`);
+    const limite = new Date(grilla.periodo.anio, grilla.periodo.mes - 2, 21); // todo el dia 20 esta en plazo
+    const motivoTardio = new Date() > limite ? window.prompt('Se pasó el plazo del día 20 del mes anterior (RIT, Art. 16). Indica el motivo del retraso:') : null;
+    if (new Date() > limite && !motivoTardio) return;
+    if (await prog.publicar(motivoTardio)) setAviso(`Programación de ${grilla.periodo.etiqueta} publicada: ya rige para el control de asistencia.`);
+  }
+
+  async function exportar() {
+    const fallo = await descargarArchivo('/programacion-calendario/turnos/pdf', { eess_id: filtros.EessId, anio: mes.anio, mes: mes.mes, papel: 'a3' }, 'programacion.pdf');
+    if (fallo) prog.setError(fallo);
+  }
+
+  async function reprogramar() {
+    const motivo = window.prompt('Se permiten hasta dos reprogramaciones (RIT, Art. 16). Indica el motivo:');
+    if (motivo && (await prog.reprogramar(motivo))) setAviso('La programación volvió a borrador para corregirla.');
   }
 
   return (
     <PageContainer>
       <PageHeader title="Programación del mes" subtitle="Elige un turno y pulsa los días de cada trabajador. Al terminar, publícala.">
+        {grilla?.programacion && (
+          <Button variant="secondary" icon={FileDown} onClick={exportar}>
+            Exportar PDF
+          </Button>
+        )}
         {editable && (
           <Button variant="secondary" icon={CopyPlus} onClick={copiar} disabled={prog.trabajando}>
             Copiar mes anterior
@@ -131,6 +150,11 @@ export default function ProgramacionMensualPage() {
         {editable && (
           <Button variant="secondary" icon={FileSpreadsheet} onClick={() => setImportando(true)} disabled={prog.trabajando}>
             Importar desde Excel
+          </Button>
+        )}
+        {grilla?.programacion?.estado === 'PUBLICADA' && (
+          <Button variant="secondary" icon={CopyPlus} onClick={reprogramar} disabled={prog.trabajando}>
+            Reprogramar
           </Button>
         )}
         {puedePublicar && (

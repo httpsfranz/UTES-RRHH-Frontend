@@ -30,6 +30,7 @@ export const menu = [
     icon: Users,
     children: [
       { label: 'Trabajadores', path: '/personal/trabajadores', buscar: 'personal vínculos laborales horarios asignados ficha' },
+      { label: 'Legajo y movimientos', path: '/personal/legajo', buscar: 'legajo fotocheck entrega de cargo desplazamiento rotación destaque' },
       { label: 'Vacaciones', path: '/vacaciones/gestion', buscar: 'vacaciones del personal récord rol vacacional goce' },
     ],
   },

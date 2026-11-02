@@ -1,4 +1,5 @@
 import { lazy } from 'react';
+import { paginaDeRegistro } from '../registros/paginaDeRegistro';
 import {
   Activity,
   Archive,
@@ -9,6 +10,8 @@ import {
   ListChecks,
   Network,
   ScanFace,
+  ShieldAlert,
+  Timer,
   SlidersHorizontal,
   AlertOctagon,
   Award,
@@ -39,6 +42,8 @@ export const CATALOGOS = [
     area: 'Configuración',
     titulo: 'Jornada y tolerancias',
     items: [
+      { id: 'tolerancia-extraordinaria', titulo: 'Tolerancia extraordinaria', descripcion: 'Hasta 2 horas por zona intransitable o desastre (RIT, Art. 16 y 27)', icono: Timer, pagina: paginaDeRegistro('tolerancias') },
+      { id: 'contingencia-marcacion', titulo: 'Contingencia de marcación', descripcion: 'Marca manual por fuerza mayor en un EESS con reloj (RIT, Art. 16)', icono: ShieldAlert, pagina: paginaDeRegistro('contingencias') },
       { id: 'turnos', titulo: 'Turnos', descripcion: 'Mañana, tarde, guardias… con su horario (RIT, Art. 16 y 20).', icono: Clock, pagina: lazy(() => import('./TurnoPage')) },
       { id: 'horarios', titulo: 'Horarios', descripcion: 'Horarios semanales fijos que se asignan a un trabajador.', icono: CalendarRange, pagina: lazy(() => import('./HorarioPage')) },
       { id: 'tipos-jornada', titulo: 'Tipos de jornada', descripcion: 'Jornada de 6 u 8 horas y sus reglas.', icono: Briefcase, pagina: lazy(() => import('./TipoJornadaPage')) },

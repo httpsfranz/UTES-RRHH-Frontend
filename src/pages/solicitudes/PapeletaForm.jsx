@@ -14,7 +14,7 @@ import { TEXTOS } from '../../utils/textosEstandar';
 
 export default function PapeletaForm({ form, setForm, errors }) {
   const { opciones: vinculos } = useOpciones('/vinculos-laborales', { actual: form.VinculoLaboralId, etiqueta: etiquetaVinculo });
-  const { opciones: tipos } = useOpciones('/tipos-papeleta', { actual: form.TipoPapeletaId });
+  const { opciones: tipos, filas: tiposPapeleta } = useOpciones('/tipos-papeleta', { actual: form.TipoPapeletaId });
   const motivos = useOpciones('/motivos-papeleta', { actual: form.MotivoPapeletaId });
   const { opciones: documentos } = useOpciones('/documentos-sustento', {
     params: {},
@@ -28,6 +28,7 @@ export default function PapeletaForm({ form, setForm, errors }) {
     ...motivos.filas.filter((m) => String(m.tipo_papeleta_id) === String(form.TipoPapeletaId)).map((m) => ({ value: m.id, label: m.nombre })),
   ];
   const diaCompleto = Boolean(form.PapeletaEsDiaCompleto);
+  const codigoTipo = tiposPapeleta.find((t) => String(t.id) === String(form.TipoPapeletaId))?.codigo;
 
   return (
     <>
@@ -65,6 +66,19 @@ export default function PapeletaForm({ form, setForm, errors }) {
         <NumeroAutomatico name="PapeletaNumero" label="N.º de papeleta" icon={Hash} valor={form.PapeletaNumero} />
       </FormGrid>
       <Checkbox form={form} setForm={setForm} errors={errors} name="PapeletaEsDiaCompleto" label="Permiso de día completo" />
+      <Checkbox form={form} setForm={setForm} errors={errors} name="PapeletaEsUrgente" label="Urgente: no se pudo pedir con 24 horas de anticipación (RIT, Art. 57)" />
+      {codigoTipo === 'COMISION' && (
+        <FormGrid>
+          <Field form={form} setForm={setForm} errors={errors} name="PapeletaUnidadDestino" label="Unidad de destino" icon={Tag} required />
+          <Field form={form} setForm={setForm} errors={errors} name="PapeletaConformeDestino" label="Firma de conformidad (destino)" icon={Tag} />
+        </FormGrid>
+      )}
+      {codigoTipo === 'LACTANCIA' && (
+        <FormGrid>
+          <Field form={form} setForm={setForm} errors={errors} name="PapeletaFechaNacimientoHijo" label="Nacimiento del hijo(a)" icon={CalendarDays} type="date" required />
+          <Checkbox form={form} setForm={setForm} errors={errors} name="PapeletaPartoMultiple" label="Parto múltiple (2 horas diarias)" />
+        </FormGrid>
+      )}
       {!diaCompleto && (
         <FormGrid>
           <Field form={form} setForm={setForm} errors={errors} name="PapeletaHoraSalida" label="Hora de salida" icon={Clock} type="time" required />

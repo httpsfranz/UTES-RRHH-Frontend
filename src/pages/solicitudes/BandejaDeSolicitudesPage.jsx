@@ -32,7 +32,7 @@ const columnas = [
   { key: 'fecha', header: 'Fecha', render: periodo },
   { key: 'detalle', header: 'Detalle' },
   { key: 'esperando', header: 'Espera', render: esperando },
-  { key: 'estado', header: 'Estado', render: (s) => ESTADOS[s.estado] ?? s.estado },
+  { key: 'estado', header: 'Estado', render: (s) => (s.visto_bueno && s.estado === 'PENDIENTE' ? 'Con visto bueno: falta RRHH' : ESTADOS[s.estado] ?? s.estado) },
 ];
 
 const tarjeta = (s) => ({
@@ -108,7 +108,7 @@ export default function BandejaDeSolicitudesPage() {
         card={tarjeta}
         getKey={(s) => s.clave}
         acciones={[
-          { icon: Check, label: 'Aprobar', visible: (s) => s.puede_aprobar, onClick: (s) => setResolviendo({ item: s, accion: 'aprobar' }) },
+          { icon: Check, label: 'Aprobar / visto bueno', visible: (s) => s.puede_aprobar, onClick: (s) => setResolviendo({ item: s, accion: 'aprobar' }) },
           { icon: X, label: 'Rechazar', visible: (s) => s.puede_rechazar, onClick: (s) => setResolviendo({ item: s, accion: 'rechazar' }) },
           { icon: ExternalLink, label: 'Abrir en su pantalla', visible: () => !propias, onClick: (s) => navigate(s.pantalla) },
         ]}

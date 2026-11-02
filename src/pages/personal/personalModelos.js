@@ -70,6 +70,9 @@ export const vinculo = {
     VinculoLaboralFechaInicio: 'fecha_inicio',
     VinculoLaboralFechaFin: 'fecha_fin',
     VinculoLaboralMotivoCese: 'motivo_cese',
+    VinculoLaboralIngresoMensual: 'ingreso_mensual',
+    VinculoLaboralCausaCese: 'causa_cese',
+    VinculoLaboralFechaRenuncia: 'fecha_renuncia',
   }),
   /** AIRHSP es obligatorio solo para las condiciones que lo exigen: la validacion necesita el catalogo de condiciones. */
   validador: (condiciones) => {

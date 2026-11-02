@@ -17,11 +17,18 @@ const { emptyForm, mapToForm } = formModel({
   TipoLicenciaMaximoDias: 'maximo_dias',
   TipoLicenciaBaseLegal: 'base_legal',
   TipoLicenciaConGoce: ['con_goce', true],
+  TipoLicenciaSexo: 'sexo',
+  TipoLicenciaMaximoDiasCas: 'maximo_dias_cas',
+  TipoLicenciaMaximoDiasAnio: 'maximo_dias_anio',
+  TipoLicenciaACuentaVacaciones: ['a_cuenta_vacaciones', false],
+  TipoLicenciaExigeAnticipacion: ['exige_anticipacion', false],
 });
 
 const validate = validador({
   TipoLicenciaNombre: [requerido],
   TipoLicenciaMaximoDias: [entero({ min: 1, max: 3650 })],
+  TipoLicenciaMaximoDiasCas: [entero({ min: 1, max: 3650 })],
+  TipoLicenciaMaximoDiasAnio: [entero({ min: 1, max: 3650 })],
 });
 
 const columns = [
